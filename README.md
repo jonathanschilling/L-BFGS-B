@@ -75,11 +75,21 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 * [Jorge Nocedal](http://www.ece.northwestern.edu/~nocedal)
 * [Jose Luis Morales](http://web.archive.org/web/20080509084403/http://www.ece.northwestern.edu:80/~morales/)
 
-## Relevant Publications
+## Related Publications
 
 * R. H. Byrd, P. Lu, J. Nocedal and C. Zhu. [A Limited Memory Algorithm for Bound Constrained Optimization](https://doi.org/10.1137/0916069), (1995), SIAM Journal on Scientific and Statistical Computing , 16, 5, pp. 1190-1208
 * C. Zhu, R. H. Byrd and J. Nocedal. [L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/279232.279236) (1997), ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550 - 560
 * J.L. Morales and J. Nocedal. [L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/2049662.2049669) (2011), ACM Transactions on Mathematical Software, Vol. 38, Num. 1
+
+## Related Software
+
+* [pcarbo/lbfgsb-matlab](https://github.com/pcarbo/lbfgsb-matlab): A MATLAB interface for L-BFGS-B
+* [https://github.com/bgranzow/L-BFGS-B](https://github.com/bgranzow/L-BFGS-B): A pure Matlab implementation of L-BFGS-B (LBFGSB)
+* [yixuan/LBFGSpp](https://github.com/yixuan/LBFGSpp): A header-only C++ library for L-BFGS and L-BFGS-B algorithms
+* [chokkan/liblbfgs](https://github.com/chokkan/liblbfgs): libLBFGS: a library of Limited-memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS)
+* [mkobos/lbfgsb_wrapper](https://github.com/mkobos/lbfgsb_wrapper): Java wrapper for the Fortran L-BFGS-B algorithm
+* [yuhonglin/Lbfgsb.jl](https://github.com/yuhonglin/Lbfgsb.jl): A Julia wrapper of the l-bfgs-b fortran library
+* [afbarnard/go-lbfgsb](https://github.com/afbarnard/go-lbfgsb): L-BFGS-B optimization for Go, C, Fortran 2003
 
 ## Notes on this repository
 

@@ -81,6 +81,8 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 * C. Zhu, R. H. Byrd and J. Nocedal. [L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/279232.279236) (1997), ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550 - 560
 * J.L. Morales and J. Nocedal. [L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/2049662.2049669) (2011), ACM Transactions on Mathematical Software, Vol. 38, Num. 1
 
+For an eagle-eye overview of `L-BFGS-B` and the geneaology `BFGS`->`L-BFGS`->`L-BFGS-B`, see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis.pdf).
+
 ## Related Software
 
 * [pcarbo/lbfgsb-matlab](https://github.com/pcarbo/lbfgsb-matlab): A MATLAB interface for L-BFGS-B
@@ -93,7 +95,10 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 * [Gnimuc/LBFGSB.jl](https://github.com/Gnimuc/LBFGSB.jl): Julia wrapper for L-BFGS-B Nonlinear Optimization Code
 * [afbarnard/go-lbfgsb](https://github.com/afbarnard/go-lbfgsb): L-BFGS-B optimization for Go, C, Fortran 2003
 * [nepluno/lbfgsb-gpu](https://github.com/nepluno/lbfgsb-gpu): An open source library for the GPU-implementation of L-BFGS-B algorithm
-* 
+* [Chris00/L-BFGS-ocaml](https://github.com/Chris00/L-BFGS-ocaml):  OCaml bindings for L-BFGS
+* [dwicke/L-BFGS-B-Lua](https://github.com/dwicke/L-BFGS-B-Lua): L-BFGS-B lua wrapper around a L-BFGS-B C implementation
+* [avieira/python_lbfgsb](https://github.com/avieira/python_lbfgsb): Pure Python-based L-BFGS-B implementation
+* [ybyygu/rust-lbfgsb](https://github.com/ybyygu/rust-lbfgsb): Ergonomic bindings to L-BFGS-B code for Rust 
 
 ## Notes on this repository
 

@@ -83,7 +83,7 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 
 ## Notes on this repository
 
-[I](https://github.com/jonathanschilling/) took the freedom to
+[I (J. Schilling)](https://github.com/jonathanschilling/) took the freedom to
 
 * put the L-BFGS-B code obtained from [the original website](http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz) up in this repository,
 * divide the subroutines and functions into separate files,

@@ -103,7 +103,7 @@ For an eagle-eye overview of `L-BFGS-B` and the genealogy `BFGS`->`L-BFGS`->`L-B
 * [dwicke/L-BFGS-B-Lua](https://github.com/dwicke/L-BFGS-B-Lua): L-BFGS-B lua wrapper around a L-BFGS-B C implementation
 * [avieira/python_lbfgsb](https://github.com/avieira/python_lbfgsb): Pure Python-based L-BFGS-B implementation
 * [ybyygu/rust-lbfgsb](https://github.com/ybyygu/rust-lbfgsb): Ergonomic bindings to L-BFGS-B code for Rust 
-
+* [lbfgsb3c](https://rdrr.io/rforge/lbfgsb3c/): Limited Memory BFGS Minimizer with Bounds on Parameters with optim() 'C' Interface for R
 
 ## Notes on this repository
 

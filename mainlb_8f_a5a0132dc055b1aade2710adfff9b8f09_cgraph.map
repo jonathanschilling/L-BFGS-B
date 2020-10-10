@@ -1,0 +1,27 @@
+<map id="mainlb" name="mainlb">
+<area shape="rect" id="node2" href="$timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118" title="This routine computes cpu time in double precision. " alt="" coords="121,5,171,32"/>
+<area shape="rect" id="node3" href="$errclb_8f.html#affdf5cf80f86556653ba2cc860a2bb32" title="This subroutine checks the validity of the input data. " alt="" coords="119,56,173,83"/>
+<area shape="rect" id="node4" href="$prn3lb_8f.html#a433c19f6cb8b79a552a65371fecffb8c" title="This subroutine prints out information when either a built&#45;in convergence test is satisfied or when a..." alt="" coords="117,107,175,133"/>
+<area shape="rect" id="node5" href="$prn1lb_8f.html#a9d5d96d3efd3ea19322ee8d472954cc9" title="This subroutine prints the input data, initial point, upper and lower bounds of each variable..." alt="" coords="117,157,175,184"/>
+<area shape="rect" id="node6" href="$active_8f.html#aabce91f1253de53e2bae52ad9b94fcbb" title="This subroutine initializes iwhere and projects the initial x to the feasible set if necessary..." alt="" coords="117,208,175,235"/>
+<area shape="rect" id="node7" href="$dcopy_8f.html#afc29c83942509cba5f3764115f0471d5" title="copies a vector, x, to a vector, y. " alt="" coords="229,575,286,601"/>
+<area shape="rect" id="node8" href="$projgr_8f.html#a7c7b868c8b42f51efd25e48cd293cb5f" title="This subroutine computes the infinity norm of the projected gradient. " alt="" coords="119,309,173,336"/>
+<area shape="rect" id="node9" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="114,360,178,387"/>
+<area shape="rect" id="node11" href="$dscal_8f.html#a0590f8db475e11dc2c9137bb13887acf" title="scales a vector by a constant. " alt="" coords="231,461,284,488"/>
+<area shape="rect" id="node16" href="$freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84" title="This subroutine counts the entering and leaving variables when iter &gt; 0, and finds the index set of f..." alt="" coords="121,461,171,488"/>
+<area shape="rect" id="node17" href="$formk_8f.html#a0e64ef7f777edb20419c8d441107c654" title="Forms the LEL^T factorization of the indefinite matrix K. " alt="" coords="119,664,173,691"/>
+<area shape="rect" id="node19" href="$cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4" title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy..." alt="" coords="115,259,177,285"/>
+<area shape="rect" id="node20" href="$subsm_8f.html#a885224f17c93707dec22de0a51a4081d" title="Performs the subspace minimization. " alt="" coords="115,512,177,539"/>
+<area shape="rect" id="node21" href="$lnsrlb_8f.html#a1ae769fcc1d4f0f54e793a730e879dbc" title="This subroutine calls subroutine dcsrch from the Minpack2 library to perform the line search..." alt="" coords="119,765,173,792"/>
+<area shape="rect" id="node24" href="$prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd" title="This subroutine prints out new information after a successful line search. " alt="" coords="117,715,175,741"/>
+<area shape="rect" id="node25" href="$matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b" title="This subroutine updates matrices WS and WY, and forms the middle matrix in B. " alt="" coords="113,563,179,589"/>
+<area shape="rect" id="node26" href="$formt_8f.html#a237bf34b63889556b05399c224ec5f71" title="Forms the upper half of the pos. def. and symm. T. " alt="" coords="120,816,172,843"/>
+<area shape="rect" id="node10" href="$ddot_8f.html#a2a42ecc597403b22ad786715c739196b" title="forms the dot product of two vectors. " alt="" coords="234,309,281,336"/>
+<area shape="rect" id="node12" href="$bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="234,259,281,285"/>
+<area shape="rect" id="node14" href="$daxpy_8f.html#adb136e14634fe4b772a0b034f52f3939" title="constant times a vector plus a vector. " alt="" coords="445,449,503,476"/>
+<area shape="rect" id="node15" href="$hpsolb_8f.html#a94349c617519970019d2f15efcb1df41" title="This subroutine sorts out the least element of t, and puts the remaining elements of t in a heap..." alt="" coords="227,360,287,387"/>
+<area shape="rect" id="node13" href="$dtrsl_8f.html#addd03dfa6a12af9f384b521e1f765a19" title="dtrsl solves triangular systems. " alt="" coords="343,487,390,513"/>
+<area shape="rect" id="node18" href="$dpofa_8f.html#abc3ea68902764ab6bbb5ae562e64eb5f" title="factors a double precision symmetric positive definite matrix. " alt="" coords="230,816,285,843"/>
+<area shape="rect" id="node22" href="$dcsrch_8f.html#a25db7a7d8ddac831be23892a10ba2a76" title="This subroutine finds a step that satisfies a sufficient decrease condition and a curvature condition..." alt="" coords="227,765,288,792"/>
+<area shape="rect" id="node23" href="$dcstep_8f.html#aa8518f45aef3723242c7ca3f41717a31" title="This subroutine computes a safeguarded step for a search procedure and updates an interval that conta..." alt="" coords="336,765,397,792"/>
+</map>

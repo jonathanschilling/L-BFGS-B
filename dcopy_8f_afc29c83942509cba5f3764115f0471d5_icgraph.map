@@ -1,0 +1,9 @@
+<map id="dcopy" name="dcopy">
+<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="111,5,175,32"/>
+<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="224,132,284,159"/>
+<area shape="rect" id="node5" href="$formk_8f.html#a0e64ef7f777edb20419c8d441107c654" title="Forms the LEL^T factorization of the indefinite matrix K. " alt="" coords="116,107,171,133"/>
+<area shape="rect" id="node6" href="$lnsrlb_8f.html#a1ae769fcc1d4f0f54e793a730e879dbc" title="This subroutine calls subroutine dcsrch from the Minpack2 library to perform the line search..." alt="" coords="117,157,170,184"/>
+<area shape="rect" id="node7" href="$matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b" title="This subroutine updates matrices WS and WY, and forms the middle matrix in B. " alt="" coords="111,208,176,235"/>
+<area shape="rect" id="node8" href="$subsm_8f.html#a885224f17c93707dec22de0a51a4081d" title="Performs the subspace minimization. " alt="" coords="113,259,174,285"/>
+<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="332,132,389,159"/>
+</map>

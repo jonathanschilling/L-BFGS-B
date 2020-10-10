@@ -1,0 +1,6 @@
+<map id="subsm" name="subsm">
+<area shape="rect" id="node2" href="$dtrsl_8f.html#addd03dfa6a12af9f384b521e1f765a19" title="dtrsl solves triangular systems. " alt="" coords="120,5,167,32"/>
+<area shape="rect" id="node4" href="$dscal_8f.html#a0590f8db475e11dc2c9137bb13887acf" title="scales a vector by a constant. " alt="" coords="117,56,170,83"/>
+<area shape="rect" id="node5" href="$dcopy_8f.html#afc29c83942509cba5f3764115f0471d5" title="copies a vector, x, to a vector, y. " alt="" coords="115,107,172,133"/>
+<area shape="rect" id="node3" href="$daxpy_8f.html#adb136e14634fe4b772a0b034f52f3939" title="constant times a vector plus a vector. " alt="" coords="220,5,277,32"/>
+</map>

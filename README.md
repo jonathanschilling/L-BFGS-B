@@ -84,12 +84,16 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 ## Related Software
 
 * [pcarbo/lbfgsb-matlab](https://github.com/pcarbo/lbfgsb-matlab): A MATLAB interface for L-BFGS-B
-* [https://github.com/bgranzow/L-BFGS-B](https://github.com/bgranzow/L-BFGS-B): A pure Matlab implementation of L-BFGS-B (LBFGSB)
+* [bgranzow/L-BFGS-B](https://github.com/bgranzow/L-BFGS-B): A pure Matlab implementation of L-BFGS-B (LBFGSB)
+* [constantino-garcia/lbfgsb_cpp_wrapper](https://github.com/constantino-garcia/lbfgsb_cpp_wrapper): A simple C++ wrapper around the original Fortran L-BGSG-B routine
 * [yixuan/LBFGSpp](https://github.com/yixuan/LBFGSpp): A header-only C++ library for L-BFGS and L-BFGS-B algorithms
 * [chokkan/liblbfgs](https://github.com/chokkan/liblbfgs): libLBFGS: a library of Limited-memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS)
 * [mkobos/lbfgsb_wrapper](https://github.com/mkobos/lbfgsb_wrapper): Java wrapper for the Fortran L-BFGS-B algorithm
 * [yuhonglin/Lbfgsb.jl](https://github.com/yuhonglin/Lbfgsb.jl): A Julia wrapper of the l-bfgs-b fortran library
+* [Gnimuc/LBFGSB.jl](https://github.com/Gnimuc/LBFGSB.jl): Julia wrapper for L-BFGS-B Nonlinear Optimization Code
 * [afbarnard/go-lbfgsb](https://github.com/afbarnard/go-lbfgsb): L-BFGS-B optimization for Go, C, Fortran 2003
+* [nepluno/lbfgsb-gpu](https://github.com/nepluno/lbfgsb-gpu): An open source library for the GPU-implementation of L-BFGS-B algorithm
+* 
 
 ## Notes on this repository
 

@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# L-BFGS-B-specific
+x.*
+docs/
+iterate.dat
+

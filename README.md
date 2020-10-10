@@ -82,7 +82,7 @@ However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly con
 * J.L. Morales and J. Nocedal. [L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/2049662.2049669) (2011), ACM Transactions on Mathematical Software, Vol. 38, Num. 1
 
 Note that the subspace minimization in the [LBFGSpp](https://github.com/yixuan/LBFGSpp) implementation
-is an exact minimization subject to the bounds, based on the [BOXCQP]() algorithm:
+is an exact minimization subject to the bounds, based on the BOXCQP algorithm:
 * C. Voglis and I. E. Lagaris, [BOXCQP: An Algorithm for Bound Constrained Convex Quadratic Problems](http://www.cs.uoi.gr/~voglis/boxcqp.pdf) (2004), 1st International Conference "From Scientific Computing to Computational Engineering", Athens, Greece
 
 For an eagle-eye overview of `L-BFGS-B` and the genealogy `BFGS`->`L-BFGS`->`L-BFGS-B`,

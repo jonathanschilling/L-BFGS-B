@@ -1,9 +1,16 @@
 c> \file ddot.f
 
+c> \brief forms the dot product of two vectors.
+c>        uses unrolled loops for increments equal to one.
+c>
+c> @param n dimensionality of vectors
+c> @param dx first vector
+c> @param incx spacing of elements in dx
+c> @param dy second vector
+c> @param incy spacing of elements in dy
+c> @returns dot product of dx and dy
       double precision function ddot(n,dx,incx,dy,incy)
 c
-c     forms the dot product of two vectors.
-c     uses unrolled loops for increments equal to one.
 c     jack dongarra, linpack, 3/11/78.
 c
       double precision dx(*),dy(*),dtemp

@@ -1,37 +1,40 @@
 c> \file freev.f
 
+c> \brief This subroutine counts the entering and leaving variables when
+c>        iter > 0, and finds the index set of free and active variables
+c>        at the GCP.
+c>
+c> This subroutine counts the entering and leaving variables when
+c> iter > 0, and finds the index set of free and active variables
+c> at the GCP.
+c> 
+c> @param n number of parameters
+c> @param nfree number of free parameters, i.e., those not at their bounds
+c> @param index for i=1,...,nfree, index(i) are the indices of free variables<br/>
+c>              for i=nfree+1,...,n, index(i) are the indices of bound variables<br/>
+c>              On entry after the first iteration, index gives 
+c>                the free variables at the previous iteration.<br/>
+c>              On exit it gives the free variables based on the determination
+c>                in cauchy using the array iwhere.
+c> @param nenter TODO
+c> @param ileave TODO
+c> @param indx2 On entry indx2 is unspecified.<br/>
+c>              On exit with iter>0, indx2 indicates which variables
+c>                 have changed status since the previous iteration.<br/>
+c>              For i= 1,...,nenter, indx2(i) have changed from bound to free.<br/>
+c>              For i= ileave+1,...,n, indx2(i) have changed from free to bound.<br/>
+c> @param iwhere TODO
+c> @param wrk TODO
+c> @param updatd TODO
+c> @param cnstnd indicating whether bounds are present
+c> @param iprint control screen output
+c> @param iter TODO
       subroutine freev(n, nfree, index, nenter, ileave, indx2, 
      +                 iwhere, wrk, updatd, cnstnd, iprint, iter)
 
       integer n, nfree, nenter, ileave, iprint, iter, 
      +        index(n), indx2(n), iwhere(n)
       logical wrk, updatd, cnstnd
-
-c     ************
-c
-c     Subroutine freev 
-c
-c     This subroutine counts the entering and leaving variables when
-c       iter > 0, and finds the index set of free and active variables
-c       at the GCP.
-c
-c     cnstnd is a logical variable indicating whether bounds are present
-c
-c     index is an integer array of dimension n
-c       for i=1,...,nfree, index(i) are the indices of free variables
-c       for i=nfree+1,...,n, index(i) are the indices of bound variables
-c       On entry after the first iteration, index gives 
-c         the free variables at the previous iteration.
-c       On exit it gives the free variables based on the determination
-c         in cauchy using the array iwhere.
-c
-c     indx2 is an integer array of dimension n
-c       On entry indx2 is unspecified.
-c       On exit with iter>0, indx2 indicates which variables
-c          have changed status since the previous iteration.
-c       For i= 1,...,nenter, indx2(i) have changed from bound to free.
-c       For i= ileave+1,...,n, indx2(i) have changed from free to bound.
-c 
 c
 c                           *  *  *
 c

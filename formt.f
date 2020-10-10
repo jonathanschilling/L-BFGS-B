@@ -1,23 +1,27 @@
 c> \file formt.f
 
+c> \brief Forms the upper half of the pos. def. and symm. T.
+c> 
+c> This subroutine forms the upper half of the pos. def. and symm.
+c> T = theta*SS + L*D^(-1)*L', stores T in the upper triangle
+c> of the array wt, and performs the Cholesky factorization of T
+c> to produce J*J', with J' stored in the upper triangle of wt.
+c> 
+c> @param m history size of approximated Hessian
+c> @param wt part of L-BFGS matrix
+c> @param sy part of L-BFGS matrix
+c> @param ss part of L-BFGS matrix
+c> @param col On entry col is the actual number of variable metric
+c>               corrections stored so far.<br/>
+c>            On exit col is unchanged.
+c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
+c>              On exit theta is unchanged.
+c>
+c> @param info error/success indicator
       subroutine formt(m, wt, sy, ss, col, theta, info)
  
       integer          m, col, info
       double precision theta, wt(m, m), sy(m, m), ss(m, m)
-
-c     ************
-c
-c     Subroutine formt
-c
-c       This subroutine forms the upper half of the pos. def. and symm.
-c         T = theta*SS + L*D^(-1)*L', stores T in the upper triangle
-c         of the array wt, and performs the Cholesky factorization of T
-c         to produce J*J', with J' stored in the upper triangle of wt.
-c
-c     Subprograms called:
-c
-c       Linpack ... dpofa.
-c
 c
 c                           *  *  *
 c

@@ -1,36 +1,26 @@
 c> \file hpsolb.f
 
+c> This subroutine sorts out the least element of t, and puts the
+c>   remaining elements of t in a heap.
+c> 
+c> @param n On entry n is the dimension of the arrays t and iorder.<br/>
+c>          On exit n is unchanged.
+c> 
+c> @param t On entry t stores the elements to be sorted.<br/>
+c>          On exit t(n) stores the least elements of t, and t(1) to t(n-1)
+c>             stores the remaining elements in the form of a heap.
+c> 
+c> @param iorder On entry iorder(i) is the index of t(i).<br/>
+c>               On exit iorder(i) is still the index of t(i), but iorder may be
+c>                  permuted in accordance with t.
+c> 
+c> @param iheap On entry iheap should be set as follows:<ul>
+c>                 <li>iheap .eq. 0 if t(1) to t(n) is not in the form of a heap,</li>
+c>                 <li>iheap .ne. 0 if otherwise.</li></ul>
+c>              On exit iheap is unchanged.
       subroutine hpsolb(n, t, iorder, iheap)
       integer          iheap, n, iorder(n)
       double precision t(n)
-  
-c     ************
-c
-c     Subroutine hpsolb 
-c
-c     This subroutine sorts out the least element of t, and puts the
-c       remaining elements of t in a heap.
-c 
-c     n is an integer variable.
-c       On entry n is the dimension of the arrays t and iorder.
-c       On exit n is unchanged.
-c
-c     t is a double precision array of dimension n.
-c       On entry t stores the elements to be sorted,
-c       On exit t(n) stores the least elements of t, and t(1) to t(n-1)
-c         stores the remaining elements in the form of a heap.
-c
-c     iorder is an integer array of dimension n.
-c       On entry iorder(i) is the index of t(i).
-c       On exit iorder(i) is still the index of t(i), but iorder may be
-c         permuted in accordance with t.
-c
-c     iheap is an integer variable specifying the task.
-c       On entry iheap should be set as follows:
-c         iheap .eq. 0 if t(1) to t(n) is not in the form of a heap,
-c         iheap .ne. 0 if otherwise.
-c       On exit iheap is unchanged.
-c
 c
 c     References:
 c       Algorithm 232 of CACM (J. W. J. Williams): HEAPSORT.

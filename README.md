@@ -85,11 +85,12 @@ Note that the subspace minimization in the [LBFGSpp](https://github.com/yixuan/L
 is an exact minimization subject to the bounds, based on the [BOXCQP]() algorithm:
 * C. Voglis and I. E. Lagaris, [BOXCQP: An Algorithm for Bound Constrained Convex Quadratic Problems](http://www.cs.uoi.gr/~voglis/boxcqp.pdf) (2004), 1st International Conference "From Scientific Computing to Computational Engineering", Athens, Greece
 
-For an eagle-eye overview of `L-BFGS-B` and the genealogy `BFGS`->`L-BFGS`->`L-BFGS-B`, see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis.pdf).
+For an eagle-eye overview of `L-BFGS-B` and the genealogy `BFGS`->`L-BFGS`->`L-BFGS-B`,
+see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis.pdf).
 
 ## Related Software
 
-* [https://github.com/wilmerhenao/L-BFGS-B-NS](https://github.com/wilmerhenao/L-BFGS-B-NS): An L-BFGS-B-NS Optimizer for Non-Smooth Functions
+* [wilmerhenao/L-BFGS-B-NS](https://github.com/wilmerhenao/L-BFGS-B-NS): An L-BFGS-B-NS Optimizer for Non-Smooth Functions
 * [pcarbo/lbfgsb-matlab](https://github.com/pcarbo/lbfgsb-matlab): A MATLAB interface for L-BFGS-B
 * [bgranzow/L-BFGS-B](https://github.com/bgranzow/L-BFGS-B): A pure Matlab implementation of L-BFGS-B (LBFGSB)
 * [constantino-garcia/lbfgsb_cpp_wrapper](https://github.com/constantino-garcia/lbfgsb_cpp_wrapper): A simple C++ wrapper around the original Fortran L-BGSG-B routine

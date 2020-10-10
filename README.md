@@ -8,34 +8,6 @@ or for large dense problems.
 `L-BFGS-B` can also be used for unconstrained problems, and in this case performs similarly to its predecessor,
 algorithm [`L-BFGS`](http://users.iems.northwestern.edu/~nocedal/lbfgs.html) (Harwell routine VA15). The algorithm is implemented in Fortran 77.
 
-The current release is version 3.0. The distribution file was last changed on 02/08/11.
-
-## Authors
-
-* [Ciyou Zhu](http://web.archive.org/web/19990129014554/http://www.ece.nwu.edu/%7Eciyou/)
-* Richard Byrd
-* [Jorge Nocedal](http://www.ece.northwestern.edu/~nocedal)
-* [Jose Luis Morales](http://web.archive.org/web/20080509084403/http://www.ece.northwestern.edu:80/~morales/)
-
-## Relevant Publications
-
-* R. H. Byrd, P. Lu, J. Nocedal and C. Zhu. [A Limited Memory Algorithm for Bound Constrained Optimization](https://doi.org/10.1137/0916069), (1995), SIAM Journal on Scientific and Statistical Computing , 16, 5, pp. 1190-1208
-* C. Zhu, R. H. Byrd and J. Nocedal. [L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/279232.279236) (1997), ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550 - 560
-* J.L. Morales and J. Nocedal. [L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/2049662.2049669) (2011), ACM Transactions on Mathematical Software, Vol. 38, Num. 1
-
-## Notes on this repository
-
-[I](https://github.com/jonathanschilling/) took the freedom to
-
-* put the L-BFGS-B code obtained from [the original website](http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz) up in this repository,
-* divide the subroutines and functions into separate files,
-* convert parts of the documentation into a format understandable to [doxygen](https://www.doxygen.nl/index.html) and
-* adjust the `Makefile` to accomodate the separate files and additionally generate a statically linked `liblbfgsb.a` library.
-
-This work was in no way intending to infringe any copyrights or take credit for others' work.
-Feel free to contact me at any time in case you noticed something against the rules.
-The following documentation is obtained from the archived version of the [original manual](http://web.archive.org/web/19991005125105/http://www.ece.nwu.edu:80/%7Eciyou/pp9/pp9.html).
-
 ## Introduction
 
 The purpose of algorithm L-BFGS-B is to minimize a nonlinear function of `n` variables,
@@ -92,3 +64,34 @@ L-BFGS-B is, at present, the only limited memory quasi-Newton algorithm capable 
 The advantages of L-BFGS-B are: (i) the code is easy to use, and the user need not supply information about the Hessian matrix or about the structure of the objective function; (ii) the storage requirements of the algorithm are modest and can be controlled by the user; (iii) the cost of the iteration is low, and is independent of the properties of the objective function. Due to this, L-BFGS-B is recommended for solving large problems in which the Hessian matrix is not sparse or is difficult to compute.
 
 However L-BFGS-B suffers from the following drawbacks: (i) it is not rapidly convergent, and on difficult problems can take a large number of function evaluations to converge; (ii) on highly ill-conditioned problems the algorithm may fail to obtain high accuracy in the solution; (iii) the algorithm cannot make use of knowledge about the structure of the problem to accelerate convergence. 
+
+
+
+
+## Authors
+
+* [Ciyou Zhu](http://web.archive.org/web/19990129014554/http://www.ece.nwu.edu/%7Eciyou/)
+* Richard Byrd
+* [Jorge Nocedal](http://www.ece.northwestern.edu/~nocedal)
+* [Jose Luis Morales](http://web.archive.org/web/20080509084403/http://www.ece.northwestern.edu:80/~morales/)
+
+## Relevant Publications
+
+* R. H. Byrd, P. Lu, J. Nocedal and C. Zhu. [A Limited Memory Algorithm for Bound Constrained Optimization](https://doi.org/10.1137/0916069), (1995), SIAM Journal on Scientific and Statistical Computing , 16, 5, pp. 1190-1208
+* C. Zhu, R. H. Byrd and J. Nocedal. [L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/279232.279236) (1997), ACM Transactions on Mathematical Software, Vol 23, Num. 4, pp. 550 - 560
+* J.L. Morales and J. Nocedal. [L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization](https://doi.org/10.1145/2049662.2049669) (2011), ACM Transactions on Mathematical Software, Vol. 38, Num. 1
+
+## Notes on this repository
+
+[I](https://github.com/jonathanschilling/) took the freedom to
+
+* put the L-BFGS-B code obtained from [the original website](http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz) up in this repository,
+* divide the subroutines and functions into separate files,
+* convert parts of the documentation into a format understandable to [doxygen](https://www.doxygen.nl/index.html) and
+* adjust the `Makefile` to accomodate the separate files and additionally generate a statically linked `liblbfgsb.a` library.
+
+The current release is version 3.0. The distribution file was last changed on 02/08/11.
+
+This work was in no way intending to infringe any copyrights or take credit for others' work.
+Feel free to contact me at any time in case you noticed something against the rules.
+Above documentation is obtained from the archived version of the [original manual](http://web.archive.org/web/19991005125105/http://www.ece.nwu.edu:80/%7Eciyou/pp9/pp9.html).

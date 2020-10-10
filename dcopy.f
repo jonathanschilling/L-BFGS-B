@@ -1,9 +1,15 @@
 c> \file dcopy.f
 
+c> \brief copies a vector, x, to a vector, y.
+c>        uses unrolled loops for increments equal to one.
+c>
+c> @param n dimensionality of vectors
+c> @param dx source vector
+c> @param incx spacing of elements in dx
+c> @param dy target vector
+c> @param incy spacing of elements in dy
       subroutine dcopy(n,dx,incx,dy,incy)
 c
-c     copies a vector, x, to a vector, y.
-c     uses unrolled loops for increments equal to one.
 c     jack dongarra, linpack, 3/11/78.
 c
       double precision dx(*),dy(*)

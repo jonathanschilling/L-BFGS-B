@@ -1,91 +1,68 @@
 c> \file dcstep.f
 
+c> \brief This subroutine computes a safeguarded step for a search
+c>        procedure and updates an interval that contains a step that
+c>        satisfies a sufficient decrease and a curvature condition.
+c> 
+c> The parameter stx contains the step with the least function
+c> value. If brackt is set to .true. then a minimizer has
+c> been bracketed in an interval with endpoints stx and sty.
+c> The parameter stp contains the current step. 
+c> The subroutine assumes that if brackt is set to .true. then
+c> 
+c>       min(stx,sty) < stp < max(stx,sty),
+c> 
+c> and that the derivative at stx is negative in the direction 
+c> of the step.
+c> 
+c> @param stx On entry stx is the best step obtained so far and is an
+c>               endpoint of the interval that contains the minimizer.<br/>
+c>            On exit stx is the updated best step.
+c> 
+c> @param fx On entry fx is the function at stx.<br/>
+c>           On exit fx is the function at stx.
+c> 
+c> @param dx On entry dx is the derivative of the function at 
+c>              stx. The derivative must be negative in the direction of 
+c>              the step, that is, dx and stp - stx must have opposite 
+c>              signs.<br/>
+c>           On exit dx is the derivative of the function at stx.
+c> 
+c> @param sty On entry sty is the second endpoint of the interval that 
+c>               contains the minimizer.<br/>
+c>            On exit sty is the updated endpoint of the interval that 
+c>               contains the minimizer.
+c> 
+c> @param fy On entry fy is the function at sty.<br/>
+c>           On exit fy is the function at sty.
+c> 
+c> @param dy On entry dy is the derivative of the function at sty.<br/>
+c>           On exit dy is the derivative of the function at the exit sty.
+c> 
+c> @param stp On entry stp is the current step. If brackt is set to .true.
+c>               then on input stp must be between stx and sty.<br/>
+c>            On exit stp is a new trial step.
+c> 
+c> @param fp On entry fp is the function at stp.<br/>
+c>           On exit fp is unchanged.
+c> 
+c> @param dp On entry dp is the the derivative of the function at stp.<br/>
+c>           On exit dp is unchanged.
+c> 
+c> @param brackt On entry brackt specifies if a minimizer has been bracketed.
+c>                  Initially brackt must be set to .false.<br/>
+c>               On exit brackt specifies if a minimizer has been bracketed.
+c>                  When a minimizer is bracketed brackt is set to .true.
+c> 
+c> @param stpmin On entry stpmin is a lower bound for the step.<br/>
+c>               On exit stpmin is unchanged.
+c> 
+c> @param stpmax On entry stpmax is an upper bound for the step.<br/>
+c>               On exit stpmax is unchanged.
       subroutine dcstep(stx,fx,dx,sty,fy,dy,stp,fp,dp,brackt,
      +                  stpmin,stpmax)
       logical brackt
       double precision stx,fx,dx,sty,fy,dy,stp,fp,dp,stpmin,stpmax
-c     **********
-c
-c     Subroutine dcstep
-c
-c     This subroutine computes a safeguarded step for a search
-c     procedure and updates an interval that contains a step that
-c     satisfies a sufficient decrease and a curvature condition.
-c
-c     The parameter stx contains the step with the least function
-c     value. If brackt is set to .true. then a minimizer has
-c     been bracketed in an interval with endpoints stx and sty.
-c     The parameter stp contains the current step. 
-c     The subroutine assumes that if brackt is set to .true. then
-c
-c           min(stx,sty) < stp < max(stx,sty),
-c
-c     and that the derivative at stx is negative in the direction 
-c     of the step.
-c
-c     The subroutine statement is
-c
-c       subroutine dcstep(stx,fx,dx,sty,fy,dy,stp,fp,dp,brackt,
-c                         stpmin,stpmax)
-c
-c     where
-c
-c       stx is a double precision variable.
-c         On entry stx is the best step obtained so far and is an
-c            endpoint of the interval that contains the minimizer. 
-c         On exit stx is the updated best step.
-c
-c       fx is a double precision variable.
-c         On entry fx is the function at stx.
-c         On exit fx is the function at stx.
-c
-c       dx is a double precision variable.
-c         On entry dx is the derivative of the function at 
-c            stx. The derivative must be negative in the direction of 
-c            the step, that is, dx and stp - stx must have opposite 
-c            signs.
-c         On exit dx is the derivative of the function at stx.
-c
-c       sty is a double precision variable.
-c         On entry sty is the second endpoint of the interval that 
-c            contains the minimizer.
-c         On exit sty is the updated endpoint of the interval that 
-c            contains the minimizer.
-c
-c       fy is a double precision variable.
-c         On entry fy is the function at sty.
-c         On exit fy is the function at sty.
-c
-c       dy is a double precision variable.
-c         On entry dy is the derivative of the function at sty.
-c         On exit dy is the derivative of the function at the exit sty.
-c
-c       stp is a double precision variable.
-c         On entry stp is the current step. If brackt is set to .true.
-c            then on input stp must be between stx and sty. 
-c         On exit stp is a new trial step.
-c
-c       fp is a double precision variable.
-c         On entry fp is the function at stp
-c         On exit fp is unchanged.
-c
-c       dp is a double precision variable.
-c         On entry dp is the the derivative of the function at stp.
-c         On exit dp is unchanged.
-c
-c       brackt is an logical variable.
-c         On entry brackt specifies if a minimizer has been bracketed.
-c            Initially brackt must be set to .false.
-c         On exit brackt specifies if a minimizer has been bracketed.
-c            When a minimizer is bracketed brackt is set to .true.
-c
-c       stpmin is a double precision variable.
-c         On entry stpmin is a lower bound for the step.
-c         On exit stpmin is unchanged.
-c
-c       stpmax is a double precision variable.
-c         On entry stpmax is an upper bound for the step.
-c         On exit stpmax is unchanged.
 c
 c     MINPACK-1 Project. June 1983
 c     Argonne National Laboratory. 

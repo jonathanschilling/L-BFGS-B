@@ -1,9 +1,16 @@
 c> \file daxpy.f
 
+c> \brief constant times a vector plus a vector.
+c>        uses unrolled loops for increments equal to one.
+c>
+c> @param n dimensionality of vectors
+c> @param da constant for scaling dx
+c> @param dx vector to be scaled and added to dy
+c> @param incx spacing between elements in dx
+c> @param dy target vector to which da*dx gets added element-wise
+c> @param incy spacing between elements in dy
       subroutine daxpy(n,da,dx,incx,dy,incy)
 c
-c     constant times a vector plus a vector.
-c     uses unrolled loops for increments equal to one.
 c     jack dongarra, linpack, 3/11/78.
 c
       double precision dx(*),dy(*),da

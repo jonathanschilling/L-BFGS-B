@@ -1,133 +1,99 @@
 c> \file dcsrch.f
 
+c> \brief This subroutine finds a step that satisfies a sufficient
+c>        decrease condition and a curvature condition.
+c>
+c> Each call of the subroutine updates an interval with 
+c> endpoints stx and sty. The interval is initially chosen 
+c> so that it contains a minimizer of the modified function
+c>
+c>       psi(stp) = f(stp) - f(0) - ftol*stp*f'(0).
+c>
+c> If psi(stp) <= 0 and f'(stp) >= 0 for some step, then the
+c> interval is chosen so that it contains a minimizer of f. 
+c>
+c> The algorithm is designed to find a step that satisfies 
+c> the sufficient decrease condition 
+c>
+c>       f(stp) <= f(0) + ftol*stp*f'(0),
+c>
+c> and the curvature condition
+c>
+c>       abs(f'(stp)) <= gtol*abs(f'(0)).
+c>
+c> If ftol is less than gtol and if, for example, the function
+c> is bounded below, then there is always a step which satisfies
+c> both conditions. 
+c>
+c> If no step can be found that satisfies both conditions, then 
+c> the algorithm stops with a warning. In this case stp only 
+c> satisfies the sufficient decrease condition.
+c>
+c> A typical invocation of dcsrch has the following outline:
+c>
+c> ```Fortran
+c>     task = 'START'
+c>  10 continue
+c>     call dcsrch( ... )
+c>     if (task .eq. 'FG') then
+c>       Evaluate the function and the gradient at stp 
+c>     goto 10
+c>     end if
+c> ```
+c> 
+c> NOTE: The user must no alter work arrays between calls.
+c>
+c> @param f On initial entry f is the value of the function at 0.<br/>
+c>          On subsequent entries f is the value of the 
+c>             function at stp.<br/>
+c>          On exit f is the value of the function at stp.
+c> @param g On initial entry g is the derivative of the function at 0.<br/>
+c>          On subsequent entries g is the derivative of the 
+c>             function at stp.<br/>
+c>          On exit g is the derivative of the function at stp.
+c> @param stp On entry stp is the current estimate of a satisfactory 
+c>               step. On initial entry, a positive initial estimate 
+c>               must be provided.<br/>
+c>            On exit stp is the current estimate of a satisfactory step
+c>               if task = 'FG'. If task = 'CONV' then stp satisfies
+c>               the sufficient decrease and curvature condition.
+c> @param ftol On entry ftol specifies a nonnegative tolerance for the 
+c>                sufficient decrease condition.<br/>
+c>             On exit ftol is unchanged.
+c> @param gtol On entry gtol specifies a nonnegative tolerance for the 
+c>                curvature condition.<br/>
+c>             On exit gtol is unchanged.
+c> @param xtol On entry xtol specifies a nonnegative relative tolerance
+c>                for an acceptable step. The subroutine exits with a
+c>                warning if the relative difference between sty and stx
+c>                is less than xtol.<br/>
+c>             On exit xtol is unchanged.
+c> @param stpmin On entry stpmin is a nonnegative lower bound for the step.<br/>
+c>               On exit stpmin is unchanged.
+c> @param stpmax On entry stpmax is a nonnegative upper bound for the step.<br/>
+c>               On exit stpmax is unchanged.
+c> @param task On initial entry task must be set to 'START'.<br/>
+c>             On exit task indicates the required action:
+c>             <ul>
+c>             <li>If task(1:2) = 'FG' then evaluate the function and
+c>                 derivative at stp and call dcsrch again.</li>
+c>             <li>If task(1:4) = 'CONV' then the search is successful.</li>
+c>             <li>If task(1:4) = 'WARN' then the subroutine is not able
+c>                 to satisfy the convergence conditions. The exit value of
+c>                 stp contains the best point found during the search.</li>
+c>             <li>If task(1:5) = 'ERROR' then there is an error in the
+c>                 input arguments.</li>
+c>             </ul>
+c>             On exit with convergence, a warning or an error, the
+c>                variable task contains additional information.
+c> @param isave work array
+c> @param dsave work array
       subroutine dcsrch(f,g,stp,ftol,gtol,xtol,stpmin,stpmax,
      +                  task,isave,dsave)
       character*(*) task
       integer isave(2)
       double precision f,g,stp,ftol,gtol,xtol,stpmin,stpmax
       double precision dsave(13)
-c     **********
-c
-c     Subroutine dcsrch
-c
-c     This subroutine finds a step that satisfies a sufficient
-c     decrease condition and a curvature condition.
-c
-c     Each call of the subroutine updates an interval with 
-c     endpoints stx and sty. The interval is initially chosen 
-c     so that it contains a minimizer of the modified function
-c
-c           psi(stp) = f(stp) - f(0) - ftol*stp*f'(0).
-c
-c     If psi(stp) <= 0 and f'(stp) >= 0 for some step, then the
-c     interval is chosen so that it contains a minimizer of f. 
-c
-c     The algorithm is designed to find a step that satisfies 
-c     the sufficient decrease condition 
-c
-c           f(stp) <= f(0) + ftol*stp*f'(0),
-c
-c     and the curvature condition
-c
-c           abs(f'(stp)) <= gtol*abs(f'(0)).
-c
-c     If ftol is less than gtol and if, for example, the function
-c     is bounded below, then there is always a step which satisfies
-c     both conditions. 
-c
-c     If no step can be found that satisfies both conditions, then 
-c     the algorithm stops with a warning. In this case stp only 
-c     satisfies the sufficient decrease condition.
-c
-c     A typical invocation of dcsrch has the following outline:
-c
-c     task = 'START'
-c  10 continue
-c        call dcsrch( ... )
-c        if (task .eq. 'FG') then
-c           Evaluate the function and the gradient at stp 
-c           goto 10
-c           end if
-c
-c     NOTE: The user must no alter work arrays between calls.
-c
-c     The subroutine statement is
-c
-c        subroutine dcsrch(f,g,stp,ftol,gtol,xtol,stpmin,stpmax,
-c                          task,isave,dsave)
-c     where
-c
-c       f is a double precision variable.
-c         On initial entry f is the value of the function at 0.
-c            On subsequent entries f is the value of the 
-c            function at stp.
-c         On exit f is the value of the function at stp.
-c
-c       g is a double precision variable.
-c         On initial entry g is the derivative of the function at 0.
-c            On subsequent entries g is the derivative of the 
-c            function at stp.
-c         On exit g is the derivative of the function at stp.
-c
-c       stp is a double precision variable. 
-c         On entry stp is the current estimate of a satisfactory 
-c            step. On initial entry, a positive initial estimate 
-c            must be provided. 
-c         On exit stp is the current estimate of a satisfactory step
-c            if task = 'FG'. If task = 'CONV' then stp satisfies
-c            the sufficient decrease and curvature condition.
-c
-c       ftol is a double precision variable.
-c         On entry ftol specifies a nonnegative tolerance for the 
-c            sufficient decrease condition.
-c         On exit ftol is unchanged.
-c
-c       gtol is a double precision variable.
-c         On entry gtol specifies a nonnegative tolerance for the 
-c            curvature condition. 
-c         On exit gtol is unchanged.
-c
-c       xtol is a double precision variable.
-c         On entry xtol specifies a nonnegative relative tolerance
-c            for an acceptable step. The subroutine exits with a
-c            warning if the relative difference between sty and stx
-c            is less than xtol.
-c         On exit xtol is unchanged.
-c
-c       stpmin is a double precision variable.
-c         On entry stpmin is a nonnegative lower bound for the step.
-c         On exit stpmin is unchanged.
-c
-c       stpmax is a double precision variable.
-c         On entry stpmax is a nonnegative upper bound for the step.
-c         On exit stpmax is unchanged.
-c
-c       task is a character variable of length at least 60.
-c         On initial entry task must be set to 'START'.
-c         On exit task indicates the required action:
-c
-c            If task(1:2) = 'FG' then evaluate the function and 
-c            derivative at stp and call dcsrch again.
-c
-c            If task(1:4) = 'CONV' then the search is successful.
-c
-c            If task(1:4) = 'WARN' then the subroutine is not able
-c            to satisfy the convergence conditions. The exit value of
-c            stp contains the best point found during the search.
-c
-c            If task(1:5) = 'ERROR' then there is an error in the
-c            input arguments.
-c
-c         On exit with convergence, a warning or an error, the
-c            variable task contains additional information.
-c
-c       isave is an integer work array of dimension 2.
-c         
-c       dsave is a double precision work array of dimension 13.
-c
-c     Subprograms called
-c
-c       MINPACK-2 ... dcstep
 c
 c     MINPACK-1 Project. June 1983.
 c     Argonne National Laboratory. 

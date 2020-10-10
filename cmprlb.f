@@ -1,5 +1,25 @@
 c> \file cmprlb.f
 
+c> \brief This subroutine computes r=-Z'B(xcp-xk)-Z'g by using 
+c>        wa(2m+1)=W'(xcp-x) from subroutine cauchy.
+c> @param n number of parameters
+c> @param m history size of Hessian approximation
+c> @param x position
+c> @param g gradient
+c> @param ws part of L-BFGS matrix
+c> @param wy part of L-BFGS matrix
+c> @param sy part of L-BFGS matrix
+c> @param wt part of L-BFGS matrix
+c> @param z TODO
+c> @param r TODO
+c> @param wa TODO
+c> @param index TODO
+c> @param theta TODO
+c> @param col TODO
+c> @param head TODO
+c> @param nfree TODO
+c> @param cnstnd TODO
+c> @param info TODO
       subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, 
      +                 theta, col, head, nfree, cnstnd, info)
  
@@ -8,18 +28,6 @@ c> \file cmprlb.f
       double precision theta, 
      +                 x(n), g(n), z(n), r(n), wa(4*m), 
      +                 ws(n, m), wy(n, m), sy(m, m), wt(m, m)
-
-c     ************
-c
-c     Subroutine cmprlb 
-c
-c       This subroutine computes r=-Z'B(xcp-xk)-Z'g by using 
-c         wa(2m+1)=W'(xcp-x) from subroutine cauchy.
-c
-c     Subprograms called:
-c
-c       L-BFGS-B Library ... bmv.
-c
 c
 c                           *  *  *
 c

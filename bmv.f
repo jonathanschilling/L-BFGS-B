@@ -5,18 +5,18 @@ c>        in the compact L-BFGS formula of B and a 2m vector v;
 c>        it returns the product in p.
 c>
 c> @param m On entry m is the maximum number of variable metric corrections
-c>            used to define the limited memory matrix.<br/>
+c>             used to define the limited memory matrix.<br/>
 c>          On exit m is unchanged.
 c>
 c> @param sy On entry sy specifies the matrix S'Y.<br/>
 c>           On exit sy is unchanged.
 c>
 c> @param wt On entry wt specifies the upper triangular matrix J' which is 
-c>             the Cholesky factor of (thetaS'S+LD^(-1)L').<br/>
+c>              the Cholesky factor of (thetaS'S+LD^(-1)L').<br/>
 c>           On exit wt is unchanged.
 c>
 c> @param col On entry col specifies the number of s-vectors (or y-vectors)
-c>              stored in the compact L-BFGS formula.<br/>
+c>               stored in the compact L-BFGS formula.<br/>
 c>            On exit col is unchanged.
 c>
 c> @param v On entry v specifies vector v.<br/>

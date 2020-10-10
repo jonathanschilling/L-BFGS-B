@@ -24,11 +24,11 @@ c> @param u On entry u is the upper bound of x.<br/>
 c>          On exit u is unchanged.
 c>
 c> @param nbd On entry nbd represents the type of bounds imposed on the
-c>            variables, and must be specified as follows:
-c>            nbd(i)=<ul><li>0 if x(i) is unbounded,</li>
-c>                       <li>1 if x(i) has only a lower bound,</li>
-c>                       <li>2 if x(i) has both lower and upper bounds, and</li>
-c>                       <li>3 if x(i) has only an upper bound.</li></ul>
+c>               variables, and must be specified as follows:
+c>               nbd(i)=<ul><li>0 if x(i) is unbounded,</li>
+c>                          <li>1 if x(i) has only a lower bound,</li>
+c>                          <li>2 if x(i) has both lower and upper bounds, and</li>
+c>                          <li>3 if x(i) has only an upper bound.</li></ul>
 c>            On exit nbd is unchanged.
 c>
 c> @param g On entry g is the gradient of f(x). g must be a nonzero vector.<br/>
@@ -47,14 +47,14 @@ c>                               are indices of variables which
 c>                               have no bound constraits along the search direction.</li></ul>
 c>
 c> @param iwhere On entry iwhere indicates only the permanently fixed (iwhere=3)
-c>                 or free (iwhere= -1) components of x.<br/>
+c>                  or free (iwhere= -1) components of x.<br/>
 c>               On exit iwhere records the status of the current x variables.
-c>                 iwhere(i)=<ul><li>-3  if x(i) is free and has bounds, but is not moved</li>
-c>                               <li> 0   if x(i) is free and has bounds, and is moved</li>
-c>                               <li> 1   if x(i) is fixed at l(i), and l(i) .ne. u(i)</li>
-c>                               <li> 2   if x(i) is fixed at u(i), and u(i) .ne. l(i)</li>
-c>                               <li> 3   if x(i) is always fixed, i.e.,  u(i)=x(i)=l(i)</li>
-c>                               <li>-1  if x(i) is always free, i.e., it has no bounds.</li></ul>
+c>                  iwhere(i)=<ul><li>-3  if x(i) is free and has bounds, but is not moved</li>
+c>                                <li> 0   if x(i) is free and has bounds, and is moved</li>
+c>                                <li> 1   if x(i) is fixed at l(i), and l(i) .ne. u(i)</li>
+c>                                <li> 2   if x(i) is fixed at u(i), and u(i) .ne. l(i)</li>
+c>                                <li> 3   if x(i) is always fixed, i.e.,  u(i)=x(i)=l(i)</li>
+c>                                <li>-1  if x(i) is always free, i.e., it has no bounds.</li></ul>
 c>
 c> @param t working array; will be used to store the break points.
 c>
@@ -63,35 +63,35 @@ c>
 c> @param xcp returns the GCP on exit
 c>
 c> @param m On entry m is the maximum number of variable metric corrections 
-c>            used to define the limited memory matrix.<br/>
+c>             used to define the limited memory matrix.<br/>
 c>          On exit m is unchanged.
 c>
 c> @param ws On entry this stores S, a set of s-vectors, that defines the
-c>           limited memory BFGS matrix.<br/>
+c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
 c>
 c> @param wy On entry this stores Y, a set of y-vectors, that defines the
-c>           limited memory BFGS matrix.<br/>
+c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
 c>
 c> @param sy On entry this stores S'Y, that defines the
-c>           limited memory BFGS matrix.<br/>
+c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
 c>
 c> @param wt On entry this stores the
-c>           Cholesky factorization of (theta*S'S+LD^(-1)L'), that defines the
-c>           limited memory BFGS matrix.<br/>
+c>              Cholesky factorization of (theta*S'S+LD^(-1)L'), that defines the
+c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
 c>
 c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
 c>              On exit theta is unchanged.
 c>
 c> @param col On entry col is the actual number of variable metric
-c>              corrections stored so far.<br/>
+c>               corrections stored so far.<br/>
 c>            On exit col is unchanged.
 c>
 c> @param head On entry head is the location of the first s-vector (or y-vector)
-c>               in S (or Y).<br/>
+c>                in S (or Y).<br/>
 c>             On exit col is unchanged.
 c>
 c> @param p will be used to store the vector p = W^(T)d.
@@ -104,7 +104,7 @@ c>
 c> @param v working array
 c>
 c> @param nseg On exit nseg records the number of quadratic segments explored
-c>               in searching for the GCP.
+c>                in searching for the GCP.
 c> 
 c> @param iprint variable that must be set by the user.<br/>
 c>       It controls the frequency and type of output generated:

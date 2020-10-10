@@ -7,12 +7,11 @@ c> @param l lower bounds on parameters
 c> @param u upper bounds on parameters
 c> @param nbd indicates which bounds are present
 c> @param x position
-c> @param iwhere
-c>      On entry iwhere is unspecified.<br/>
-c>      On exit: iwhere(i)=<ul><li>-1  if x(i) has no bounds</li>
-c>                             <li> 3   if l(i)=u(i),</li>
-c>                             <li> 0   otherwise.</li></ul>
-c>      In cauchy, iwhere is given finer gradations.
+c> @param iwhere On entry iwhere is unspecified.<br/>
+c>               On exit: iwhere(i)=<ul><li>-1  if x(i) has no bounds</li>
+c>                                      <li> 3   if l(i)=u(i),</li>
+c>                                      <li> 0   otherwise.</li></ul>
+c>               In cauchy, iwhere is given finer gradations.
 c> @param iprint console output flag
 c> @param prjctd TODO
 c> @param cnstnd TODO

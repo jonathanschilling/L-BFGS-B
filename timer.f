@@ -1,18 +1,16 @@
 c> \file timer.f
 
-c                                                                                      
-c  L-BFGS-B is released under the “New BSD License” (aka “Modified BSD License”        
-c  or “3-clause license”)                                                              
-c  Please read attached file License.txt                                               
-c                                        
+c> \brief This routine computes cpu time in double precision.
+c>
+c> This routine computes cpu time in double precision; it makes use of 
+c> the intrinsic f90 cpu_time therefore a conversion type is
+c> needed.
+c>
+c> @param ttime CPU time in double precision
       subroutine timer(ttime)
       double precision ttime
 c
       real temp
-c
-c     This routine computes cpu time in double precision; it makes use of 
-c     the intrinsic f90 cpu_time therefore a conversion type is
-c     needed.
 c
 c           J.L Morales  Departamento de Matematicas, 
 c                        Instituto Tecnologico Autonomo de Mexico

@@ -1,5 +1,45 @@
 c> \file lnsrlb.f
 
+c> \brief This subroutine calls subroutine dcsrch from the Minpack2 library
+c>        to perform the line search.  Subroutine dscrch is safeguarded so
+c>        that all trial points lie within the feasible region.
+c> 
+c> @param n number of parameters
+c> @param l lower bounds of parameters
+c> @param u upper bounds of parameters
+c> @param nbd On entry nbd represents the type of bounds imposed on the
+c>               variables, and must be specified as follows:
+c>               nbd(i)=<ul><li>0 if x(i) is unbounded,</li>
+c>                          <li>1 if x(i) has only a lower bound,</li>
+c>                          <li>2 if x(i) has both lower and upper bounds, and</li>
+c>                          <li>3 if x(i) has only an upper bound.</li></ul>
+c>            On exit nbd is unchanged.
+c> @param x position
+c> @param f function value at x
+c> @param fold TODO
+c> @param gd TODO
+c> @param gdold TODO
+c> @param g gradient of f at x
+c> @param d TODO
+c> @param r TODO
+c> @param t TODO
+c> @param z TODO
+c> @param stp TODO
+c> @param dnorm TODO
+c> @param dtd TODO
+c> @param xstep TODO
+c> @param stpmx TODO
+c> @param iter TODO
+c> @param ifun TODO
+c> @param iback TODO
+c> @param nfgv TODO
+c> @param info TODO
+c> @param task TODO
+c> @param boxed TODO
+c> @param cnstnd TODO
+c> @param csave working array
+c> @param isave working array
+c> @param dsave working array
       subroutine lnsrlb(n, l, u, nbd, x, f, fold, gd, gdold, g, d, r, t,
      +                  z, stp, dnorm, dtd, xstep, stpmx, iter, ifun,
      +                  iback, nfgv, info, task, boxed, cnstnd, csave,
@@ -12,20 +52,6 @@ c> \file lnsrlb.f
       double precision f, fold, gd, gdold, stp, dnorm, dtd, xstep,
      +                 stpmx, x(n), l(n), u(n), g(n), d(n), r(n), t(n),
      +                 z(n), dsave(13)
-c     **********
-c
-c     Subroutine lnsrlb
-c
-c     This subroutine calls subroutine dcsrch from the Minpack2 library
-c       to perform the line search.  Subroutine dscrch is safeguarded so
-c       that all trial points lie within the feasible region.
-c
-c     Subprograms called:
-c
-c       Minpack2 Library ... dcsrch.
-c
-c       Linpack ... dtrsl, ddot.
-c
 c
 c                           *  *  *
 c

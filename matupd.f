@@ -1,5 +1,51 @@
 c> \file matupd.f
 
+c> \brief This subroutine updates matrices WS and WY, and forms the
+c>        middle matrix in B.
+c>
+c> This subroutine updates matrices WS and WY, and forms the
+c> middle matrix in B.
+c> 
+c> @param n On entry n is the number of variables.<br/>
+c>          On exit n is unchanged.
+c>
+c> @param m On entry m is the maximum number of variable metric
+c>             corrections allowed in the limited memory matrix.<br/>
+c>          On exit m is unchanged.
+c>
+c> @param ws On entry this stores S, a set of s-vectors, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param wy On entry this stores Y, a set of y-vectors, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param sy On entry this stores S'Y, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param ss On entry this stores S'S, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c> @param d TODO
+c> @param r TODO
+c> @param itail TODO
+c> @param iupdat TODO
+c> @param col On entry col is the actual number of variable metric
+c>               corrections stored so far.<br/>
+c>            On exit col is unchanged.
+c>
+c> @param head On entry head is the location of the first s-vector (or y-vector)
+c>                in S (or Y).<br/>
+c>             On exit col is unchanged.
+c>
+c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
+c>              On exit theta is unchanged.
+c> @param rr TODO
+c> @param dr TODO
+c> @param stp TODO
+c> @param dtd TODO
       subroutine matupd(n, m, ws, wy, sy, ss, d, r, itail, 
      +                  iupdat, col, head, theta, rr, dr, stp, dtd)
  
@@ -7,17 +53,6 @@ c> \file matupd.f
       double precision theta, rr, dr, stp, dtd, d(n), r(n), 
      +                 ws(n, m), wy(n, m), sy(m, m), ss(m, m)
 
-c     ************
-c
-c     Subroutine matupd
-c
-c       This subroutine updates matrices WS and WY, and forms the
-c         middle matrix in B.
-c
-c     Subprograms called:
-c
-c       Linpack ... dcopy, ddot.
-c
 c
 c                           *  *  *
 c

@@ -1,39 +1,31 @@
 c> \file dpofa.f
 
+c> \brief factors a double precision symmetric positive definite matrix.
+c>
+c> dpofa is usually called by dpoco, but it can be called
+c> directly with a saving in time if  rcond  is not needed.
+c> (time for dpoco) = (1 + 18/n)*(time for dpofa) .
+c>
+c> @param a On entry, this is the symmetric matrix to be factored.
+c>             Only the diagonal and upper triangle are used.<br/>
+c>          On exit this is an upper triangular matrix  r  so that  a = trans(r)*r
+c>             where  trans(r)  is the transpose.
+c>             The strict lower triangle is unaltered.
+c>             If  info .ne. 0 , the factorization is not complete.
+c>
+c> @param lda On entry, this is the leading dimension of the array  a .<br/>
+c>            On exit, this value is unaltered.
+c> @param n On entry, this is the order of the matrix  a .<br/>
+c>          On exit, this value is unaltered.
+c> @param info On exit, this signals success:
+c>             <ul>
+c>             <li>= 0  for normal return.</li>
+c>             <li>= k  signals an error condition.  the leading minor
+c>                 of order  k  is not positive definite.</li>
+c>             </ul>
       subroutine dpofa(a,lda,n,info)
       integer lda,n,info
       double precision a(lda,*)
-c
-c     dpofa factors a double precision symmetric positive definite
-c     matrix.
-c
-c     dpofa is usually called by dpoco, but it can be called
-c     directly with a saving in time if  rcond  is not needed.
-c     (time for dpoco) = (1 + 18/n)*(time for dpofa) .
-c
-c     on entry
-c
-c        a       double precision(lda, n)
-c                the symmetric matrix to be factored.  only the
-c                diagonal and upper triangle are used.
-c
-c        lda     integer
-c                the leading dimension of the array  a .
-c
-c        n       integer
-c                the order of the matrix  a .
-c
-c     on return
-c
-c        a       an upper triangular matrix  r  so that  a = trans(r)*r
-c                where  trans(r)  is the transpose.
-c                the strict lower triangle is unaltered.
-c                if  info .ne. 0 , the factorization is not complete.
-c
-c        info    integer
-c                = 0  for normal return.
-c                = k  signals an error condition.  the leading minor
-c                     of order  k  is not positive definite.
 c
 c     linpack.  this version dated 08/14/78 .
 c     cleve moler, university of new mexico, argonne national lab.

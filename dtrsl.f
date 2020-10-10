@@ -1,54 +1,37 @@
 c> \file dtrsl.f
 
+c> \brief dtrsl solves triangular systems.
+c>
+c> dtrsl solves systems of the form
+c>
+c>               t * x = b
+c> or
+c>               trans(t) * x = b
+c>
+c> where t is a triangular matrix of order n. here trans(t)
+c> denotes the transpose of the matrix t.
+c> @param t On entry, t contains the matrix of the system. the zero
+c>             elements of the matrix are not referenced, and
+c>             the corresponding elements of the array can be
+c>             used to store other information.
+c> @param ldt On entry, ldt is the leading dimension of the array t.
+c> @param n On entry, n is the order of the system.
+c> @param b On entry, b contains the right hand side of the system.<br/>
+c>          On exit, b contains the solution, if info .eq. 0.
+c>             otherwise b is unaltered.
+c> @param job On entry, job specifies what kind of system is to be solved.
+c>            if job is<ul>
+c>                     <li>00   solve t*x=b, t lower triangular,</li>
+c>                     <li>01   solve t*x=b, t upper triangular,</li>
+c>                     <li>10   solve trans(t)*x=b, t lower triangular,</li>
+c>                     <li>11   solve trans(t)*x=b, t upper triangular.</li>
+c>                     </ul>
+c> @param info On exit, info contains zero if the system is nonsingular.
+c>                otherwise info contains the index of
+c>                the first zero diagonal element of t.
       subroutine dtrsl(t,ldt,n,b,job,info)
       integer ldt,n,job,info
       double precision t(ldt,*),b(*)
-c
-c
-c     dtrsl solves systems of the form
-c
-c                   t * x = b
-c     or
-c                   trans(t) * x = b
-c
-c     where t is a triangular matrix of order n. here trans(t)
-c     denotes the transpose of the matrix t.
-c
-c     on entry
-c
-c         t         double precision(ldt,n)
-c                   t contains the matrix of the system. the zero
-c                   elements of the matrix are not referenced, and
-c                   the corresponding elements of the array can be
-c                   used to store other information.
-c
-c         ldt       integer
-c                   ldt is the leading dimension of the array t.
-c
-c         n         integer
-c                   n is the order of the system.
-c
-c         b         double precision(n).
-c                   b contains the right hand side of the system.
-c
-c         job       integer
-c                   job specifies what kind of system is to be solved.
-c                   if job is
-c
-c                        00   solve t*x=b, t lower triangular,
-c                        01   solve t*x=b, t upper triangular,
-c                        10   solve trans(t)*x=b, t lower triangular,
-c                        11   solve trans(t)*x=b, t upper triangular.
-c
-c     on return
-c
-c         b         b contains the solution, if info .eq. 0.
-c                   otherwise b is unaltered.
-c
-c         info      integer
-c                   info contains zero if the system is nonsingular.
-c                   otherwise info contains the index of
-c                   the first zero diagonal element of t.
 c
 c     linpack. this version dated 08/14/78 .
 c     g. w. stewart, university of maryland, argonne national lab.

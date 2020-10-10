@@ -62,3 +62,5 @@ The current release is version 3.0. The distribution file was last changed on 02
 This work was in no way intending to infringe any copyrights or take credit for others' work.
 Feel free to contact me at any time in case you noticed something against the rules.
 Above documentation is obtained from the archived version of the [original manual](http://web.archive.org/web/19991005125105/http://www.ece.nwu.edu:80/%7Eciyou/pp9/pp9.html).
+
+A PDF version of the documentation is available here: [L-BFGS-B.pdf](https://github.com/jonathanschilling/L-BFGS-B/blob/gh-pages/L-BFGS-B.pdf).

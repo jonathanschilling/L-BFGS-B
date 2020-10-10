@@ -1,17 +1,23 @@
 c> \file errclb.f
 
+c> \brief This subroutine checks the validity of the input data.
+c>
+c> This subroutine checks the validity of the input data.
+c>
+c> @param n number of parameters
+c> @param m history size of approximated Hessian
+c> @param factr convergence criterion on function value
+c> @param l lower bounds for parameters
+c> @param u upper bounds for parameters
+c> @param nbd indicates which bounds are present
+c> @param task what task is to be performed
+c> @param info error/success indicator
+c> @param k index of last errournous parameter
       subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
  
       character*60     task
       integer          n, m, info, k, nbd(n)
       double precision factr, l(n), u(n)
-
-c     ************
-c
-c     Subroutine errclb
-c
-c     This subroutine checks the validity of the input data.
-c
 c
 c                           *  *  *
 c

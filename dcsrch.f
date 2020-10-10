@@ -3,6 +3,9 @@ c> \file dcsrch.f
 c> \brief This subroutine finds a step that satisfies a sufficient
 c>        decrease condition and a curvature condition.
 c>
+c> This subroutine finds a step that satisfies a sufficient
+c> decrease condition and a curvature condition.
+c>
 c> Each call of the subroutine updates an interval with 
 c> endpoints stx and sty. The interval is initially chosen 
 c> so that it contains a minimizer of the modified function

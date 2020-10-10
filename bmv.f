@@ -1,8 +1,11 @@
 c> \file bmv.f
 
 c> \brief This subroutine computes the product of the 2m x 2m middle matrix 
-c>        in the compact L-BFGS formula of B and a 2m vector v;  
-c>        it returns the product in p.
+c>        in the compact L-BFGS formula of B and a 2m vector v.
+c> 
+c> This subroutine computes the product of the 2m x 2m middle matrix 
+c> in the compact L-BFGS formula of B and a 2m vector v;  
+c> it returns the product in p.
 c>
 c> @param m On entry m is the maximum number of variable metric corrections
 c>             used to define the limited memory matrix.<br/>

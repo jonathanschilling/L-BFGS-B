@@ -1,5 +1,91 @@
 c> \file formk.f
 
+c> \brief Forms the LEL^T factorization of the indefinite matrix K.
+c> 
+c> This subroutine forms the LEL^T factorization of the indefinite matrix
+c>
+c> K = [-D -Y'ZZ'Y/theta     L_a'-R_z'  ]
+c>     [L_a -R_z           theta*S'AA'S ]
+c>                                    where E = [-I  0]
+c>                                              [ 0  I]
+c>
+c> The matrix K can be shown to be equal to the matrix M^[-1]N
+c>   occurring in section 5.1 of [1], as well as to the matrix
+c>   Mbar^[-1] Nbar in section 5.3.
+c>
+c> @param n On entry n is the dimension of the problem.<br/>
+c>          On exit n is unchanged.
+c>
+c> @param nsub On entry nsub is the number of subspace variables in free set.<br/>
+c>             On exit nsub is not changed.
+c>
+c> @param ind On entry ind specifies the indices of subspace variables.<br/>
+c>            On exit ind is unchanged. 
+c>
+c> @param nenter On entry nenter is the number of variables entering the 
+c>                  free set.<br/>
+c>               On exit nenter is unchanged. 
+c>
+c> @param ileave On entry indx2(ileave),...,indx2(n) are the variables leaving
+c>                  the free set.<br/>
+c>               On exit ileave is unchanged. 
+c>
+c> @param indx2 On entry indx2(1),...,indx2(nenter) are the variables entering
+c>                 the free set, while indx2(ileave),...,indx2(n) are the
+c>                 variables leaving the free set.<br/>
+c>              On exit indx2 is unchanged. 
+c>
+c> @param iupdat On entry iupdat is the total number of BFGS updates made so far.<br/>
+c>               On exit iupdat is unchanged. 
+c>
+c> @param updatd On entry 'updatd' is true if the L-BFGS matrix is updated.<br/>
+c>               On exit 'updatd' is unchanged. 
+c>
+c> @param wn On entry wn is unspecified.<br/>
+c>           On exit the upper triangle of wn stores the LEL^T factorization
+c>              of the 2*col x 2*col indefinite matrix
+c>                         [-D -Y'ZZ'Y/theta     L_a'-R_z'  ]
+c>                         [L_a -R_z           theta*S'AA'S ]
+c>
+c> @param wn1 On entry wn1 stores the lower triangular part of 
+c>                          [Y' ZZ'Y   L_a'+R_z']
+c>                          [L_a+R_z   S'AA'S   ]
+c>               in the previous iteration.<br/>
+c>            On exit wn1 stores the corresponding updated matrices.<br/>
+c>            The purpose of wn1 is just to store these inner products
+c>            so they can be easily updated and inserted into wn.
+c>
+c> @param m On entry m is the maximum number of variable metric corrections
+c>             used to define the limited memory matrix.<br/>
+c>          On exit m is unchanged.
+c>
+c> @param ws On entry this stores S, a set of s-vectors, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param wy On entry this stores Y, a set of y-vectors, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param sy On entry this stores S'Y, that defines the
+c>              limited memory BFGS matrix.<br/>
+c>           On exit this array is unchanged.
+c>
+c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
+c>              On exit theta is unchanged.
+c>
+c> @param col On entry col is the actual number of variable metric
+c>               corrections stored so far.<br/>
+c>            On exit col is unchanged.
+c>
+c> @param head On entry head is the location of the first s-vector (or y-vector)
+c>                in S (or Y).<br/>
+c>             On exit col is unchanged.
+c>
+c> @param info On entry info is unspecified.<br/>
+c>             On exit info<ul><li>=  0 for normal return;</li>
+c>                             <li>= -1 when the 1st Cholesky factorization failed;</li>
+c>                             <li>= -2 when the 2st Cholesky factorization failed.</li></ul>
       subroutine formk(n, nsub, ind, nenter, ileave, indx2, iupdat, 
      +                 updatd, wn, wn1, m, ws, wy, sy, theta, col,
      +                 head, info)
@@ -9,104 +95,6 @@ c> \file formk.f
       double precision theta, wn(2*m, 2*m), wn1(2*m, 2*m),
      +                 ws(n, m), wy(n, m), sy(m, m)
       logical          updatd
-
-c     ************
-c
-c     Subroutine formk 
-c
-c     This subroutine forms  the LEL^T factorization of the indefinite
-c
-c       matrix    K = [-D -Y'ZZ'Y/theta     L_a'-R_z'  ]
-c                     [L_a -R_z           theta*S'AA'S ]
-c                                                    where E = [-I  0]
-c                                                              [ 0  I]
-c     The matrix K can be shown to be equal to the matrix M^[-1]N
-c       occurring in section 5.1 of [1], as well as to the matrix
-c       Mbar^[-1] Nbar in section 5.3.
-c
-c     n is an integer variable.
-c       On entry n is the dimension of the problem.
-c       On exit n is unchanged.
-c
-c     nsub is an integer variable
-c       On entry nsub is the number of subspace variables in free set.
-c       On exit nsub is not changed.
-c
-c     ind is an integer array of dimension nsub.
-c       On entry ind specifies the indices of subspace variables.
-c       On exit ind is unchanged. 
-c
-c     nenter is an integer variable.
-c       On entry nenter is the number of variables entering the 
-c         free set.
-c       On exit nenter is unchanged. 
-c
-c     ileave is an integer variable.
-c       On entry indx2(ileave),...,indx2(n) are the variables leaving
-c         the free set.
-c       On exit ileave is unchanged. 
-c
-c     indx2 is an integer array of dimension n.
-c       On entry indx2(1),...,indx2(nenter) are the variables entering
-c         the free set, while indx2(ileave),...,indx2(n) are the
-c         variables leaving the free set.
-c       On exit indx2 is unchanged. 
-c
-c     iupdat is an integer variable.
-c       On entry iupdat is the total number of BFGS updates made so far.
-c       On exit iupdat is unchanged. 
-c
-c     updatd is a logical variable.
-c       On entry 'updatd' is true if the L-BFGS matrix is updatd.
-c       On exit 'updatd' is unchanged. 
-c
-c     wn is a double precision array of dimension 2m x 2m.
-c       On entry wn is unspecified.
-c       On exit the upper triangle of wn stores the LEL^T factorization
-c         of the 2*col x 2*col indefinite matrix
-c                     [-D -Y'ZZ'Y/theta     L_a'-R_z'  ]
-c                     [L_a -R_z           theta*S'AA'S ]
-c
-c     wn1 is a double precision array of dimension 2m x 2m.
-c       On entry wn1 stores the lower triangular part of 
-c                     [Y' ZZ'Y   L_a'+R_z']
-c                     [L_a+R_z   S'AA'S   ]
-c         in the previous iteration.
-c       On exit wn1 stores the corresponding updated matrices.
-c       The purpose of wn1 is just to store these inner products
-c       so they can be easily updated and inserted into wn.
-c
-c     m is an integer variable.
-c       On entry m is the maximum number of variable metric corrections
-c         used to define the limited memory matrix.
-c       On exit m is unchanged.
-c
-c     ws, wy, sy, and wtyy are double precision arrays;
-c     theta is a double precision variable;
-c     col is an integer variable;
-c     head is an integer variable.
-c       On entry they store the information defining the
-c                                          limited memory BFGS matrix:
-c         ws(n,m) stores S, a set of s-vectors;
-c         wy(n,m) stores Y, a set of y-vectors;
-c         sy(m,m) stores S'Y;
-c         wtyy(m,m) stores the Cholesky factorization
-c                                   of (theta*S'S+LD^(-1)L')
-c         theta is the scaling factor specifying B_0 = theta I;
-c         col is the number of variable metric corrections stored;
-c         head is the location of the 1st s- (or y-) vector in S (or Y).
-c       On exit they are unchanged.
-c
-c     info is an integer variable.
-c       On entry info is unspecified.
-c       On exit info =  0 for normal return;
-c                    = -1 when the 1st Cholesky factorization failed;
-c                    = -2 when the 2st Cholesky factorization failed.
-c
-c     Subprograms called:
-c
-c       Linpack ... dcopy, dpofa, dtrsl.
-c
 c
 c     References:
 c       [1] R. H. Byrd, P. Lu, J. Nocedal and C. Zhu, ``A limited

@@ -1,7 +1,9 @@
 c> \file dscal.f
 
 c> \brief scales a vector by a constant.
-c>        uses unrolled loops for increment equal to one.
+c>
+c> scales a vector by a constant.
+c> uses unrolled loops for increment equal to one.
 c>
 c> @param n dimensionality of the vectors
 c> @param da scaling factor to be applied on dx

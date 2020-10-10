@@ -2,6 +2,10 @@ c> \file cmprlb.f
 
 c> \brief This subroutine computes r=-Z'B(xcp-xk)-Z'g by using 
 c>        wa(2m+1)=W'(xcp-x) from subroutine cauchy.
+c> 
+c> This subroutine computes r=-Z'B(xcp-xk)-Z'g by using 
+c> wa(2m+1)=W'(xcp-x) from subroutine cauchy.
+c> 
 c> @param n number of parameters
 c> @param m history size of Hessian approximation
 c> @param x position

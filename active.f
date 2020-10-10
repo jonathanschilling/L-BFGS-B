@@ -2,6 +2,10 @@ c> \file active.f
 
 c> \brief This subroutine initializes iwhere and projects the initial x to
 c>        the feasible set if necessary.
+c> 
+c> This subroutine initializes iwhere and projects the initial x to
+c> the feasible set if necessary.
+c> 
 c> @param n number of parameters
 c> @param l lower bounds on parameters
 c> @param u upper bounds on parameters

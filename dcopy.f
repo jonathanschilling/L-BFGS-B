@@ -1,7 +1,9 @@
 c> \file dcopy.f
 
 c> \brief copies a vector, x, to a vector, y.
-c>        uses unrolled loops for increments equal to one.
+c>
+c> copies a vector, x, to a vector, y.
+c> uses unrolled loops for increments equal to one.
 c>
 c> @param n dimensionality of vectors
 c> @param dx source vector

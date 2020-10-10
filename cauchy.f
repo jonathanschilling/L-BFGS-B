@@ -1,15 +1,17 @@
 c> \file cauchy.f
 
-c> \brief For given x, l, u, g (with sbgnrm > 0), and a limited memory
-c>        BFGS matrix B defined in terms of matrices WY, WS, WT, and
-c>        scalars head, col, and theta, this subroutine computes the
-c>        generalized Cauchy point (GCP), defined as the first local
-c>        minimizer of the quadratic
+c> \brief Compute the Generalized Cauchy Point along the projected gradient direction.
+c> 
+c> For given x, l, u, g (with sbgnrm > 0), and a limited memory
+c> BFGS matrix B defined in terms of matrices WY, WS, WT, and
+c> scalars head, col, and theta, this subroutine computes the
+c> generalized Cauchy point (GCP), defined as the first local
+c> minimizer of the quadratic
 c>
-c>                   Q(x + s) = g's + 1/2 s'Bs
+c>            Q(x + s) = g's + 1/2 s'Bs
 c>
-c>        along the projected gradient direction P(x-tg,l,u).
-c>        The routine returns the GCP in xcp. 
+c> along the projected gradient direction P(x-tg,l,u).
+c> The routine returns the GCP in xcp. 
 c>
 c> @param n On entry n is the dimension of the problem.<br/>
 c>          On exit n is unchanged.

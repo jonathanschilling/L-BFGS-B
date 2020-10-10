@@ -2,6 +2,8 @@ c> \file dpofa.f
 
 c> \brief factors a double precision symmetric positive definite matrix.
 c>
+c> factors a double precision symmetric positive definite matrix.
+c>
 c> dpofa is usually called by dpoco, but it can be called
 c> directly with a saving in time if  rcond  is not needed.
 c> (time for dpoco) = (1 + 18/n)*(time for dpofa) .

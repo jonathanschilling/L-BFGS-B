@@ -1,7 +1,9 @@
 c> \file daxpy.f
 
 c> \brief constant times a vector plus a vector.
-c>        uses unrolled loops for increments equal to one.
+c>
+c> constant times a vector plus a vector.
+c> uses unrolled loops for increments equal to one.
 c>
 c> @param n dimensionality of vectors
 c> @param da constant for scaling dx

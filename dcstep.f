@@ -3,6 +3,10 @@ c> \file dcstep.f
 c> \brief This subroutine computes a safeguarded step for a search
 c>        procedure and updates an interval that contains a step that
 c>        satisfies a sufficient decrease and a curvature condition.
+c>
+c> This subroutine computes a safeguarded step for a search
+c> procedure and updates an interval that contains a step that
+c> satisfies a sufficient decrease and a curvature condition.
 c> 
 c> The parameter stx contains the step with the least function
 c> value. If brackt is set to .true. then a minimizer has

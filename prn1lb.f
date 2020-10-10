@@ -1,18 +1,46 @@
 c> \file prn1lb.f
 
+c> \brief This subroutine prints the input data, initial point, upper and
+c>        lower bounds of each variable, machine precision, as well as 
+c>        the headings of the output.
+c> 
+c> This subroutine prints the input data, initial point, upper and
+c>        lower bounds of each variable, machine precision, as well as 
+c>        the headings of the output.
+c>
+c> @param n On entry n is the number of variables.<br/>
+c>          On exit n is unchanged.
+c>
+c> @param m On entry m is the maximum number of variable metric
+c>             corrections allowed in the limited memory matrix.<br/>
+c>          On exit m is unchanged.
+c>
+c> @param l On entry l is the lower bound of x.<br/>
+c>          On exit l is unchanged.
+c>
+c> @param u On entry u is the upper bound of x.<br/>
+c>          On exit u is unchanged.
+c>
+c> @param x On entry x is an approximation to the solution.<br/>
+c>          On exit x is the current approximation.
+c>
+c> @param iprint It controls the frequency and type of output generated:<ul>
+c>               <li>iprint<0    no output is generated;</li>
+c>               <li>iprint=0    print only one line at the last iteration;</li>
+c>               <li>0<iprint<99 print also f and |proj g| every iprint iterations;</li>
+c>               <li>iprint=99   print details of every iteration except n-vectors;</li>
+c>               <li>iprint=100  print also the changes of active set and final x;</li>
+c>               <li>iprint>100  print details of every iteration including x and g;</li></ul>
+c>               When iprint > 0, the file iterate.dat will be created to
+c>                                summarize the iteration.
+c> 
+c> @param itfile unit number of iterate.dat file
+c> @param epsmch machine precision epsilon
       subroutine prn1lb(n, m, l, u, x, iprint, itfile, epsmch)
  
       integer n, m, iprint, itfile
       double precision epsmch, x(n), l(n), u(n)
 
-c     ************
-c
-c     Subroutine prn1lb
-c
-c     This subroutine prints the input data, initial point, upper and
-c       lower bounds of each variable, machine precision, as well as 
-c       the headings of the output.
-c
 c
 c                           *  *  *
 c

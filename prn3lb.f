@@ -1,5 +1,43 @@
 c> \file prn3lb.f
 
+c> \brief This subroutine prints out information when either a built-in
+c>        convergence test is satisfied or when an error message is
+c>        generated.
+c>
+c> This subroutine prints out information when either a built-in
+c> convergence test is satisfied or when an error message is
+c> generated.
+c>
+c> @param n On entry n is the number of variables.<br/>
+c>          On exit n is unchanged.
+c>
+c> @param x On entry x is an approximation to the solution.<br/>
+c>          On exit x is the current approximation.
+c>
+c> @param f On first entry f is unspecified.<br/>
+c>          On final exit f is the value of the function at x.
+c> 
+c> @param task working string indicating
+c>             the current job when entering and leaving this subroutine.
+c> @param iprint TODO
+c> @param info TODO
+c> @param itfile unit number of iterate.dat file
+c> @param iter TODO
+c> @param nfgv TODO
+c> @param nintol TODO
+c> @param nskip TODO
+c> @param nact TODO
+c> @param sbgnrm TODO
+c> @param time TODO
+c> @param nseg TODO
+c> @param word TODO
+c> @param iback TODO
+c> @param stp TODO
+c> @param xstep TODO
+c> @param k TODO
+c> @param cachyt TODO
+c> @param sbtime TODO
+c> @param lnscht TODO
       subroutine prn3lb(n, x, f, task, iprint, info, itfile, 
      +                  iter, nfgv, nintol, nskip, nact, sbgnrm, 
      +                  time, nseg, word, iback, stp, xstep, k, 
@@ -13,15 +51,6 @@ c> \file prn3lb.f
      +                 lnscht, x(n)
 
 c     ************
-c
-c     Subroutine prn3lb
-c
-c     This subroutine prints out information when either a built-in
-c       convergence test is satisfied or when an error message is
-c       generated.
-c       
-c
-c                           *  *  *
 c
 c     NEOS, November 1994. (Latest revision June 1996.)
 c     Optimization Technology Center.

@@ -1,5 +1,45 @@
 c> \file prn2lb.f
 
+c> \brief This subroutine prints out new information after a successful
+c>        line search.
+c>
+c> This subroutine prints out new information after a successful
+c> line search.
+c>
+c> @param n On entry n is the number of variables.<br/>
+c>          On exit n is unchanged.
+c>
+c> @param x On entry x is an approximation to the solution.<br/>
+c>          On exit x is the current approximation.
+c>
+c> @param f On first entry f is unspecified.<br/>
+c>          On final exit f is the value of the function at x.
+c>
+c> @param g On first entry g is unspecified.<br/>
+c>          On final exit g is the value of the gradient at x.
+c>
+c> @param iprint It controls the frequency and type of output generated:<ul>
+c>               <li>iprint<0    no output is generated;</li>
+c>               <li>iprint=0    print only one line at the last iteration;</li>
+c>               <li>0<iprint<99 print also f and |proj g| every iprint iterations;</li>
+c>               <li>iprint=99   print details of every iteration except n-vectors;</li>
+c>               <li>iprint=100  print also the changes of active set and final x;</li>
+c>               <li>iprint>100  print details of every iteration including x and g;</li></ul>
+c>               When iprint > 0, the file iterate.dat will be created to
+c>                                summarize the iteration.
+c> 
+c> @param itfile unit number of iterate.dat file
+c>
+c> @param iter TODO
+c> @param nfgv TODO
+c> @param nact TODO
+c> @param sbgnrm TODO
+c> @param nseg TODO
+c> @param word TODO
+c> @param iword TODO
+c> @param iback TODO
+c> @param stp TODO
+c> @param xstep TODO
       subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, 
      +                  sbgnrm, nseg, word, iword, iback, stp, xstep)
  
@@ -9,14 +49,6 @@ c> \file prn2lb.f
       double precision f, sbgnrm, stp, xstep, x(n), g(n)
 
 c     ************
-c
-c     Subroutine prn2lb
-c
-c     This subroutine prints out new information after a successful
-c       line search. 
-c
-c
-c                           *  *  *
 c
 c     NEOS, November 1994. (Latest revision June 1996.)
 c     Optimization Technology Center.

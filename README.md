@@ -89,6 +89,7 @@ For an eagle-eye overview of `L-BFGS-B` and the genealogy `BFGS`->`L-BFGS`->`L-B
 
 ## Related Software
 
+* [https://github.com/wilmerhenao/L-BFGS-B-NS](https://github.com/wilmerhenao/L-BFGS-B-NS): An L-BFGS-B-NS Optimizer for Non-Smooth Functions
 * [pcarbo/lbfgsb-matlab](https://github.com/pcarbo/lbfgsb-matlab): A MATLAB interface for L-BFGS-B
 * [bgranzow/L-BFGS-B](https://github.com/bgranzow/L-BFGS-B): A pure Matlab implementation of L-BFGS-B (LBFGSB)
 * [constantino-garcia/lbfgsb_cpp_wrapper](https://github.com/constantino-garcia/lbfgsb_cpp_wrapper): A simple C++ wrapper around the original Fortran L-BGSG-B routine

@@ -2,7 +2,7 @@
 
 ## Software for Large-scale Bound-constrained Optimization
 [`L-BFGS-B`](http://users.iems.northwestern.edu/~nocedal/lbfgsb.html) is a limited-memory quasi-Newton code for bound-constrained optimization,
-i.e., for problems where the only constraints are of the form `l<= x <= u`.
+i.e., for problems where the only constraints are of the form `l <= x <= u`.
 It is intended for problems in which information on the Hessian matrix is difficult to obtain,
 or for large dense problems.
 `L-BFGS-B` can also be used for unconstrained problems, and in this case performs similarly to its predecessor,
@@ -30,7 +30,7 @@ The current release is version 3.0. The distribution file was last changed on 02
 * put the L-BFGS-B code obtained from [the original website](http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz) up in this repository,
 * divide the subroutines and functions into separate files,
 * convert parts of the documentation into a format understandable to [doxygen](https://www.doxygen.nl/index.html) and
-* adjust the Makefile to accomodate the separate files and additionally generate a statically linked `liblbfgsb.a` library.
+* adjust the `Makefile` to accomodate the separate files and additionally generate a statically linked `liblbfgsb.a` library.
 
 This work was in no way intending to infringe any copyrights or take credit for others' work.
 Feel free to contact me at any time in case you noticed something against the rules.

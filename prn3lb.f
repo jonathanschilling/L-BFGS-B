@@ -153,7 +153,7 @@ c     ************
      +' Line search cannot locate an adequate point after 20 function',/
      +,'  and gradient evaluations.  Previous x, f and g restored.',/,
      +' Possible causes: 1 error in function or gradient evaluation;',/,
-     +'                  2 rounding error dominate computation.')
+     +'                  2 rounding errors dominate computation.')
 
       return
 

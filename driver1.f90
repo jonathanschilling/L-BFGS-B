@@ -229,7 +229,7 @@
 
       allocate ( nbd(n), x(n), l(n), u(n), g(n) )
       allocate ( iwa(3*n) )
-      allocate ( wa(2*m*n + 5*n + 11*m*m + 8*m) )
+      allocate ( wa(2*m*n + 11*m*m + 5*n + 8*m) )
 ! 
       do 10 i=1, n, 2
          nbd(i) = 2

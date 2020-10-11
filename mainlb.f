@@ -133,7 +133,7 @@ c> @param dsave working array
       character*60     task, csave
       logical          lsave(4)
       integer          n, m, iprint, nbd(n), index(n),
-     +                 iwhere(n), indx2(n), isave(22)
+     +                 iwhere(n), indx2(n), isave(23)
       double precision f, factr, pgtol,
      +                 x(n), l(n), u(n), g(n), z(n), r(n), d(n), t(n), 
 c-jlm-jn
@@ -240,7 +240,7 @@ c           'info' records the termination information.
          itfile = 8
          if (iprint .ge. 1) then
 c                                open a summary file 'iterate.dat'
-            open (8, file = 'iterate.dat', status = 'unknown')
+            open (itfile, file = 'iterate.dat', status = 'unknown')
          endif            
 
 c        Check the input arguments for errors.

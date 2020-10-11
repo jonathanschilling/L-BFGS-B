@@ -10,8 +10,8 @@ c> @param factr convergence criterion on function value
 c> @param l lower bounds for parameters
 c> @param u upper bounds for parameters
 c> @param nbd indicates which bounds are present
-c> @param task what task is to be performed
-c> @param info error/success indicator
+c> @param task if an error occurs, contains a human-readable error message
+c> @param info =0 on success; =-6 if nbd(k) was invalid; =-7 if both limits are given but l(k) > u(k)
 c> @param k index of last errournous parameter
       subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
  

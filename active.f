@@ -49,7 +49,7 @@ c     Initialize nbdd, prjctd, cnstnd and boxed.
       cnstnd = .false.
       boxed = .true.
 
-c     Project the initial x to the easible set if necessary.
+c     Project the initial x to the feasible set if necessary.
 
       do 10 i = 1, n
          if (nbd(i) .gt. 0) then

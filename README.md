@@ -13,7 +13,7 @@ algorithm [`L-BFGS`](http://users.iems.northwestern.edu/~nocedal/lbfgs.html) (Ha
 * [Ciyou Zhu](http://web.archive.org/web/19990129014554/http://www.ece.nwu.edu/%7Eciyou/)
 * Richard Byrd
 * [Jorge Nocedal](http://www.ece.northwestern.edu/~nocedal)
-* [Jose Luis Morales](http://web.archive.org/web/20080509084403/http://www.ece.northwestern.edu:80/~morales/)
+* [Jose Luis Morales](http://web.archive.org/web/20090903033420/http://www.ece.northwestern.edu:80/~morales)
 
 ## Related Publications
 

@@ -47,6 +47,7 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
 * [avieira/python_lbfgsb](https://github.com/avieira/python_lbfgsb): Pure Python-based L-BFGS-B implementation
 * [ybyygu/rust-lbfgsb](https://github.com/ybyygu/rust-lbfgsb): Ergonomic bindings to L-BFGS-B code for Rust 
 * [lbfgsb3c](https://rdrr.io/rforge/lbfgsb3c/): Limited Memory BFGS Minimizer with Bounds on Parameters with optim() 'C' Interface for R
+* [optimParallel-python](https://github.com/florafauna/optimParallel-python): A parallel version of `scipy.optimize.minimize(method='L-BFGS-B')`
 
 ## Notes on this repository
 

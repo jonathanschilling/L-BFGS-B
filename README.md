@@ -45,7 +45,7 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
 * [Chris00/L-BFGS-ocaml](https://github.com/Chris00/L-BFGS-ocaml):  OCaml bindings for L-BFGS
 * [dwicke/L-BFGS-B-Lua](https://github.com/dwicke/L-BFGS-B-Lua): L-BFGS-B lua wrapper around a L-BFGS-B C implementation
 * [avieira/python_lbfgsb](https://github.com/avieira/python_lbfgsb): Pure Python-based L-BFGS-B implementation
-* [ybyygu/rust-lbfgsb](https://github.com/ybyygu/rust-lbfgsb): Ergonomic bindings to L-BFGS-B code for Rust 
+* [ybyygu/rust-lbfgsb](https://github.com/ybyygu/rust-lbfgsb): Ergonomic bindings to L-BFGS-B code for Rust
 * [rforge/lbfgsb3c](https://rdrr.io/rforge/lbfgsb3c): Limited Memory BFGS Minimizer with Bounds on Parameters with optim() 'C' Interface for R
 * [florafauna/optimParallel-python](https://github.com/florafauna/optimParallel-python): A parallel version of `scipy.optimize.minimize(method='L-BFGS-B')`
 
@@ -56,7 +56,26 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
 * put the L-BFGS-B code obtained from [the original website](http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz) up in this repository,
 * divide the subroutines and functions into separate files,
 * convert parts of the documentation into a format understandable to [doxygen](https://www.doxygen.nl/index.html) and
-* adjust the `Makefile` to accomodate the separate files and additionally generate a statically linked `liblbfgsb.a` library.
+* replace the included BLAS/LINPACK routines with calls to user-provided BLAS/LAPACK routines.
+  To be precise, the calls to LINPACK's `dtrsl` were replace with calls to LAPACK's `dtrsm`
+  and the calls to LINPACK's `dpofa` were replaces with calls to LAPACK's `dpotrf`.
+
+## Building
+
+A CMake setup is provided for L-BFGS-B in this repository.
+External modules for `BLAS` and `LAPACK` have to be installed on your system.
+Then, building the shared library `liblbgsb.so` and the examples `driver*.f` and `driver*.f90` works as follows:
+
+```bash
+> mkdir build
+> cd build
+> cmake ..
+> make -j
+```
+
+The resulting shared library and the driver executables can be found in the `build` directory.
+
+## Concluding remarks
 
 The current release is version 3.0. The distribution file was last changed on 02/08/11.
 

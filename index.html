@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>replace the included BLAS/LINPACK routines with calls to user-provided BLAS/LAPACK routines. To be precise, the calls to LINPACK's <code>dtrsl</code> were replace with calls to LAPACK's <code>dtrsm</code> and the calls to LINPACK's <code>dpofa</code> were replaces with calls to LAPACK's <code>dpotrf</code>.</li>
 </ul>
 <h1>Building</h1>
-<p>A CMake setup is provided for L-BFGS-B in this repository. External modules for <code>BLAS</code> and <code>LAPACK</code> have to be installed on your system. Then, building the shared library <code>liblbgsb.so</code> and the examples <code>driver*.f</code> and <code>driver*.f90</code> works as follows:</p>
+<p>A CMake setup is provided for L-BFGS-B in this repository. External modules for <code>BLAS</code> and <code>LAPACK</code> have to be installed on your system. Then, building the shared library <code>liblbfgsb.so</code> and the examples <code>driver*.f</code> and <code>driver*.f90</code> works as follows:</p>
 <div class="fragment"><div class="line">&gt; mkdir build</div>
 <div class="line">&gt; cd build</div>
 <div class="line">&gt; cmake ..</div>

@@ -22,12 +22,12 @@ jobs:
     # run doxygen
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1.2.0
-#      with:
-#        enable-latex: true
-#      
-#    - name: Copy Pdf
-#      working-directory: ${{ github.workspace }}
-#      run: sudo cp ./docs/latex/refman.pdf ./docs/html/VMEC_manual.pdf
+      with:
+        enable-latex: true
+      
+    - name: Copy Pdf
+      working-directory: ${{ github.workspace }}
+      run: sudo cp ./docs/latex/refman.pdf ./docs/html/L-BFGS-B.pdf
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3

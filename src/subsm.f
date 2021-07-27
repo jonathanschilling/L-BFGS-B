@@ -1,10 +1,10 @@
 c> \file subsm.f
 
 c> \brief Performs the subspace minimization.
-c> 
+c>
 c> Given xcp, l, u, r, an index set that specifies
-c> the active set at xcp, and an l-BFGS matrix B 
-c> (in terms of WY, WS, SY, WT, head, col, and theta), 
+c> the active set at xcp, and an l-BFGS matrix B
+c> (in terms of WY, WS, SY, WT, head, col, and theta),
 c> this subroutine computes an approximate solution
 c> of the subspace problem
 c>
@@ -13,7 +13,7 @@ c>
 c> subject to l<=x<=u
 c>           x_i=xcp_i for all i in A(xcp)
 c>
-c> along the subspace unconstrained Newton direction 
+c> along the subspace unconstrained Newton direction
 c>
 c>    d = -(Z'BZ)^(-1) r.
 c>
@@ -21,12 +21,12 @@ c> The formula for the Newton direction, given the L-BFGS matrix
 c> and the Sherman-Morrison formula, is
 c>
 c>    d = (1/theta)r + (1/theta*2) Z'WK^(-1)W'Z r.
-c> 
+c>
 c> where
 c>           K = [-D -Y'ZZ'Y/theta     L_a'-R_z'  ]
 c>               [L_a -R_z           theta*S'AA'S ]
 c>
-c> Note that this procedure for computing d differs 
+c> Note that this procedure for computing d differs
 c> from that described in [1]. One can show that the matrix K is
 c> equal to the matrix M^[-1]N in that paper.
 c>
@@ -59,10 +59,10 @@ c>            On exit nbd is unchanged.
 c>
 c> @param x On entry x specifies the Cauchy point xcp.<br/>
 c>          On exit x(i) is the minimizer of Q over the subspace of
-c>                                                        free variables. 
+c>                                                        free variables.
 c>
 c> @param d On entry d is the reduced gradient of Q at xcp.<br/>
-c>          On exit d is the Newton direction of Q. 
+c>          On exit d is the Newton direction of Q.
 c>
 c> @param xp used to safeguard the projected Newton direction<br/>
 c>
@@ -79,7 +79,7 @@ c>
 c> @param wy On entry this stores Y, a set of y-vectors, that defines the
 c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
-c> 
+c>
 c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
 c>              On exit theta is unchanged.
 c>
@@ -119,17 +119,17 @@ c>                                summarize the iteration.
 c>
 c> @param info On entry info is unspecified.<br/>
 c>             On exit info =<ul><li>0       for normal return,</li>
-c>                               <li>nonzero for abnormal return 
+c>                               <li>nonzero for abnormal return
 c>                                        when the matrix K is ill-conditioned.</li></ul>
       subroutine subsm ( n, m, nsub, ind, l, u, nbd, x, d, xp, ws, wy,
      +                   theta, xx, gg,
      +                   col, head, iword, wv, wn, iprint, info )
       implicit none
-      integer          n, m, nsub, col, head, iword, iprint, info, 
+      integer          n, m, nsub, col, head, iword, iprint, info,
      +                 ind(nsub), nbd(n)
-      double precision theta, 
+      double precision theta,
      +                 l(n), u(n), x(n), d(n), xp(n), xx(n), gg(n),
-     +                 ws(n, m), wy(n, m), 
+     +                 ws(n, m), wy(n, m),
      +                 wv(2*m), wn(2*m, 2*m)
 
 c     **********************************************************************
@@ -141,7 +141,7 @@ c      Jose Luis Morales, Jorge Nocedal
 c      "Remark On Algorithm 788: L-BFGS-B: Fortran Subroutines for Large-Scale
 c       Bound Constrained Optimization". Decemmber 27, 2010.
 c
-c             J.L. Morales  Departamento de Matematicas, 
+c             J.L. Morales  Departamento de Matematicas,
 c                           Instituto Tecnologico Autonomo de Mexico
 c                           Mexico D.F.
 c
@@ -172,7 +172,7 @@ c
 c     ************
 
       integer          pointr,m2,col2,ibd,jy,js,i,j,k
-      double precision alpha, xk, dk, temp1, temp2 
+      double precision alpha, xk, dk, temp1, temp2
       double precision one,zero
       parameter        (one=1.0d0,zero=0.0d0)
 c
@@ -183,7 +183,7 @@ c
 
 c     Compute wv = W'Zd.
 
-      pointr = head 
+      pointr = head
       do 20 i = 1, col
          temp1 = zero
          temp2 = zero
@@ -196,34 +196,41 @@ c     Compute wv = W'Zd.
          wv(col + i) = theta*temp2
          pointr = mod(pointr,m) + 1
   20  continue
- 
+
 c     Compute wv:=K^(-1)wv.
 
       m2 = 2*m
       col2 = 2*col
-      call dtrsl(wn,m2,col2,wv,11,info)
-      if (info .ne. 0) return
+
+      !call dtrsl(wn,m2,col2,wv,11,info)
+      !if (info .ne. 0) return
+      call dtrsm('l','u','t','n',col2,1,one,wn,m2,wv,col2)
+      info = 0
+
       do 25 i = 1, col
          wv(i) = -wv(i)
   25     continue
-      call dtrsl(wn,m2,col2,wv,01,info)
-      if (info .ne. 0) return
- 
+
+      !call dtrsl(wn,m2,col2,wv,01,info)
+      !if (info .ne. 0) return
+      call dtrsm('l','u','n','n',col2,1,one,wn,m2,wv,col2)
+      info = 0
+
 c     Compute d = (1/theta)d + (1/theta**2)Z'W wv.
- 
+
       pointr = head
       do 40 jy = 1, col
          js = col + jy
          do 30 i = 1, nsub
             k = ind(i)
-            d(i) = d(i) + wy(k,pointr)*wv(jy)/theta     
+            d(i) = d(i) + wy(k,pointr)*wv(jy)/theta
      +                  + ws(k,pointr)*wv(js)
   30     continue
          pointr = mod(pointr,m) + 1
   40  continue
 
       call dscal( nsub, one/theta, d, 1 )
-c 
+c
 c-----------------------------------------------------------------
 c     Let us try the projection, d is the Newton direction
 
@@ -240,10 +247,10 @@ c
             if ( nbd(k).eq.1 ) then          ! lower bounds only
                x(k) = max( l(k), xk + dk )
                if ( x(k).eq.l(k) ) iword = 1
-            else 
-c     
+            else
+c
                if ( nbd(k).eq.2 ) then       ! upper and lower bounds
-                  xk   = max( l(k), xk + dk ) 
+                  xk   = max( l(k), xk + dk )
                   x(k) = min( u(k), xk )
                   if ( x(k).eq.l(k) .or. x(k).eq.u(k) ) iword = 1
                else
@@ -251,13 +258,13 @@ c
                   if ( nbd(k).eq.3 ) then    ! upper bounds only
                      x(k) = min( u(k), xk + dk )
                      if ( x(k).eq.u(k) ) iword = 1
-                  end if 
+                  end if
                end if
             end if
-c            
+c
          else                                ! free variables
             x(k) = xk + dk
-         end if 
+         end if
  50   continue
 c
       if ( iword.eq.0 ) then
@@ -282,7 +289,7 @@ c-----------------------------------------------------------------
 c
       alpha = one
       temp1 = alpha
-      ibd   = 0 
+      ibd   = 0
       do 60 i = 1, nsub
          k = ind(i)
          dk = d(i)
@@ -308,7 +315,7 @@ c
             endif
          endif
  60   continue
-      
+
       if (alpha .lt. one) then
          dk = d(ibd)
          k = ind(ibd)

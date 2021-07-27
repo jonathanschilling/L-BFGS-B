@@ -1,10 +1,10 @@
 c> \file bmv.f
 
-c> \brief This subroutine computes the product of the 2m x 2m middle matrix 
+c> \brief This subroutine computes the product of the 2m x 2m middle matrix
 c>        in the compact L-BFGS formula of B and a 2m vector v.
-c> 
-c> This subroutine computes the product of the 2m x 2m middle matrix 
-c> in the compact L-BFGS formula of B and a 2m vector v;  
+c>
+c> This subroutine computes the product of the 2m x 2m middle matrix
+c> in the compact L-BFGS formula of B and a 2m vector v;
 c> it returns the product in p.
 c>
 c> @param m On entry m is the maximum number of variable metric corrections
@@ -14,7 +14,7 @@ c>
 c> @param sy On entry sy specifies the matrix S'Y.<br/>
 c>           On exit sy is unchanged.
 c>
-c> @param wt On entry wt specifies the upper triangular matrix J' which is 
+c> @param wt On entry wt specifies the upper triangular matrix J' which is
 c>              the Cholesky factor of (thetaS'S+LD^(-1)L').<br/>
 c>           On exit wt is unchanged.
 c>
@@ -49,12 +49,12 @@ c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.
 c
 c
 c     ************
- 
+
       integer          i,k,i2
       double precision sum
- 
+
       if (col .eq. 0) return
- 
+
 c     PART I: solve [  D^(1/2)      O ] [ p1 ] = [ v1 ]
 c                   [ -L*D^(-1/2)   J ] [ p2 ]   [ v2 ].
 
@@ -67,25 +67,29 @@ c       solve Jp2=v2+LD^(-1)v1.
             sum = sum + sy(i,k)*v(k)/sy(k,k)
   10     continue
          p(i2) = v(i2) + sum
-  20  continue  
+  20  continue
 c     Solve the triangular system
-      call dtrsl(wt,m,col,p(col+1),11,info)
-      if (info .ne. 0) return
- 
+      !call dtrsl(wt,m,col,p(col+1),11,info)
+      call dtrsm('l','u','t','n',col,1,one,wt,m,p(col+1),col)
+      info = 0
+      !if (info .ne. 0) return
+
 c       solve D^(1/2)p1=v1.
       do 30 i = 1, col
          p(i) = v(i)/sqrt(sy(i,i))
-  30  continue 
- 
+  30  continue
+
 c     PART II: solve [ -D^(1/2)   D^(-1/2)*L'  ] [ p1 ] = [ p1 ]
-c                    [  0         J'           ] [ p2 ]   [ p2 ]. 
- 
-c       solve J^Tp2=p2. 
-      call dtrsl(wt,m,col,p(col+1),01,info)
-      if (info .ne. 0) return
- 
+c                    [  0         J'           ] [ p2 ]   [ p2 ].
+
+c       solve J^Tp2=p2.
+      !call dtrsl(wt,m,col,p(col+1),01,info)
+      !if (info .ne. 0) return
+      call dtrsm('l','u','n','n',col,1,one,wt,m,p(col+1),col)
+      info = 0
+
 c       compute p1=-D^(-1/2)(p1-D^(-1/2)L'p2)
-c                 =-D^(-1/2)p1+D^(-1)L'p2.  
+c                 =-D^(-1/2)p1+D^(-1)L'p2.
       do 40 i = 1, col
          p(i) = -p(i)/sqrt(sy(i,i))
   40  continue

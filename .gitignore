@@ -36,3 +36,5 @@ x.*
 docs/
 iterate.dat
 
+# cmake
+build

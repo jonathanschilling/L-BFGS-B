@@ -1,10 +1,60 @@
 c> \file setulb.f
 
-c> \brief This subroutine partitions the working arrays wa and iwa, and 
+c> \example driver1.f
+c> This simple driver demonstrates how to call the L-BFGS-B code to
+c> solve a sample problem (the extended Rosenbrock function
+c> subject to bounds on the variables).
+c> The dimension n of this problem is variable.
+c> (Fortran-77 version)
+
+c> \example driver1.f90
+c> This simple driver demonstrates how to call the L-BFGS-B code to
+c> solve a sample problem (the extended Rosenbrock function
+c> subject to bounds on the variables).
+c> The dimension n of this problem is variable.
+c> (Fortran-90 version)
+
+c> \example driver2.f
+c> This driver shows how to replace the default stopping test
+c> by other termination criteria. It also illustrates how to
+c> print the values of several parameters during the course of
+c> the iteration. The sample problem used here is the same as in
+c> DRIVER1 (the extended Rosenbrock function with bounds on the variables).
+c> (Fortran-77 version)
+
+c> \example driver2.f90
+c> This driver shows how to replace the default stopping test
+c> by other termination criteria. It also illustrates how to
+c> print the values of several parameters during the course of
+c> the iteration. The sample problem used here is the same as in
+c> DRIVER1 (the extended Rosenbrock function with bounds on the variables).
+c> (Fortran-90 version)
+
+c> \example driver3.f
+c> This time-controlled driver shows that it is possible to terminate
+c> a run by elapsed CPU time, and yet be able to print all desired
+c> information. This driver also illustrates the use of two
+c> stopping criteria that may be used in conjunction with a limit
+c> on execution time. The sample problem used here is the same as in
+c> driver1 and driver2 (the extended Rosenbrock function with bounds
+c> on the variables).
+c> (Fortran-77 version)
+
+c> \example driver3.f90
+c> This time-controlled driver shows that it is possible to terminate
+c> a run by elapsed CPU time, and yet be able to print all desired
+c> information. This driver also illustrates the use of two
+c> stopping criteria that may be used in conjunction with a limit
+c> on execution time. The sample problem used here is the same as in
+c> driver1 and driver2 (the extended Rosenbrock function with bounds
+c> on the variables).
+c> (Fortran-90 version)
+
+c> \brief This subroutine partitions the working arrays wa and iwa, and
 c>        then uses the limited memory BFGS method to solve the bound
 c>        constrained optimization problem by calling mainlb.
 c>
-c> This subroutine partitions the working arrays wa and iwa, and 
+c> This subroutine partitions the working arrays wa and iwa, and
 c> then uses the limited memory BFGS method to solve the bound
 c> constrained optimization problem by calling mainlb.
 c> (The direct method will be used in the subspace minimization.)
@@ -77,7 +127,7 @@ c>
 c> @param csave working string
 c>
 c> @param lsave working array;
-c>              On exit with 'task' = NEW_X, the following information is 
+c>              On exit with 'task' = NEW_X, the following information is
 c>                                                                    available:<ul>
 c>                <li>If lsave(1) = .true.  then  the initial X has been replaced by
 c>                                                its projection in the feasible set;</li>
@@ -86,18 +136,18 @@ c>                <li>If lsave(3) = .true.  then  each variable has upper and lo
 c>                                                bounds;</li></ul>
 c>
 c> @param isave working array;
-c>              On exit with 'task' = NEW_X, the following information is 
+c>              On exit with 'task' = NEW_X, the following information is
 c>                                                                    available:<ul>
-c>                <li>isave(22) = the total number of intervals explored in the 
+c>                <li>isave(22) = the total number of intervals explored in the
 c>                                    search of Cauchy points;</li>
-c>                <li>isave(26) = the total number of skipped BFGS updates before 
+c>                <li>isave(26) = the total number of skipped BFGS updates before
 c>                                    the current iteration;</li>
 c>                <li>isave(30) = the number of current iteration;</li>
 c>                <li>isave(31) = the total number of BFGS updates prior the current
 c>                                    iteration;</li>
 c>                <li>isave(33) = the number of intervals explored in the search of
 c>                                    Cauchy point in the current iteration;</li>
-c>                <li>isave(34) = the total number of function and gradient 
+c>                <li>isave(34) = the total number of function and gradient
 c>                                    evaluations;</li>
 c>                <li>isave(36) = the number of function value or gradient
 c>                                              evaluations in the current iteration;</li>
@@ -137,16 +187,16 @@ c>                <li>dsave(16) = the square of the 2-norm of the line search
 c>                                                             direction vector.</li></ul>
       subroutine setulb(n, m, x, l, u, nbd, f, g, factr, pgtol, wa, iwa,
      +                 task, iprint, csave, lsave, isave, dsave)
- 
+
       character*60     task, csave
       logical          lsave(4)
-      integer          n, m, iprint, 
+      integer          n, m, iprint,
      +                 nbd(n), iwa(3*n), isave(44)
       double precision f, factr, pgtol, x(n), l(n), u(n), g(n),
 c
 c-jlm-jn
      +                 wa(2*m*n + 5*n + 11*m*m + 8*m), dsave(29)
- 
+
 c     ************
 c
 c     References:
@@ -174,7 +224,7 @@ c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.
 c
 c
 c     ************
-c-jlm-jn 
+c-jlm-jn
       integer   lws,lr,lz,lt,ld,lxp,lwa,
      +          lwy,lsy,lss,lwt,lwn,lsnd
 
@@ -214,9 +264,11 @@ c-jlm-jn
      +  wa(lws),wa(lwy),wa(lsy),wa(lss), wa(lwt),
      +  wa(lwn),wa(lsnd),wa(lz),wa(lr),wa(ld),wa(lt),wa(lxp),
      +  wa(lwa),
-     +  iwa(1),iwa(n+1),iwa(2*n+1),task,iprint, 
+     +  iwa(1),iwa(n+1),iwa(2*n+1),task,iprint,
      +  csave,lsave,isave(22),dsave)
 
       return
 
       end
+
+

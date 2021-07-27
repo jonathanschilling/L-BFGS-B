@@ -64,7 +64,7 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
 
 A CMake setup is provided for L-BFGS-B in this repository.
 External modules for `BLAS` and `LAPACK` have to be installed on your system.
-Then, building the shared library `liblbgsb.so` and the examples `driver*.f` and `driver*.f90` works as follows:
+Then, building the shared library `liblbfgsb.so` and the examples `driver*.f` and `driver*.f90` works as follows:
 
 ```bash
 > mkdir build

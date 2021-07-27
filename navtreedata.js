@@ -31,7 +31,8 @@ var NAVTREE =
         [ "All", "globals.html", null ],
         [ "Functions/Subroutines", "globals_func.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 

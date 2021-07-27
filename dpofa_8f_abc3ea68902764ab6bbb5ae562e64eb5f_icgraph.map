@@ -1,6 +1,0 @@
-<map id="dpofa" name="dpofa">
-<area shape="rect" id="node2" href="$formk_8f.html#a0e64ef7f777edb20419c8d441107c654" title="Forms the LEL^T factorization of the indefinite matrix K. " alt="" coords="108,5,163,32"/>
-<area shape="rect" id="node5" href="$formt_8f.html#a237bf34b63889556b05399c224ec5f71" title="Forms the upper half of the pos. def. and symm. T. " alt="" coords="109,56,161,83"/>
-<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="211,31,271,57"/>
-<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="319,31,376,57"/>
-</map>

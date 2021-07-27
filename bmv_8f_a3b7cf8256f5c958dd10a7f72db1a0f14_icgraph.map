@@ -1,6 +1,7 @@
 <map id="bmv" name="bmv">
-<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="100,5,164,32"/>
-<area shape="rect" id="node5" href="$cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4" title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy..." alt="" coords="101,56,163,83"/>
-<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="212,31,272,57"/>
-<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="320,31,377,57"/>
+<area shape="rect" id="node1" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="329,31,376,57"/>
+<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction." alt="" coords="219,5,281,32"/>
+<area shape="rect" id="node5" href="$cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4" title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy." alt="" coords="219,56,281,83"/>
+<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="111,31,171,57"/>
+<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="5,31,63,57"/>
 </map>

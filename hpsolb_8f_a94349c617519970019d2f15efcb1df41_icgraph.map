@@ -1,5 +1,6 @@
 <map id="hpsolb" name="hpsolb">
-<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="113,5,177,32"/>
-<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="225,5,285,32"/>
-<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="333,5,391,32"/>
+<area shape="rect" id="node1" title="This subroutine sorts out the least element of t, and puts the remaining elements of t in a heap." alt="" coords="329,5,389,32"/>
+<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction." alt="" coords="219,5,281,32"/>
+<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="111,5,171,32"/>
+<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="5,5,63,32"/>
 </map>

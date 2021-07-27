@@ -1,9 +1,0 @@
-<map id="dtrsl" name="dtrsl">
-<area shape="rect" id="node2" href="$bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="107,56,154,83"/>
-<area shape="rect" id="node7" href="$formk_8f.html#a0e64ef7f777edb20419c8d441107c654" title="Forms the LEL^T factorization of the indefinite matrix K. " alt="" coords="214,107,269,133"/>
-<area shape="rect" id="node8" href="$subsm_8f.html#a885224f17c93707dec22de0a51a4081d" title="Performs the subspace minimization. " alt="" coords="100,157,161,184"/>
-<area shape="rect" id="node3" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="209,5,273,32"/>
-<area shape="rect" id="node6" href="$cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4" title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy..." alt="" coords="211,56,272,83"/>
-<area shape="rect" id="node4" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="321,81,381,108"/>
-<area shape="rect" id="node5" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="429,81,487,108"/>
-</map>

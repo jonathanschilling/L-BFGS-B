@@ -1,6 +1,0 @@
-<map id="dscal" name="dscal">
-<area shape="rect" id="node2" href="$cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" title="Compute the Generalized Cauchy Point along the projected gradient direction. " alt="" coords="107,5,171,32"/>
-<area shape="rect" id="node3" href="$mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09" title="This subroutine solves bound constrained optimization problems by using the compact formula of the li..." alt="" coords="219,56,279,83"/>
-<area shape="rect" id="node5" href="$subsm_8f.html#a885224f17c93707dec22de0a51a4081d" title="Performs the subspace minimization. " alt="" coords="108,107,169,133"/>
-<area shape="rect" id="node4" href="$setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed" title="This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho..." alt="" coords="327,56,384,83"/>
-</map>

@@ -1,9 +1,5 @@
 <map id="cauchy" name="cauchy">
-<area shape="rect" id="node2" href="$ddot_8f.html#a2a42ecc597403b22ad786715c739196b" title="forms the dot product of two vectors. " alt="" coords="124,5,171,32"/>
-<area shape="rect" id="node3" href="$dcopy_8f.html#afc29c83942509cba5f3764115f0471d5" title="copies a vector, x, to a vector, y. " alt="" coords="119,56,176,83"/>
-<area shape="rect" id="node4" href="$dscal_8f.html#a0590f8db475e11dc2c9137bb13887acf" title="scales a vector by a constant. " alt="" coords="121,107,174,133"/>
-<area shape="rect" id="node5" href="$bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="124,157,171,184"/>
-<area shape="rect" id="node7" href="$daxpy_8f.html#adb136e14634fe4b772a0b034f52f3939" title="constant times a vector plus a vector. " alt="" coords="320,183,377,209"/>
-<area shape="rect" id="node8" href="$hpsolb_8f.html#a94349c617519970019d2f15efcb1df41" title="This subroutine sorts out the least element of t, and puts the remaining elements of t in a heap..." alt="" coords="117,259,177,285"/>
-<area shape="rect" id="node6" href="$dtrsl_8f.html#addd03dfa6a12af9f384b521e1f765a19" title="dtrsl solves triangular systems. " alt="" coords="225,157,272,184"/>
+<area shape="rect" id="node1" title="Compute the Generalized Cauchy Point along the projected gradient direction." alt="" coords="5,31,68,57"/>
+<area shape="rect" id="node2" href="$bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="123,5,169,32"/>
+<area shape="rect" id="node3" href="$hpsolb_8f.html#a94349c617519970019d2f15efcb1df41" title="This subroutine sorts out the least element of t, and puts the remaining elements of t in a heap." alt="" coords="116,56,176,83"/>
 </map>

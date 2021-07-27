@@ -1,5 +1,5 @@
 <map id="lnsrlb" name="lnsrlb">
-<area shape="rect" id="node2" href="$dcopy_8f.html#afc29c83942509cba5f3764115f0471d5" title="copies a vector, x, to a vector, y. " alt="" coords="109,5,166,32"/>
-<area shape="rect" id="node3" href="$dcsrch_8f.html#a25db7a7d8ddac831be23892a10ba2a76" title="This subroutine finds a step that satisfies a sufficient decrease condition and a curvature condition..." alt="" coords="107,56,168,83"/>
-<area shape="rect" id="node4" href="$dcstep_8f.html#aa8518f45aef3723242c7ca3f41717a31" title="This subroutine computes a safeguarded step for a search procedure and updates an interval that conta..." alt="" coords="216,56,277,83"/>
+<area shape="rect" id="node1" title="This subroutine calls subroutine dcsrch from the Minpack2 library to perform the line search...." alt="" coords="5,5,59,32"/>
+<area shape="rect" id="node2" href="$dcsrch_8f.html#a25db7a7d8ddac831be23892a10ba2a76" title="This subroutine finds a step that satisfies a sufficient decrease condition and a curvature condition..." alt="" coords="107,5,168,32"/>
+<area shape="rect" id="node3" href="$dcstep_8f.html#aa8518f45aef3723242c7ca3f41717a31" title="This subroutine computes a safeguarded step for a search procedure and updates an interval that conta..." alt="" coords="216,5,277,32"/>
 </map>

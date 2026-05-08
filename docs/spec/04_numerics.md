@@ -145,7 +145,7 @@ The algorithm calls these BLAS-level-1 and LAPACK routines:
 | `dcopy` | many | Copy a vector. |
 | `daxpy` | many | `y <- alpha*x + y`. |
 | `dscal` | many | `y <- alpha*y`. |
-| `ddot` | many | `x&#39; y`. |
+| `ddot` | many | `x^T y`. |
 | `dnrm2` | line search, gradients | `||x||_2`. |
 | `dgemv` | `formk`, `subsm`, `cauchy` | `y <- alpha*A*x + beta*y`. |
 | `dtrsm` | `bmv`, `subsm` | Triangular solve `A x = b`. |

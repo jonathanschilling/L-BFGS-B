@@ -11,10 +11,10 @@ M^{-1} = [[-D,        L' ],
 ```
 
 The matrix is never materialized; the solve is done blockwise using
-the diagonal `D = diag(s_i&#39; y_i)`, the strict-lower L
-(`L_{i,j} = s_i&#39; y_j` for `i > j`), and the upper-triangular Cholesky
+the diagonal `D = diag(s_i^T y_i)`, the strict-lower L
+(`L_{i,j} = s_i^T y_j` for `i > j`), and the upper-triangular Cholesky
 factor `T` (called `wt` in the F77 source) of
-`theta * S&#39;S + L * D^{-1} * L&#39;`.
+`theta * S^TS + L * D^{-1} * L^T`.
 
 This is the workhorse of the compact L-BFGS evaluation: every
 Hessian-vector product (and inverse) for the L-BFGS approximation
@@ -28,8 +28,8 @@ goes through `bmv`.
 |------|------|-------------|
 | `m` | positive integer | Memory parameter (used for the leading dimension of `sy` and `wt`). |
 | `col` | integer, `0 <= col <= m` | Number of stored L-BFGS pairs. |
-| `sy` | real matrix, `m * m`, lower-triangle-and-diagonal | `sy[i,i] = s_i&#39; y_i = D[i]`; `sy[i,j] = s_i&#39; y_j = L[i,j]` for `i > j`. Strict upper triangle unused. |
-| `wt` | real matrix, `m * m`, upper-triangular | Cholesky factor `T` of `theta*S&#39;S + L*D^{-1}*L&#39;`, computed by `formt`. |
+| `sy` | real matrix, `m * m`, lower-triangle-and-diagonal | `sy[i,i] = s_i^T y_i = D[i]`; `sy[i,j] = s_i^T y_j = L[i,j]` for `i > j`. Strict upper triangle unused. |
+| `wt` | real matrix, `m * m`, upper-triangular | Cholesky factor `T` of `theta*S^TS + L*D^{-1}*L^T`, computed by `formt`. |
 | `v` | real vector, length `2 col` | Right-hand side. Layout: `v[1..col]` is the "Y-block" component; `v[col+1..2col]` is the "S-block" component. |
 
 ### Logical outputs
@@ -108,7 +108,7 @@ for i = 1 to col:
 ```
 
 The "transpose upper" triangular solve is the F77 call
-`dtrsm(&#39;l&#39;,&#39;u&#39;,&#39;t&#39;,&#39;n&#39;, col, 1, 1.0, wt, m, p(col+1), col)`.
+`dtrsm('l','u','t','n', col, 1, 1.0, wt, m, p(col+1), col)`.
 
 ### Part II -- solve the upper triangular block
 
@@ -118,11 +118,11 @@ The "transpose upper" triangular solve is the F77 call
 ```
 
 In equations:
-- `J&#39; p2 = p2_pre` ==> solve via triangular solve with `J&#39; = wt&#39;`,
+- `J^T p2 = p2_pre` ==> solve via triangular solve with `J^T = wt^T`,
   no-transpose, upper.
-- `-D^{1/2} p1 + D^{-1/2} L&#39; p2 = p1_pre` ==>
-  `p1 = -D^{-1/2} (p1_pre - D^{-1/2} L&#39; p2)`
-       `= -D^{-1/2} p1_pre + D^{-1} L&#39; p2`.
+- `-D^{1/2} p1 + D^{-1/2} L^T p2 = p1_pre` ==>
+  `p1 = -D^{-1/2} (p1_pre - D^{-1/2} L^T p2)`
+       `= -D^{-1/2} p1_pre + D^{-1} L^T p2`.
 
 Pseudocode for Part II:
 
@@ -144,7 +144,7 @@ for i = 1 to col:
 ```
 
 The "no-transpose upper" triangular solve is the F77 call
-`dtrsm(&#39;l&#39;,&#39;u&#39;,&#39;n&#39;,&#39;n&#39;, col, 1, 1.0, wt, m, p(col+1), col)`.
+`dtrsm('l','u','n','n', col, 1, 1.0, wt, m, p(col+1), col)`.
 
 ### Combined pseudocode
 
@@ -185,7 +185,7 @@ None.
 ### Numerical safeguards
 
 - `sqrt(sy[i, i])` requires `sy[i, i] > 0`. Caller (`matupd`) ensures
-  this via the curvature condition `s&#39; y > eps * ||y||^2`. If a port
+  this via the curvature condition `s^T y > eps * ||y||^2`. If a port
   receives `sy[i, i] <= 0` (corrupt state), `bmv` is undefined.
 - The triangular solves require `wt[i, i] != 0`. Caller (`formt`)
   ensures this; if the Cholesky factorization in `formt` fails, the

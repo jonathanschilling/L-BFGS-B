@@ -38,7 +38,7 @@ robust to garbage inputs (subject to the array length being at least
 
 ### Postconditions
 
-- `task` may be unchanged (success), or contain an `&#39;ERROR: ...&#39;`
+- `task` may be unchanged (success), or contain an `'ERROR: ...'`
   message.
 - If `task` is unchanged, `info` and `k` are also unchanged.
 
@@ -71,7 +71,7 @@ for the final `task` value when multiple errors are present.
 When multiple errors are present:
 
 - If `n <= 0`, `m <= 0`, and `factr < 0` are all true:
-  `task = &#39;ERROR: FACTR .LT. 0&#39;` (check 3 wins).
+  `task = 'ERROR: FACTR .LT. 0'` (check 3 wins).
 - If both `n <= 0` and `nbd[1] = -1`: the nbd loop runs (because the
   loop bound `n` is an integer; if `n <= 0` the loop does nothing in
   F77 -- see below); the final `task` depends on which checks fire.
@@ -174,7 +174,7 @@ valid?" property. Whether this matters depends on the port's audience.
 - **Paper**: not algorithmic; this is implementation-level input
   validation.
 - **Related subroutines**: called by `mainlb` once at startup before
-  `active`. If `errclb` sets `task = &#39;ERROR: ...&#39;`, `mainlb` returns
+  `active`. If `errclb` sets `task = 'ERROR: ...'`, `mainlb` returns
   immediately without further computation.
 - **F77 source**: `src/errclb.f`.
 - **Unit test**: `tests/unit/test_errclb.f90` (8 case_* blocks).

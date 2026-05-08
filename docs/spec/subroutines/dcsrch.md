@@ -21,7 +21,7 @@ interval `[stx, sty]` that contains a minimizer, and uses `dcstep`
 to compute each next trial step.
 
 The F77 implementation uses **reverse-communication**: the caller
-supplies `phi(stp_trial)` and `phi&#39;(stp_trial)` between calls. Ports
+supplies `phi(stp_trial)` and `phi'(stp_trial)` between calls. Ports
 targeting modern languages can wrap this in a callback style:
 
 ```
@@ -98,30 +98,30 @@ result {
 
 ### Preconditions
 
-- On `&#39;START&#39;`: `f = phi(0)`, `g = phi&#39;(0) < 0`, `stp` in
+- On `'START'`: `f = phi(0)`, `g = phi'(0) < 0`, `stp` in
   `[stpmin, stpmax]`.
 - The phi function (or the caller-supplied trial f, g) must be the
   derivative-and-value of a 1D function along the search direction.
 
 ### Postconditions
 
-- `stp` is the trial step (`task = &#39;FG&#39;`) or final step (`task = &#39;CONV&#39;/&#39;WARN&#39;`).
-- `f` and `g` reflect `phi(stp)` and `phi&#39;(stp)`.
+- `stp` is the trial step (`task = 'FG'`) or final step (`task = 'CONV'/'WARN'`).
+- `f` and `g` reflect `phi(stp)` and `phi'(stp)`.
 
 ## Algorithm
 
 The algorithm has two stages:
 
-- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol * stp * phi&#39;(0)`
+- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol * stp * phi'(0)`
   -- a curve translated so the sufficient-decrease line is the
-  zero-axis. Once `psi(stp) <= 0` and `phi&#39;(stp) >= 0`, switch to
+  zero-axis. Once `psi(stp) <= 0` and `phi'(stp) >= 0`, switch to
   stage 2.
 - **Stage 2**: search uses the original `phi` directly.
 
 Per call, `dcsrch`:
 
 1. Restore local state from `isave`/`dsave` (or initialize on
-   `&#39;START&#39;`).
+   `'START'`).
 2. Update `stage` if the stage-2 entry condition is met.
 3. Test for warnings (bracket too small, `stp` at boundary).
 4. Test for convergence (Wolfe conditions).
@@ -131,7 +131,7 @@ Per call, `dcsrch`:
 7. Apply bisection if the bracket isn't shrinking fast enough.
 8. Update step bounds `[stmin, stmax]`.
 9. Clamp `stp` to `[stpmin, stpmax]`.
-10. Save state, return with `task = &#39;FG&#39;`.
+10. Save state, return with `task = 'FG'`.
 
 ### Magic constants
 

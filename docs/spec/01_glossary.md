@@ -16,7 +16,7 @@ this notation.
 | `m` | `m` | `m` | Maximum number of L-BFGS pairs to retain. Typical 5-17. |
 | `col` | `k` (alg) / `m_k` (code) | `col` | Current number of stored L-BFGS pairs (`0 <= col <= m`). Increases each iteration until reaching `m`, then stays at `m`. |
 | `iter` | `k` | `iter` | Iteration counter (0-based; `iter=0` is the initial point). |
-| `theta` | `theta` | `theta` | Hessian scaling parameter; `theta = (y_k&#39; y_k) / (s_k&#39; y_k)` after each successful update. Initialized to 1. |
+| `theta` | `theta` | `theta` | Hessian scaling parameter; `theta = (y_k^T y_k) / (s_k^T y_k)` after each successful update. Initialized to 1. |
 | `f` | `f(x)` | `f` | Function value at current iterate. |
 | `factr` | `factr` | `factr` | Function-decrease tolerance (relative). Convergence when `(f_old - f_new) / max(\|f_old\|, \|f_new\|, 1) <= factr * eps`. Typical `10^7` (low accuracy), `10^1` (machine accuracy). |
 | `pgtol` | `pgtol` | `pgtol` | Projected-gradient tolerance. Convergence when `||g_proj||_Inf <= pgtol`. |
@@ -67,24 +67,24 @@ indexing is by *insertion order*. The most recent pair is at column
 |------|-------|-----|-------|-------------|
 | `S` | `S_k = [s_{k-col}, ..., s_{k-1}]` | `ws` | `n * col` | Matrix of `s`-vectors. Columns ordered by insertion; F77 uses `head`/`itail` to track cyclic position when `col = m`. |
 | `Y` | `Y_k` | `wy` | `n * col` | Matrix of `y`-vectors, same ordering as `S`. |
-| `D` | `D_k = diag(s_i&#39; y_i)` | (diagonal of `sy`) | `col * col` | Diagonal of dot products. **Stored as the diagonal of `sy`**. |
-| `L` | `L_k` (strictly lower triangular of `S_k&#39; Y_k`) | (lower triangle of `sy`) | `col * col` | Strict lower triangle: `L_{i,j} = s_i&#39; y_j` for `i > j`. **Stored as the strict lower triangle of `sy`**. |
-| `R` | `R_k` (upper triangular of `S_k&#39; Y_k`) | not stored | `col * col` | Used in derivations; not materialized in the F77 code (the relevant info is in `D` + `L`). |
-| `S&#39;S` | `S_k&#39; S_k` | `ss` | `col * col` | Symmetric Gram matrix. F77 stores the upper triangle in `ss`. |
+| `D` | `D_k = diag(s_i^T y_i)` | (diagonal of `sy`) | `col * col` | Diagonal of dot products. **Stored as the diagonal of `sy`**. |
+| `L` | `L_k` (strictly lower triangular of `S_k^T Y_k`) | (lower triangle of `sy`) | `col * col` | Strict lower triangle: `L_{i,j} = s_i^T y_j` for `i > j`. **Stored as the strict lower triangle of `sy`**. |
+| `R` | `R_k` (upper triangular of `S_k^T Y_k`) | not stored | `col * col` | Used in derivations; not materialized in the F77 code (the relevant info is in `D` + `L`). |
+| `S^TS` | `S_k^T S_k` | `ss` | `col * col` | Symmetric Gram matrix. F77 stores the upper triangle in `ss`. |
 
 ### F77 packing of `sy` and `ss`
 
 The F77 implementation packs both `D` and `L` into a single `m * m`
 array `sy`:
-- `sy(i, i) = D[i] = s_i&#39; y_i` (diagonal)
-- `sy(i, j) = L[i,j] = s_i&#39; y_j` for `i > j` (strict lower triangle)
+- `sy(i, i) = D[i] = s_i^T y_i` (diagonal)
+- `sy(i, j) = L[i,j] = s_i^T y_j` for `i > j` (strict lower triangle)
 - `sy(i, j)` for `i < j` is **unused** (held but not read).
 
-Similarly `ss(i, j)` for `i <= j` holds `s_i&#39; s_j` (upper triangle of
-`S&#39;S`); the strict lower part is unused.
+Similarly `ss(i, j)` for `i <= j` holds `s_i^T s_j` (upper triangle of
+`S^TS`); the strict lower part is unused.
 
 **Ports may use any storage they prefer** -- separate `D` (vector) and
-`L` (lower-triangular matrix) variables, a full symmetric `S&#39;S` matrix,
+`L` (lower-triangular matrix) variables, a full symmetric `S^TS` matrix,
 sparse formats, etc. -- as long as the entries above are accessible.
 The packing above is an F77 implementation detail.
 
@@ -95,10 +95,10 @@ Following Byrd/Nocedal/Schnabel 1994 sec.3 and `code.pdf` sec.2.
 | Spec | Paper | F77 | Shape | Description |
 |------|-------|-----|-------|-------------|
 | `W` | `W_k = [Y_k, theta*S_k]` | (formed implicitly) | `n * 2col` | Wide matrix. Not stored explicitly in F77; columns are taken on the fly from `wy` and `ws`. |
-| `M_inv` | `M_k^{-1} = [[-D, L&#39;], [L, theta*S&#39;S]]` | (formed implicitly via `sy`, `ss`, `theta`) | `2col * 2col` | Middle matrix inverse. F77 never materializes this; `bmv` solves `M_k v = result` using the components. |
-| `T` | `J_k`: upper Cholesky factor of `theta*S&#39;S + L D^{-1} L&#39;` | `wt` | `col * col` | Upper-triangular Cholesky factor. Computed in `formt` from `sy`, `ss`, `theta`. Used by `bmv` for the matrix-vector solve. |
-| `B` | `B_k = thetaI - W M^{-1} W&#39;` | (not stored) | `n * n` | Hessian approximation. Never materialized; only Hessian-vector products are computed. |
-| `K` | `K = [[-D - Y&#39;_a Z B Z&#39; Y_a, ...], ...]` (subspace minimization) | `wn` | `2col * 2col` | Reduced Hessian for the subspace minimization. Built by `formk`, used by `subsm`. |
+| `M_inv` | `M_k^{-1} = [[-D, L^T], [L, theta*S^TS]]` | (formed implicitly via `sy`, `ss`, `theta`) | `2col * 2col` | Middle matrix inverse. F77 never materializes this; `bmv` solves `M_k v = result` using the components. |
+| `T` | `J_k`: upper Cholesky factor of `theta*S^TS + L D^{-1} L^T` | `wt` | `col * col` | Upper-triangular Cholesky factor. Computed in `formt` from `sy`, `ss`, `theta`. Used by `bmv` for the matrix-vector solve. |
+| `B` | `B_k = thetaI - W M^{-1} W^T` | (not stored) | `n * n` | Hessian approximation. Never materialized; only Hessian-vector products are computed. |
+| `K` | `K = [[-D - Y^T_a Z B Z^T Y_a, ...], ...]` (subspace minimization) | `wn` | `2col * 2col` | Reduced Hessian for the subspace minimization. Built by `formk`, used by `subsm`. |
 | `K_chol` | upper Cholesky of `K` | `snd` | `2col * 2col` | Cholesky factor of `K` for back-substitution in `subsm`. |
 
 ## F77 workspace arrays (mapped to logical objects)

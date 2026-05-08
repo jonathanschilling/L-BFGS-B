@@ -146,7 +146,7 @@ endif
 ```
 
 Caller-side check (in `mainlb`) that gates calls to `matupd`. If the
-new `(s, y)` pair has curvature `s&#39;y` smaller than `eps` times the
+new `(s, y)` pair has curvature `s'y` smaller than `eps` times the
 relevant scale, the pair is rejected to avoid corrupting the L-BFGS
 cache. Standard refresh logic; the threshold `epsmch * ddum` keeps
 the test scale-invariant.

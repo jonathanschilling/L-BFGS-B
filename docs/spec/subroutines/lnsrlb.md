@@ -10,7 +10,7 @@ feasible box. Computes the actual `x = t + stp * d` at each trial
 
 This is the bridge between `mainlb`'s outer iteration and `dcsrch`'s
 1D search. In F77 it is reverse-comm; the wrapper accepts
-`task = &#39;FG_LN&#39;` (continuation) vs `&#39;START&#39;` (new search).
+`task = 'FG_LN'` (continuation) vs `'START'` (new search).
 
 In a callback-based port, `lnsrlb` is just an internal function in
 the `mainlb` loop that calls the user's `f_eval` / `g_eval` between

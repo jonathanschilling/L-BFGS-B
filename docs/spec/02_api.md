@@ -210,7 +210,7 @@ termination with `info = INFO_ABNORMAL_LNSRLB`.
 
 Some ports may want to allow the user to interrupt the optimization
 between iterations (e.g., timeout, external signal). The F77 `setulb`
-exposes this via `task = &#39;STOP&#39;` mid-iteration.
+exposes this via `task = 'STOP'` mid-iteration.
 
 For a callback-based port, the recommended idiom is an optional
 `should_stop: function(state) -> boolean` callback invoked at each

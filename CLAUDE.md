@@ -80,29 +80,38 @@ The conversion script that originally cleaned the repo is logged in commit histo
 
 ### Doxygen-table apostrophe quirk
 
-In addition to the ASCII rule, **inside inline backtick spans `` `...` ``, write apostrophes as the HTML entity `&#39;`**. Doxygen's markdown-in-tables parser misinterprets backtick-delimited content containing apostrophes as a smart-quote pair, which collapses subsequent table rows and section headings into the broken cell. The rendered glossary page lost its "Vectors (current state)" heading this way (see issue diagnosis at gh-pages run that hit `md_docs_spec_01_glossary.html`).
+Doxygen's markdown-in-tables parser misinterprets a backtick-delimited span containing a raw apostrophe as a smart-quote pair: the opening backtick becomes `&lsquo;`, the first apostrophe becomes `&rsquo;`, and the closing backtick opens an unclosed `<code>` block that swallows subsequent table rows and headings. This collapsed the "Vectors (current state)" heading into the previous table at `md_docs_spec_01_glossary.html`.
 
-The escape applies only inside inline `` `code` ``; multi-line fenced code blocks (` ``` `) render correctly without escaping. The escape is invisible in the rendered HTML (Doxygen prints `&#39;` as a literal apostrophe).
+The bug only fires **inside markdown table cells** (`| ... |` lines). Inline backticks in regular paragraphs and fenced code blocks (` ``` `) render correctly with raw apostrophes.
 
-When adding new spec docs that include math notation with apostrophes (transpose `s'y`, derivative `phi'(t)`, F77 string args `'l'`, task names `'CONV'`, etc.) inside backticks, replace each `'` with `&#39;`. A pre-flight check:
+Two complementary rules for the spec docs:
+
+1. **Use `^T` for matrix transpose**, not `'`. Standard math notation, more readable, and avoids the bug entirely. Examples: write `s_i^T y_j`, `S_k^T Y_k`, `theta * S^T S + L * D^{-1} * L^T`. Don't write `s_i' y_j`.
+
+2. **Inside table-cell inline backticks only**, escape any remaining apostrophes (derivatives like `` `phi&#39;(t)` ``, F77 string args like `` `'l'` ``, paired task names like `` `'CONV'` ``) with the HTML entity `&#39;`. Doxygen renders `&#39;` as a literal `'` so the visible HTML is unchanged.
+
+Pre-flight check before committing:
 
 ```bash
-# Find any inline backtick spans that still contain a raw apostrophe.
-grep -rEn "\`[^\`]*'[^\`]*\`" docs/spec/*.md docs/spec/subroutines/*.md
+# Find inline backtick spans on table rows that still contain a raw apostrophe.
+python3 -c "
+import re, glob, sys
+INLINE = re.compile(r'\`([^\`\n]+)\`')
+TABLE = re.compile(r'^\s*\|.*\|\s*\$')
+bad = 0
+for p in glob.glob('docs/spec/**/*.md', recursive=True):
+    with open(p) as f:
+        for i, line in enumerate(f, 1):
+            if not TABLE.match(line): continue
+            for m in INLINE.finditer(line):
+                if \"'\" in m.group(1):
+                    print(f'{p}:{i}: {m.group(0)}')
+                    bad += 1
+sys.exit(1 if bad else 0)
+"
 ```
 
-If anything is reported, run this fix script (or hand-edit):
-
-```python
-import re, glob
-INLINE = re.compile(r'`([^`\n]+)`')
-for path in glob.glob('docs/spec/**/*.md', recursive=True):
-    with open(path) as f: text = f.read()
-    new = INLINE.sub(lambda m: '`' + m.group(1).replace("'", "&#39;") + '`'
-                                if "'" in m.group(1) else m.group(0), text)
-    if new != text:
-        with open(path, 'w') as f: f.write(new)
-```
+If anything is reported, hand-fix by either (a) replacing transpose `'` with `^T` (preferred), or (b) escaping the apostrophe with `&#39;` if it's a derivative or string literal.
 
 ## Portability specification pack
 

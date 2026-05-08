@@ -210,18 +210,49 @@ In particular:
 
 ## Magic-constants table
 
-This table is **populated during Phase D** (`05_deviations.md` audit).
-For now, the known entries:
+Populated by the Phase D deviations audit; see `05_deviations.md` for
+the full audit notes.
+
+### Algorithmic constants (require port to match)
 
 | Constant | Site | Value | Origin | Tunable? |
 |----------|------|-------|--------|----------|
-| `ftol` | `lnsrlb.f`, `dcsrch.f` | `1.0e-3` | Code-only deviation from More–Thuente 1994 (which uses `1e-4`). | No. Validated test bounds depend on this. |
-| `gtol` | `lnsrlb.f`, `dcsrch.f` | `0.9` | More–Thuente 1994 §6 standard for L-BFGS line search. | No. |
-| `xtol` | `lnsrlb.f`, `dcsrch.f` | `0.1` | More–Thuente 1994 §6. | No. |
-| (cauchy's `0.66` step-backoff factor) | `cauchy.f` | `0.66` | TBD (Phase D audit). Suspected heuristic safety margin. | TBD. |
-| (refresh `1e-8` gate) | `cauchy.f`, `subsm.f` | `1.0e-8` | TBD (Phase D audit). | TBD. |
-| (refresh `1e-10` gate) | `cauchy.f`, `subsm.f` | `1.0e-10` | TBD (Phase D audit). | TBD. |
-| (Cholesky pivot threshold) | `formt.f` | derived from `epsmch` | TBD (Phase D audit). | No. |
+| `ftol` | `lnsrlb.f`, `dcsrch.f` | `1.0e-3` | **Deviation from More-Thuente 1994 (which uses `1e-4`).** Code-only. See `05_deviations.md`. | No. Validated test bounds depend on this. |
+| `gtol` | `lnsrlb.f`, `dcsrch.f` | `0.9` | More-Thuente 1994 §6 standard. | No. |
+| `xtol` | `lnsrlb.f`, `dcsrch.f` | `0.1` | More-Thuente 1994 §6. | No. |
+| `p66` | `dcstep.f`, `dcsrch.f` | `0.66` | More-Thuente 1994 §3 bracket safeguard. | No. |
+| `xtrapl` | `dcsrch.f` | `1.1` | MINPACK-2 line search lower-extrapolation. | No. |
+| `xtrapu` | `dcsrch.f` | `4.0` | MINPACK-2 line search upper-extrapolation. | No. |
 
-This table will be filled in as part of the Phase D audit; entries
-marked TBD are placeholders.
+### Universal numeric literals
+
+| Constant | Sites | Value | Notes |
+|----------|-------|-------|-------|
+| `zero`, `one` | many | `0.0d0`, `1.0d0` | Universal. |
+| `p5`, `two`, `three` | `dcstep.f`, `dcsrch.f` | `0.5`, `2.0`, `3.0` | Cubic / quadratic interpolation coefficients. |
+| `2.0d0` | `cauchy.f:420` | `2.0` | Cross-term coefficient in the `f2` update across a breakpoint. From the Taylor expansion in `algorithm.pdf` §4. |
+
+### Implementation-detail sentinels
+
+| Constant | Site | Value | Notes |
+|----------|------|-------|-------|
+| `big` | `lnsrlb.f` | `1.0e10` | No-bounds-binding sentinel for `stpmx`. Not algorithmic. |
+
+### `epsmch`-scaled safeguards
+
+These don't appear as fixed numerical literals; they scale with the
+machine precision of the running platform.
+
+| Where | Form | Purpose |
+|-------|------|---------|
+| `cauchy.f:423` | `max(epsmch * f2_org, f2)` | Lower bound on segment curvature to prevent `0/0` in `dtm = -f1/f2`. |
+| `mainlb.f:566` | `dr ≤ epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s'y`. |
+| `formt.f`, `formk.f` | LAPACK `dpotrf` failure | Cholesky pivot non-positivity → caller refreshes L-BFGS history. |
+
+### Constants from earlier suspicion that DO NOT exist
+
+The original Phase D candidate list mentioned `1.0e-8` and `1.0e-10`
+gates somewhere in `cauchy.f` / `subsm.f`. **The audit confirmed
+neither exists in the F77 source.** Cauchy's only safety floor uses
+`epsmch * f2_org` (machine-eps-scaled). See `05_deviations.md` for
+the audit methodology.

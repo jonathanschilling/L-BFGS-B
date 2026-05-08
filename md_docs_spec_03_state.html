@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_03_state.html',''); initR
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>Y</code>   </td><td class="markdownTableBodyNone">real matrix, <code>n * col</code>   </td><td class="markdownTableBodyNone">Columns are <code>y_i = g_{k_i+1} - g_{k_i}</code> in insertion order.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>theta</code>   </td><td class="markdownTableBodyNone">real, <code>&gt; 0</code>   </td><td class="markdownTableBodyNone">Hessian scaling (<code>y_k&amp;#39; y_k / s_k&amp;#39; y_k</code> after each update; initialized to <code>1</code>).   </td></tr>
+<td class="markdownTableBodyNone"><code>theta</code>   </td><td class="markdownTableBodyNone">real, <code>&gt; 0</code>   </td><td class="markdownTableBodyNone">Hessian scaling (<code>y_k^T y_k / s_k^T y_k</code> after each update; initialized to <code>1</code>).   </td></tr>
 </table>
 <p>Ports may store <code>S</code> and <code>Y</code> as column-major matrices, row-major matrices, lists of vectors, or any other structure. The F77 source uses column-major <code>n * m</code> arrays with <code>head</code>/<code>itail</code> indices for cyclic storage when <code>col = m</code>; this is one valid choice but not required.</p>
 <h2>Cached quantities for the compact representation</h2>
@@ -142,11 +142,11 @@ $(document).ready(function(){initNavTree('md_docs_spec_03_state.html',''); initR
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Object   </th><th class="markdownTableHeadNone">Type   </th><th class="markdownTableHeadNone">Defined as    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>sy</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>   </td><td class="markdownTableBodyNone"><code>sy[i,j] = s_i&amp;#39; * y_j</code>. The diagonal is <code>D = diag(s_i&amp;#39; y_i)</code>. The strict lower triangle is <code>L_{i,j} = s_i&amp;#39; y_j</code> for <code>i &gt; j</code>. The strict upper triangle is unused (in the F77 packing).    </td></tr>
+<td class="markdownTableBodyNone"><code>sy</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>   </td><td class="markdownTableBodyNone"><code>sy[i,j] = s_i^T * y_j</code>. The diagonal is <code>D = diag(s_i^T y_i)</code>. The strict lower triangle is <code>L_{i,j} = s_i^T y_j</code> for <code>i &gt; j</code>. The strict upper triangle is unused (in the F77 packing).    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>ss</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>   </td><td class="markdownTableBodyNone"><code>ss[i,j] = s_i&amp;#39; * s_j</code>. Symmetric; the F77 source stores only the upper triangle.    </td></tr>
+<td class="markdownTableBodyNone"><code>ss</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>   </td><td class="markdownTableBodyNone"><code>ss[i,j] = s_i^T * s_j</code>. Symmetric; the F77 source stores only the upper triangle.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>T</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>, upper-triangular   </td><td class="markdownTableBodyNone">Cholesky factor: <code>T&amp;#39; T = theta * S&amp;#39;S + L * D^{-1} * L&amp;#39;</code> (the Cholesky factor of the middle matrix <code>M_inv</code>'s lower-right block). Computed by <code>formt</code> from <code>sy</code>, <code>ss</code>, <code>theta</code>.   </td></tr>
+<td class="markdownTableBodyNone"><code>T</code>   </td><td class="markdownTableBodyNone">real matrix, <code>col * col</code>, upper-triangular   </td><td class="markdownTableBodyNone">Cholesky factor: <code>T^T T = theta * S^TS + L * D^{-1} * L^T</code> (the Cholesky factor of the middle matrix <code>M_inv</code>'s lower-right block). Computed by <code>formt</code> from <code>sy</code>, <code>ss</code>, <code>theta</code>.   </td></tr>
 </table>
 <h2>Bound state</h2>
 <table class="markdownTable">
@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_03_state.html',''); initR
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>xc</code>   </td><td class="markdownTableBodyNone">real vector, length <code>n</code>   </td><td class="markdownTableBodyNone">Generalized Cauchy point. Computed by <code>cauchy</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>c</code>   </td><td class="markdownTableBodyNone">real vector, length <code>2 col</code>   </td><td class="markdownTableBodyNone"><code>c = W&amp;#39; (xc - x)</code>; built by <code>cauchy</code>, used by <code>subsm</code>.   </td></tr>
+<td class="markdownTableBodyNone"><code>c</code>   </td><td class="markdownTableBodyNone">real vector, length <code>2 col</code>   </td><td class="markdownTableBodyNone"><code>c = W^T (xc - x)</code>; built by <code>cauchy</code>, used by <code>subsm</code>.   </td></tr>
 </table>
 <h2>Active set after Cauchy</h2>
 <table class="markdownTable">
@@ -230,12 +230,12 @@ $(document).ready(function(){initNavTree('md_docs_spec_03_state.html',''); initR
 <li><b>First evaluation</b>: invoke <code>f_eval(x0)</code> and <code>g_eval(x0)</code> to get <code>f</code> and <code>g</code>. Increment <code>n_fg</code>.</li>
 <li><b>Initial convergence check</b>: compute <code>g_proj_inf</code>; if it is <code>&lt;= pgtol</code>, return with <code>info = INFO_CONVERGED_PGTOL</code> immediately.</li>
 </ol>
-<p>The legacy reverse-comm version splits steps 1-4 into the <code>START</code> task and yields after step 5 with <code>task = &amp;#39;FG&amp;#39;</code>; ports using callbacks collapse this into straight code.</p>
+<p>The legacy reverse-comm version splits steps 1-4 into the <code>START</code> task and yields after step 5 with &lsquo;task = 'FG&rsquo;`; ports using callbacks collapse this into straight code.</p>
 <h1>Per-iteration update</h1>
 <p>After computing the next iterate <code>x_new</code> with function <code>f_new</code> and gradient <code>g_new</code>:</p>
 <ol type="1">
-<li><b>Check curvature</b>: compute <code>s = x_new - x</code> and <code>y = g_new - g</code>. If <code>s&amp;#39; y / |s&amp;#39; s| &gt; eps * ||y||^2</code> (a refresh threshold; see <code>mainlb.md</code> for the exact formula), accept the pair.</li>
-<li><b>If accepted</b>: append <code>(s, y)</code> to <code>S</code>, <code>Y</code>. If <code>col = m</code> already, drop the oldest column first. Update <code>theta = (y&amp;#39; y) / (s&amp;#39; y)</code>. Update cached <code>sy</code>, <code>ss</code>. Recompute <code>T = formt(sy, ss, theta)</code>. Set <code>updatd = true</code>.</li>
+<li><b>Check curvature</b>: compute <code>s = x_new - x</code> and <code>y = g_new - g</code>. If <code>s^T y / |s^T s| &gt; eps * ||y||^2</code> (a refresh threshold; see <code>mainlb.md</code> for the exact formula), accept the pair.</li>
+<li><b>If accepted</b>: append <code>(s, y)</code> to <code>S</code>, <code>Y</code>. If <code>col = m</code> already, drop the oldest column first. Update <code>theta = (y^T y) / (s^T y)</code>. Update cached <code>sy</code>, <code>ss</code>. Recompute <code>T = formt(sy, ss, theta)</code>. Set <code>updatd = true</code>.</li>
 <li><b>If rejected</b> (curvature too small or <code>formt</code> Cholesky failed): discard the proposed pair; set <code>updatd = false</code>. The <code>cauchy</code> and <code>subsm</code> calls in the next iteration will reuse the existing factorizations.</li>
 <li><b>Set</b> <code>xp = x</code>, <code>x = x_new</code>, <code>f = f_new</code>, <code>g = g_new</code>. Increment <code>iter</code>.</li>
 </ol>

@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_02_api.html',''); initRes
 <p>The optimizer validates inputs before the first callback. On validation failure it returns immediately with <code>info &lt;= -1</code> and <b>no callbacks have been invoked</b>. See <code>errclb.md</code> for the full list of error cases and codes.</p>
 <p>NaN / Inf in the user-supplied <code>x0</code>, <code>l</code>, or <code>u</code> is allowed only where the bound is inactive (e.g., <code>u[i]</code> may be <code>+Inf</code> if <code>nbd[i] in {0, 1}</code>). NaN / Inf returned from <code>f_eval</code> or <code>g_eval</code> causes abnormal termination with <code>info = INFO_ABNORMAL_LNSRLB</code>.</p>
 <h1>Optional: stopping callback</h1>
-<p>Some ports may want to allow the user to interrupt the optimization between iterations (e.g., timeout, external signal). The F77 <code>setulb</code> exposes this via <code>task = &amp;#39;STOP&amp;#39;</code> mid-iteration.</p>
+<p>Some ports may want to allow the user to interrupt the optimization between iterations (e.g., timeout, external signal). The F77 <code>setulb</code> exposes this via &lsquo;task = 'STOP&rsquo;` mid-iteration.</p>
 <p>For a callback-based port, the recommended idiom is an optional <code>should_stop: function(state) -&gt; boolean</code> callback invoked at each iteration boundary; if it returns <code>true</code>, the optimizer terminates with <code>info = INFO_USER_STOP</code>. The state passed to <code>should_stop</code> may include <code>iter</code>, <code>n_fg</code>, current <code>f</code>, current <code>||g_proj||_Inf</code>, and elapsed wall time &ndash; port's choice.</p>
 <p>This is <b>not part of the algorithm spec</b> (the algorithm itself does nothing different); it is an interface convenience that ports may or may not provide.</p>
 <h1>Mapping to F77 <code>setulb</code></h1>
@@ -211,9 +211,9 @@ $(document).ready(function(){initNavTree('md_docs_spec_02_api.html',''); initRes
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>factr</code>, <code>pgtol</code>, <code>iprint</code>   </td><td class="markdownTableBodyNone">Same names.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>f_eval</code>, <code>g_eval</code>   </td><td class="markdownTableBodyNone">Caller computes <code>f</code>, <code>g</code> between <code>setulb</code> calls when <code>task = &amp;#39;FG&amp;#39;</code>.    </td></tr>
+<td class="markdownTableBodyNone"><code>f_eval</code>, <code>g_eval</code>   </td><td class="markdownTableBodyNone">Caller computes <code>f</code>, <code>g</code> between <code>setulb</code> calls when <code>task = FG</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>max_iter</code>, <code>max_fg</code>   </td><td class="markdownTableBodyNone">F77 has no caps in <code>setulb</code> itself; the drivers loop and break on <code>task != &amp;#39;FG&amp;#39; &amp;&amp; task != &amp;#39;NEW_X&amp;#39;</code>.    </td></tr>
+<td class="markdownTableBodyNone"><code>max_iter</code>, <code>max_fg</code>   </td><td class="markdownTableBodyNone">F77 has no caps in <code>setulb</code> itself; the drivers loop and break on <code>task != FG &amp;&amp; task != NEW_X</code>.    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Result <code>x</code>, <code>f</code>, <code>g</code>, <code>info</code>   </td><td class="markdownTableBodyNone">F77 leaves these in-place in the user's arrays.    </td></tr>
 <tr class="markdownTableRowEven">

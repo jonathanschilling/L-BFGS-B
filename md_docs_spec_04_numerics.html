@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>bmv</code>: <code>1 / sqrt(sy[i,i])</code>   </td><td class="markdownTableBodyNone">precondition: <code>sy[i,i] &gt; 0</code> enforced by <code>matupd</code>   </td><td class="markdownTableBodyNone">If precondition violated, behavior undefined.   </td></tr>
 </table>
-<p>| <code>matupd</code>: <code>s&amp;#39;y</code> curvature test | <code>s&amp;#39;y &gt; eps * ||y||^2</code> (refresh threshold) | New pair rejected; <code>updatd = false</code>. |</p>
+<p>| <code>matupd</code>: <code>s^T y</code> curvature test | <code>s^T y &gt; eps * ||y||^2</code> (refresh threshold) | New pair rejected; <code>updatd = false</code>. |</p>
 <h2>Overflow / underflow</h2>
 <p>The algorithm does not explicitly guard against IEEE-754 overflow to infinity in arithmetic. Inputs that produce intermediate <code>Inf</code> or <code>NaN</code> typically cause the line search to fail, returning <code>INFO_ABNORMAL_LNSRLB</code>. The user should ensure <code>f_eval</code> and <code>g_eval</code> return finite values for feasible inputs.</p>
 <h2>Step-length floor</h2>
@@ -172,7 +172,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>dscal</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><code>y &lt;- alpha*y</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>ddot</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><code>x&amp;#39; y</code>.   </td></tr>
+<td class="markdownTableBodyNone"><code>ddot</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><code>x^T y</code>.   </td></tr>
 </table>
 <p>| <code>dnrm2</code> | line search, gradients | <code>||x||_2</code>. | | <code>dgemv</code> | <code>formk</code>, <code>subsm</code>, <code>cauchy</code> | <code>y &lt;- alpha*A*x + beta*y</code>. | | <code>dtrsm</code> | <code>bmv</code>, <code>subsm</code> | Triangular solve <code>A x = b</code>. | | <code>dpotrf</code> | <code>formt</code>, <code>formk</code> | Cholesky factorization. |</p>
 <h2>Reference build for bit-for-bit conformance</h2>
@@ -240,7 +240,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code><a class="el" href="cauchy_8f.html">cauchy.f</a>:423</code>   </td><td class="markdownTableBodyNone"><code>max(epsmch * f2_org, f2)</code>   </td><td class="markdownTableBodyNone">Lower bound on segment curvature to prevent <code>0/0</code> in <code>dtm = -f1/f2</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code><a class="el" href="mainlb_8f.html">mainlb.f</a>:566</code>   </td><td class="markdownTableBodyNone"><code>dr &lt;= epsmch * ddum</code>   </td><td class="markdownTableBodyNone">L-BFGS curvature-condition gate; rejects <code>(s, y)</code> pairs with too-small <code>s&amp;#39;y</code>.    </td></tr>
+<td class="markdownTableBodyNone"><code><a class="el" href="mainlb_8f.html">mainlb.f</a>:566</code>   </td><td class="markdownTableBodyNone"><code>dr &lt;= epsmch * ddum</code>   </td><td class="markdownTableBodyNone">L-BFGS curvature-condition gate; rejects <code>(s, y)</code> pairs with too-small <code>s^T y</code>.    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code><a class="el" href="formt_8f.html">formt.f</a></code>, <code><a class="el" href="formk_8f.html">formk.f</a></code>   </td><td class="markdownTableBodyNone">LAPACK <code>dpotrf</code> failure   </td><td class="markdownTableBodyNone">Cholesky pivot non-positivity -&gt; caller refreshes L-BFGS history.   </td></tr>
 </table>

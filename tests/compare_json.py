@@ -10,9 +10,11 @@ The IsCloseRelAbs metric is |a-b| / (1 + |b|) < threshold. The "+1"
 gracefully degrades to absolute tolerance when |b| is small (which is
 typical for converged f or |proj g|, both near machine epsilon).
 
-Default threshold is 1e-2 (1%): tight enough to catch real algorithmic
-regressions, loose enough to absorb cross-toolchain FP-trajectory
-divergence in iterative methods. Override with LBFGSB_TEST_TOLERANCE.
+Default threshold is 1e-9: gives ~33x headroom over the worst observed
+cross-toolchain divergence (~3e-11 between gfortran 16.1.1 + openblas
+locally and gfortran 13.3.0 + openblas 0.3.26 on ubuntu-24.04 CI),
+while still catching any real algorithmic regression. Override with
+LBFGSB_TEST_TOLERANCE if a future toolchain pushes things further.
 
 Exits 0 on match (and prints the values for visibility), 1 on mismatch.
 """
@@ -20,7 +22,7 @@ import json
 import os
 import sys
 
-DEFAULT_THRESHOLD = 1e-2
+DEFAULT_THRESHOLD = 1e-9
 THRESHOLD = float(os.environ.get("LBFGSB_TEST_TOLERANCE", DEFAULT_THRESHOLD))
 
 EXPECTED_KEYS = {"final_task", "final_f", "final_projg"}

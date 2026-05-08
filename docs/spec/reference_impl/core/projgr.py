@@ -1,4 +1,4 @@
-"""projgr — infinity norm of the projected gradient.
+"""projgr -- infinity norm of the projected gradient.
 
 Reference implementation following ``docs/spec/subroutines/projgr.md``.
 This module is part of the portability spec pack and is intended as a

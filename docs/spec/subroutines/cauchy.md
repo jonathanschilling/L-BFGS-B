@@ -3,9 +3,9 @@
 ## Purpose
 
 Compute the **Generalized Cauchy Point** (GCP): the first local
-minimizer of the quadratic model `Q(x + s) = g'·s + (1/2)·s'·B·s`
-along the projected steepest-descent path `P(x - t·g, l, u)` for
-`t ≥ 0`.
+minimizer of the quadratic model `Q(x + s) = g'*s + (1/2)*s'*B*s`
+along the projected steepest-descent path `P(x - t*g, l, u)` for
+`t >= 0`.
 
 The GCP determines which bounds become active in this iteration; the
 free variables at the GCP form the subspace for `subsm`.
@@ -15,7 +15,7 @@ direction in order of increasing `t`. At each breakpoint, one
 variable hits a bound and is "fixed"; between breakpoints, the
 quadratic is minimized analytically. The minimizer in the current
 piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
-§4 for the derivation.)
+sec.4 for the derivation.)
 
 ## Mathematical contract
 
@@ -28,8 +28,8 @@ piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
 | `g` | real vector, length `n` | Gradient (must be nonzero; checked via `sbgnrm > 0`). |
 | `m`, `col`, `head` | integers | L-BFGS memory layout. |
 | `theta` | positive real | Hessian scaling. |
-| `ws`, `wy` | real matrices, `n × col` | L-BFGS history. |
-| `sy`, `wt` | real matrices, `m × m` | Compact representation. |
+| `ws`, `wy` | real matrices, `n * col` | L-BFGS history. |
+| `sy`, `wt` | real matrices, `m * m` | Compact representation. |
 | `iwhere` (in/out) | integer vector, length `n` | Coarse bound status from `active`. Refined by `cauchy`. |
 | `sbgnrm` | nonneg real | Projected-gradient infinity norm (precomputed by `projgr`). |
 | `epsmch` | real | Machine epsilon. |
@@ -40,7 +40,7 @@ piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
 | Name | Type | Description |
 |------|------|-------------|
 | `xcp` | real vector, length `n` | Generalized Cauchy point. |
-| `d` | real vector, length `n` | Cauchy direction `P(x - t·g, l, u) - x` at the GCP. |
+| `d` | real vector, length `n` | Cauchy direction `P(x - t*g, l, u) - x` at the GCP. |
 | `iwhere` (in/out) | integer vector | Refined: see `01_glossary.md`. |
 | `iorder` | integer vector, length `n` | Permutation of variables: free, bound-encountered, bound-not-encountered. |
 | `t` | real vector, length `n` | Workspace: breakpoints (used for `hpsolb`). |
@@ -51,7 +51,7 @@ piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
 
 ### Preconditions
 
-- `sbgnrm ≥ 0`. If `0`, the routine returns immediately with `xcp = x`.
+- `sbgnrm >= 0`. If `0`, the routine returns immediately with `xcp = x`.
 - `iwhere` set by `active` initially (only `-1`, `0`, `3`).
 - L-BFGS state (`ws`, `wy`, `sy`, `wt`, `theta`, `col`, `head`)
   consistent (verified by `formt`/`bmv`).
@@ -72,7 +72,7 @@ LAPACK `dtrsm`, the parameter was always 0 and has been removed.
 
 ## Algorithm
 
-### Phase 1: setup — bound status and breakpoints
+### Phase 1: setup -- bound status and breakpoints
 
 For each variable `i`:
 
@@ -248,8 +248,8 @@ return
 
 ## Cross-references
 
-- **Paper**: Byrd/Lu/Nocedal/Zhu 1995 §4 (the original GCP derivation),
-  `code.pdf` §3.
+- **Paper**: Byrd/Lu/Nocedal/Zhu 1995 sec.4 (the original GCP derivation),
+  `code.pdf` sec.3.
 - **Related subroutines**: called by `mainlb` per iteration. Calls
   `bmv` (twice per breakpoint when `col > 0`) and `hpsolb` (heap-sort
   the breakpoints).

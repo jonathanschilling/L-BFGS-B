@@ -15,8 +15,8 @@ Called once at startup, before any iteration.
 
 | Name | Type | Description |
 |------|------|-------------|
-| `n` | integer | Claimed problem dimension. May be invalid (`≤ 0`). |
-| `m` | integer | Claimed memory parameter. May be invalid (`≤ 0`). |
+| `n` | integer | Claimed problem dimension. May be invalid (`<= 0`). |
+| `m` | integer | Claimed memory parameter. May be invalid (`<= 0`). |
 | `factr` | real | Function-decrease tolerance. May be invalid (`< 0`). |
 | `l` | real vector, length `n` if `n > 0` | Lower bounds. |
 | `u` | real vector, length `n` if `n > 0` | Upper bounds. |
@@ -27,7 +27,7 @@ Called once at startup, before any iteration.
 | Name | Type | Description |
 |------|------|-------------|
 | `task` | string | Set to an `'ERROR: ...'` string on validation failure; **untouched** on success. |
-| `info` | integer | `-6` if any `nbd[i] ∉ {0, 1, 2, 3}`; `-7` if any `nbd[i] = 2` with `l[i] > u[i]`; **untouched** otherwise. |
+| `info` | integer | `-6` if any `nbd[i] not in {0, 1, 2, 3}`; `-7` if any `nbd[i] = 2` with `l[i] > u[i]`; **untouched** otherwise. |
 | `k` | integer | Index of the *last* offending variable (1-based); **untouched** if no array-valued error. |
 
 ### Preconditions
@@ -70,11 +70,11 @@ for the final `task` value when multiple errors are present.
 
 When multiple errors are present:
 
-- If `n ≤ 0`, `m ≤ 0`, and `factr < 0` are all true:
+- If `n <= 0`, `m <= 0`, and `factr < 0` are all true:
   `task = 'ERROR: FACTR .LT. 0'` (check 3 wins).
-- If both `n ≤ 0` and `nbd[1] = -1`: the nbd loop runs (because the
-  loop bound `n` is an integer; if `n ≤ 0` the loop does nothing in
-  F77 — see below); the final `task` depends on which checks fire.
+- If both `n <= 0` and `nbd[1] = -1`: the nbd loop runs (because the
+  loop bound `n` is an integer; if `n <= 0` the loop does nothing in
+  F77 -- see below); the final `task` depends on which checks fire.
 - Within the nbd loop: if both an invalid `nbd` and an infeasible
   `nbd = 2` occur on different indices, the *last* such index wins
   for `k`, and the last-fired check determines `task`.
@@ -84,13 +84,13 @@ conformance.** A port that returns early on first error will pass the
 "is the input valid?" test but produce different `task`/`info`/`k`
 values on multi-error inputs.
 
-### Behavior when `n ≤ 0`
+### Behavior when `n <= 0`
 
-The F77 loop `do i = 1, n` with `n ≤ 0` executes zero iterations
+The F77 loop `do i = 1, n` with `n <= 0` executes zero iterations
 (see `06_portability_notes.md`). So the nbd-array checks are skipped
-when `n ≤ 0`, even though `task` has been set by check 1. This is
+when `n <= 0`, even though `task` has been set by check 1. This is
 **defensive** behavior: the array `nbd` may be empty or malformed
-when `n ≤ 0`, and skipping the loop avoids out-of-bounds reads.
+when `n <= 0`, and skipping the loop avoids out-of-bounds reads.
 
 ### Pseudocode
 
@@ -145,11 +145,11 @@ Both orderings are required for `--strict` conformance.
 | 5 | `data/errclb_case_5.json` | `nbd[i] < 0` triggers invalid-nbd; `info=-6` |
 | 6 | `data/errclb_case_6.json` | `nbd[i] > 3` triggers invalid-nbd from above |
 | 7 | `data/errclb_case_7.json` | `nbd=2` with `l > u` triggers infeasible; `info=-7` |
-| 8 | `data/errclb_case_8.json` | `nbd=2` with `l ≤ u`: feasible, no error |
+| 8 | `data/errclb_case_8.json` | `nbd=2` with `l <= u`: feasible, no error |
 
 ## Reference implementation
 
-`reference_impl/core/errclb.py` — Python implementation that follows
+`reference_impl/core/errclb.py` -- Python implementation that follows
 this spec.
 
 ## Mapping to other languages

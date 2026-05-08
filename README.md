@@ -62,15 +62,15 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
 
 ## Porting to another language
 
-A language-neutral specification of the algorithm — sufficient to
+A language-neutral specification of the algorithm -- sufficient to
 implement L-BFGS-B in any language with a BLAS/LAPACK binding, without
-reading the Fortran source — lives in [`docs/spec/`](docs/spec/).
+reading the Fortran source -- lives in [`docs/spec/`](docs/spec/).
 Start with [`docs/spec/README.md`](docs/spec/README.md).
 
 The pack includes:
 - 9 foundation documents (algorithm overview, glossary, abstract
   callback-based API, logical state model, numerical conventions,
-  deviations from the published papers, conformance criteria, F77 →
+  deviations from the published papers, conformance criteria, F77 ->
   other-language gotchas, and an optional appendix on the F77
   reverse-communication interface for ABI compatibility).
 - One per-subroutine spec for each in-scope numerical routine.

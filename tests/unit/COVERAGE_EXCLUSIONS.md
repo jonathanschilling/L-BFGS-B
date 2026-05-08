@@ -1,7 +1,7 @@
 # Coverage exclusions
 
 This file lists branches in `src/` that the unit-test suite is allowed to
-leave uncovered. Each entry must document **why** the branch is exempt — a
+leave uncovered. Each entry must document **why** the branch is exempt -- a
 defensive path the state machine cannot reach, a numerical-edge-case path
 that requires unreasonable test setup, etc. Reviewers add or refuse
 exemptions during code review.
@@ -29,8 +29,8 @@ The four files listed below are excluded from the must-cover set entirely
 via the `--exclude-file` flag (not via this file). They are not core
 numerics:
 
-- `src/timer.f` — wallclock helper
-- `src/prn1lb.f`, `src/prn2lb.f`, `src/prn3lb.f` — diagnostic printing
+- `src/timer.f` -- wallclock helper
+- `src/prn1lb.f`, `src/prn2lb.f`, `src/prn3lb.f` -- diagnostic printing
 
 ## Exemptions
 
@@ -54,7 +54,7 @@ into two buckets:
 - **`src/dcsrch.f` line 204, 206, 210**: the three "WARNING:..." paths.
   Trigger only when bracketing causes rounding-driven progress failure,
   the xtol-based shrink fires, or stp lands exactly on stpmin. Reachable
-  in adversarial line searches; covered by the existing Moré–Thuente
+  in adversarial line searches; covered by the existing More-Thuente
   test suite (driver runs) but not by the n=2 test inputs we author
   for unit-test scope. Remaining uncovered fraction: 3 lines / 104 = 3%.
 
@@ -80,7 +80,7 @@ integration tests cover the well-conditioned trajectories, and these
 internal recovery paths are the one place where a port could legitimately
 diverge in implementation detail without affecting correctness.
 
-(Two earlier entries — "cauchy returning info != 0" and "subsm
-returning info != 0" — were removed when the dead `info` parameters
+(Two earlier entries -- "cauchy returning info != 0" and "subsm
+returning info != 0" -- were removed when the dead `info` parameters
 in `bmv` / `cmprlb` / `cauchy` / `subsm` were dropped after the
-LINPACK→LAPACK migration left them unreachable.)
+LINPACK->LAPACK migration left them unreachable.)

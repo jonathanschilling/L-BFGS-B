@@ -5,12 +5,12 @@
 Form the upper triangle of the symmetric positive-definite matrix
 
 ```
-T = theta · S'S + L · D⁻¹ · L'
+T = theta * S'S + L * D^{-1} * L'
 ```
 
 (in the notation of the compact L-BFGS representation; see
 `01_glossary.md`), then Cholesky-factorize it in place to produce the
-upper-triangular factor `T_chol` such that `T_chol' · T_chol = T`.
+upper-triangular factor `T_chol` such that `T_chol' * T_chol = T`.
 
 The factor is stored in the upper triangle of `wt`, replacing the
 unfactored matrix. It is consumed by `bmv` for the inverse-middle-
@@ -28,16 +28,16 @@ L-BFGS history.
 | Name | Type | Description |
 |------|------|-------------|
 | `m` | positive integer | Memory parameter (leading dimension of `wt`, `sy`, `ss`). |
-| `col` | integer, `0 ≤ col ≤ m` | Active size. |
+| `col` | integer, `0 <= col <= m` | Active size. |
 | `theta` | positive real | Hessian scaling. |
-| `sy` | real matrix, `m × m` | Holds `D` on the diagonal and `L` (strict lower); see `01_glossary.md`. |
-| `ss` | real matrix, `m × m` | Holds `S'S` upper triangle (symmetric). |
+| `sy` | real matrix, `m * m` | Holds `D` on the diagonal and `L` (strict lower); see `01_glossary.md`. |
+| `ss` | real matrix, `m * m` | Holds `S'S` upper triangle (symmetric). |
 
 ### Logical outputs
 
 | Name | Type | Description |
 |------|------|-------------|
-| `wt` | real matrix, `m × m` | Output: upper triangle holds the Cholesky factor `T_chol` of `theta·S'S + L·D⁻¹·L'`. The strict lower triangle is unspecified. |
+| `wt` | real matrix, `m * m` | Output: upper triangle holds the Cholesky factor `T_chol` of `theta*S'S + L*D^{-1}*L'`. The strict lower triangle is unspecified. |
 | `info` | integer | `0` on success; `-3` if the Cholesky factorization fails (matrix not positive-definite). |
 
 ### Preconditions
@@ -45,25 +45,25 @@ L-BFGS history.
 - `sy[i, i] > 0` for `i = 1, ..., col` (positive curvature; ensured
   by `matupd`).
 - `theta > 0`.
-- `ss` upper triangle holds `s_i' s_j` for `j ≥ i`.
+- `ss` upper triangle holds `s_i' s_j` for `j >= i`.
 
 ### Postconditions
 
 - On success (`info = 0`): `wt` upper triangle holds `T_chol` such
-  that `T_chol' · T_chol` reproduces the original `theta·S'S + L·D⁻¹·L'`.
+  that `T_chol' * T_chol` reproduces the original `theta*S'S + L*D^{-1}*L'`.
 - On failure (`info = -3`): `wt` contents are *implementation-defined*.
   Caller must not use them.
 
 ## Algorithm
 
-### Phase 1: build upper triangle of `T = theta·S'S + L·D⁻¹·L'`
+### Phase 1: build upper triangle of `T = theta*S'S + L*D^{-1}*L'`
 
-The diagonal of `T` is `T[i, i] = theta · s_i' s_i + sum_{k<i} s_i'y_k · (s_i'y_k) / s_k'y_k`.
+The diagonal of `T` is `T[i, i] = theta * s_i' s_i + sum_{k<i} s_i'y_k * (s_i'y_k) / s_k'y_k`.
 
-The upper triangle for `j ≥ i` is `T[i, j] = theta · s_i' s_j + sum_{k<i} s_i'y_k · s_j'y_k / s_k'y_k`.
+The upper triangle for `j >= i` is `T[i, j] = theta * s_i' s_j + sum_{k<i} s_i'y_k * s_j'y_k / s_k'y_k`.
 
 Special case: for `i = 1`, the inner sum is empty (no `k < 1`), so the
-entire first row is just `theta · ss[1, :]`.
+entire first row is just `theta * ss[1, :]`.
 
 ```
 # First row: i = 1
@@ -80,7 +80,7 @@ for i = 2 to col:
         wt[i, j] = sum + theta * ss[i, j]
 ```
 
-The `min(i, j) - 1` simplifies to `i - 1` for `j ≥ i`. The F77 source
+The `min(i, j) - 1` simplifies to `i - 1` for `j >= i`. The F77 source
 keeps the `min` form for clarity.
 
 ### Phase 2: Cholesky factorization
@@ -138,7 +138,7 @@ None.
 
 - The first loop builds row 1 in ascending `j` order. Result is
   order-independent (each entry written once).
-- The double loop fills `wt[i, j]` for `i ≥ 2`, `j ≥ i`. Outer in
+- The double loop fills `wt[i, j]` for `i >= 2`, `j >= i`. Outer in
   ascending `i`; inner in ascending `j`. The accumulation
   `sum += sy[i, k] * sy[j, k] / sy[k, k]` iterates `k = 1..i-1` in
   ascending order; `--strict` requires this.
@@ -159,8 +159,8 @@ None.
 
 ## Cross-references
 
-- **Paper**: Byrd/Nocedal/Schnabel 1994 §3 (compact representation),
-  `code.pdf` §2.2.
+- **Paper**: Byrd/Nocedal/Schnabel 1994 sec.3 (compact representation),
+  `code.pdf` sec.2.2.
 - **Related subroutines**: called by `mainlb` once per L-BFGS update;
   output `wt` is consumed by `bmv`. Failure (`info = -3`) triggers
   history refresh.

@@ -18,16 +18,16 @@ indices in the free-variable index permutation.
 |------|------|-------------|
 | `n` | positive integer | Number of variables. |
 | `m` | positive integer | Memory parameter. |
-| `col` | integer, `0 ≤ col ≤ m` | Number of stored L-BFGS pairs. |
-| `head` | integer, `1 ≤ head ≤ m` | Index of oldest pair in the cyclic `S`/`Y` buffer. |
-| `nfree` | integer, `0 ≤ nfree ≤ n` | Number of free variables. |
+| `col` | integer, `0 <= col <= m` | Number of stored L-BFGS pairs. |
+| `head` | integer, `1 <= head <= m` | Index of oldest pair in the cyclic `S`/`Y` buffer. |
+| `nfree` | integer, `0 <= nfree <= n` | Number of free variables. |
 | `index` | integer vector, length `n` | Free/active permutation: `index[1..nfree]` are free indices. |
 | `theta` | positive real | Hessian scaling. |
 | `x`, `z` | real vectors, length `n` | Current iterate and Cauchy point. |
 | `g` | real vector, length `n` | Gradient at `x`. |
-| `ws`, `wy` | real matrices, `n × m` | L-BFGS history columns (`s`-vectors and `y`-vectors). |
-| `sy`, `wt` | real matrices, `m × m` | Compact representation: `S'Y` packed and Cholesky factor `T`. |
-| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W'(z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M⁻¹ W' (z - x)`. |
+| `ws`, `wy` | real matrices, `n * m` | L-BFGS history columns (`s`-vectors and `y`-vectors). |
+| `sy`, `wt` | real matrices, `m * m` | Compact representation: `S'Y` packed and Cholesky factor `T`. |
+| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W'(z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M^{-1} W' (z - x)`. |
 | `cnstnd` | boolean | True if any variable is bounded. |
 
 ### Logical outputs
@@ -35,7 +35,7 @@ indices in the free-variable index permutation.
 | Name | Type | Description |
 |------|------|-------------|
 | `r` | real vector, length `n` | Filled in two regimes (see Algorithm): full `n`-vector when unconstrained with history, or `r[1..nfree]` for the free variables otherwise. |
-| `wa` | (in-place) | `wa[1..2col]` filled with `M⁻¹ W'(z - x)`. |
+| `wa` | (in-place) | `wa[1..2col]` filled with `M^{-1} W'(z - x)`. |
 
 ### Preconditions
 
@@ -161,9 +161,9 @@ routine no longer signals an error path.
 
 ## Cross-references
 
-- **Paper**: `code.pdf` §4 (subspace minimization setup). The reduced
+- **Paper**: `code.pdf` sec.4 (subspace minimization setup). The reduced
   gradient is the residual for the subspace problem of
-  Byrd/Lu/Nocedal/Zhu 1995 §5.
+  Byrd/Lu/Nocedal/Zhu 1995 sec.5.
 - **Related subroutines**: called by `mainlb` after `cauchy`. Calls
   `bmv` for the inverse-middle-matrix solve. Output `r` feeds
   `subsm`.

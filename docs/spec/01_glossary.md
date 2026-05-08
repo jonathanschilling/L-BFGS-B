@@ -13,36 +13,36 @@ this notation.
 | Spec | Paper | F77 | Description |
 |------|-------|-----|-------------|
 | `n` | `n` | `n` | Number of variables (problem dimension). |
-| `m` | `m` | `m` | Maximum number of L-BFGS pairs to retain. Typical 5–17. |
-| `col` | `k` (alg) / `m_k` (code) | `col` | Current number of stored L-BFGS pairs (`0 ≤ col ≤ m`). Increases each iteration until reaching `m`, then stays at `m`. |
+| `m` | `m` | `m` | Maximum number of L-BFGS pairs to retain. Typical 5-17. |
+| `col` | `k` (alg) / `m_k` (code) | `col` | Current number of stored L-BFGS pairs (`0 <= col <= m`). Increases each iteration until reaching `m`, then stays at `m`. |
 | `iter` | `k` | `iter` | Iteration counter (0-based; `iter=0` is the initial point). |
-| `theta` | `θ` | `theta` | Hessian scaling parameter; `theta = (y_k' y_k) / (s_k' y_k)` after each successful update. Initialized to 1. |
+| `theta` | `theta` | `theta` | Hessian scaling parameter; `theta = (y_k' y_k) / (s_k' y_k)` after each successful update. Initialized to 1. |
 | `f` | `f(x)` | `f` | Function value at current iterate. |
-| `factr` | `factr` | `factr` | Function-decrease tolerance (relative). Convergence when `(f_old - f_new) / max(\|f_old\|, \|f_new\|, 1) ≤ factr * eps`. Typical `10⁷` (low accuracy), `10¹` (machine accuracy). |
-| `pgtol` | `pgtol` | `pgtol` | Projected-gradient tolerance. Convergence when `‖g_proj‖_∞ ≤ pgtol`. |
-| `eps` / `epsmch` | `ε_M` | `epsmch` | Machine epsilon (≈ `2.22 × 10⁻¹⁶` for IEEE-754 double). |
+| `factr` | `factr` | `factr` | Function-decrease tolerance (relative). Convergence when `(f_old - f_new) / max(\|f_old\|, \|f_new\|, 1) <= factr * eps`. Typical `10^7` (low accuracy), `10^1` (machine accuracy). |
+| `pgtol` | `pgtol` | `pgtol` | Projected-gradient tolerance. Convergence when `||g_proj||_Inf <= pgtol`. |
+| `eps` / `epsmch` | `eps_M` | `epsmch` | Machine epsilon (~= `2.22 * 10^{-16}` for IEEE-754 double). |
 
 ## Vectors (current state)
 
 | Spec | Paper | F77 | Shape | Description |
 |------|-------|-----|-------|-------------|
 | `x` | `x_k` | `x` | `n` | Current iterate. |
-| `g` | `g_k = ∇f(x_k)` | `g` | `n` | Gradient at current iterate. |
-| `g_proj` | `\|P[x - g, l, u] - x\|_∞` | (computed in `projgr`) | scalar | Infinity norm of projected gradient. |
+| `g` | `g_k = gradf(x_k)` | `g` | `n` | Gradient at current iterate. |
+| `g_proj` | `\|P[x - g, l, u] - x\|_Inf` | (computed in `projgr`) | scalar | Infinity norm of projected gradient. |
 | `s` | `s_k = x_{k+1} - x_k` | (incremental) | `n` | Step from previous iterate. |
 | `y` | `y_k = g_{k+1} - g_k` | (incremental) | `n` | Gradient difference. |
 | `d` | `d_k` | `d` | `n` | Search direction (subspace minimizer). |
 | `xc` | `x^c` | `z` | `n` | Generalized Cauchy point. |
 | `xp` | `x_{k-1}` | `xp` | `n` | Previous iterate (kept for refresh logic). |
 | `r` | (varies) | `r` | `n` | Reduced gradient at the Cauchy point (used by `subsm`). |
-| `t` | — | `t` | `n` | Scratch vector inside `mainlb`. |
+| `t` | -- | `t` | `n` | Scratch vector inside `mainlb`. |
 
 ## Bounds
 
 | Spec | F77 | Description |
 |------|-----|-------------|
-| `l` | `l` | Lower-bound vector (length `n`). Entries irrelevant where `nbd(i) ∈ {0, 3}`. |
-| `u` | `u` | Upper-bound vector (length `n`). Entries irrelevant where `nbd(i) ∈ {0, 1}`. |
+| `l` | `l` | Lower-bound vector (length `n`). Entries irrelevant where `nbd(i) in {0, 3}`. |
+| `u` | `u` | Upper-bound vector (length `n`). Entries irrelevant where `nbd(i) in {0, 1}`. |
 | `nbd[i]` | `nbd(i)` | Bound code per variable: `0` = unbounded, `1` = lower only, `2` = both, `3` = upper only. |
 
 ## Bound-status flags (per variable)
@@ -65,61 +65,61 @@ indexing is by *insertion order*. The most recent pair is at column
 
 | Spec | Paper | F77 | Shape | Description |
 |------|-------|-----|-------|-------------|
-| `S` | `S_k = [s_{k-col}, ..., s_{k-1}]` | `ws` | `n × col` | Matrix of `s`-vectors. Columns ordered by insertion; F77 uses `head`/`itail` to track cyclic position when `col = m`. |
-| `Y` | `Y_k` | `wy` | `n × col` | Matrix of `y`-vectors, same ordering as `S`. |
-| `D` | `D_k = diag(s_i' y_i)` | (diagonal of `sy`) | `col × col` | Diagonal of dot products. **Stored as the diagonal of `sy`**. |
-| `L` | `L_k` (strictly lower triangular of `S_k' Y_k`) | (lower triangle of `sy`) | `col × col` | Strict lower triangle: `L_{i,j} = s_i' y_j` for `i > j`. **Stored as the strict lower triangle of `sy`**. |
-| `R` | `R_k` (upper triangular of `S_k' Y_k`) | not stored | `col × col` | Used in derivations; not materialized in the F77 code (the relevant info is in `D` + `L`). |
-| `S'S` | `S_k' S_k` | `ss` | `col × col` | Symmetric Gram matrix. F77 stores the upper triangle in `ss`. |
+| `S` | `S_k = [s_{k-col}, ..., s_{k-1}]` | `ws` | `n * col` | Matrix of `s`-vectors. Columns ordered by insertion; F77 uses `head`/`itail` to track cyclic position when `col = m`. |
+| `Y` | `Y_k` | `wy` | `n * col` | Matrix of `y`-vectors, same ordering as `S`. |
+| `D` | `D_k = diag(s_i' y_i)` | (diagonal of `sy`) | `col * col` | Diagonal of dot products. **Stored as the diagonal of `sy`**. |
+| `L` | `L_k` (strictly lower triangular of `S_k' Y_k`) | (lower triangle of `sy`) | `col * col` | Strict lower triangle: `L_{i,j} = s_i' y_j` for `i > j`. **Stored as the strict lower triangle of `sy`**. |
+| `R` | `R_k` (upper triangular of `S_k' Y_k`) | not stored | `col * col` | Used in derivations; not materialized in the F77 code (the relevant info is in `D` + `L`). |
+| `S'S` | `S_k' S_k` | `ss` | `col * col` | Symmetric Gram matrix. F77 stores the upper triangle in `ss`. |
 
 ### F77 packing of `sy` and `ss`
 
-The F77 implementation packs both `D` and `L` into a single `m × m`
+The F77 implementation packs both `D` and `L` into a single `m * m`
 array `sy`:
 - `sy(i, i) = D[i] = s_i' y_i` (diagonal)
 - `sy(i, j) = L[i,j] = s_i' y_j` for `i > j` (strict lower triangle)
 - `sy(i, j)` for `i < j` is **unused** (held but not read).
 
-Similarly `ss(i, j)` for `i ≤ j` holds `s_i' s_j` (upper triangle of
+Similarly `ss(i, j)` for `i <= j` holds `s_i' s_j` (upper triangle of
 `S'S`); the strict lower part is unused.
 
-**Ports may use any storage they prefer** — separate `D` (vector) and
+**Ports may use any storage they prefer** -- separate `D` (vector) and
 `L` (lower-triangular matrix) variables, a full symmetric `S'S` matrix,
-sparse formats, etc. — as long as the entries above are accessible.
+sparse formats, etc. -- as long as the entries above are accessible.
 The packing above is an F77 implementation detail.
 
 ## Compact representation
 
-Following Byrd/Nocedal/Schnabel 1994 §3 and `code.pdf` §2.
+Following Byrd/Nocedal/Schnabel 1994 sec.3 and `code.pdf` sec.2.
 
 | Spec | Paper | F77 | Shape | Description |
 |------|-------|-----|-------|-------------|
-| `W` | `W_k = [Y_k, theta·S_k]` | (formed implicitly) | `n × 2col` | Wide matrix. Not stored explicitly in F77; columns are taken on the fly from `wy` and `ws`. |
-| `M_inv` | `M_k^{-1} = [[-D, L'], [L, theta·S'S]]` | (formed implicitly via `sy`, `ss`, `theta`) | `2col × 2col` | Middle matrix inverse. F77 never materializes this; `bmv` solves `M_k v = result` using the components. |
-| `T` | `J_k`: upper Cholesky factor of `theta·S'S + L D⁻¹ L'` | `wt` | `col × col` | Upper-triangular Cholesky factor. Computed in `formt` from `sy`, `ss`, `theta`. Used by `bmv` for the matrix-vector solve. |
-| `B` | `B_k = θI - W M⁻¹ W'` | (not stored) | `n × n` | Hessian approximation. Never materialized; only Hessian-vector products are computed. |
-| `K` | `K = [[-D - Y'_a Z B Z' Y_a, ...], ...]` (subspace minimization) | `wn` | `2col × 2col` | Reduced Hessian for the subspace minimization. Built by `formk`, used by `subsm`. |
-| `K_chol` | upper Cholesky of `K` | `snd` | `2col × 2col` | Cholesky factor of `K` for back-substitution in `subsm`. |
+| `W` | `W_k = [Y_k, theta*S_k]` | (formed implicitly) | `n * 2col` | Wide matrix. Not stored explicitly in F77; columns are taken on the fly from `wy` and `ws`. |
+| `M_inv` | `M_k^{-1} = [[-D, L'], [L, theta*S'S]]` | (formed implicitly via `sy`, `ss`, `theta`) | `2col * 2col` | Middle matrix inverse. F77 never materializes this; `bmv` solves `M_k v = result` using the components. |
+| `T` | `J_k`: upper Cholesky factor of `theta*S'S + L D^{-1} L'` | `wt` | `col * col` | Upper-triangular Cholesky factor. Computed in `formt` from `sy`, `ss`, `theta`. Used by `bmv` for the matrix-vector solve. |
+| `B` | `B_k = thetaI - W M^{-1} W'` | (not stored) | `n * n` | Hessian approximation. Never materialized; only Hessian-vector products are computed. |
+| `K` | `K = [[-D - Y'_a Z B Z' Y_a, ...], ...]` (subspace minimization) | `wn` | `2col * 2col` | Reduced Hessian for the subspace minimization. Built by `formk`, used by `subsm`. |
+| `K_chol` | upper Cholesky of `K` | `snd` | `2col * 2col` | Cholesky factor of `K` for back-substitution in `subsm`. |
 
 ## F77 workspace arrays (mapped to logical objects)
 
-Ports do **not** need to use a single contiguous workspace — these
+Ports do **not** need to use a single contiguous workspace -- these
 mappings exist so that readers of the F77 source can locate the
 logical objects within `wa` / `iwa`.
 
-`wa` is the double-precision workspace, sized `2mn + 5n + 11m² + 8m`.
+`wa` is the double-precision workspace, sized `2mn + 5n + 11m^2 + 8m`.
 The F77 driver layout (see `setulb.f`):
 
 | F77 slice | Spec object | Shape |
 |-----------|-------------|-------|
-| `wa[1:mn]` | `S` flattened (column-major) | `n × m` |
-| `wa[mn+1:2mn]` | `Y` flattened | `n × m` |
-| `wa[2mn+1:2mn+m²]` | `sy` packed | `m × m` |
-| `wa[2mn+m²+1:2mn+2m²]` | `ss` packed | `m × m` |
-| `wa[2mn+2m²+1:2mn+3m²]` | `T` (Cholesky factor) | `m × m` |
-| `wa[2mn+3m²+1:2mn+7m²]` | `K` workspace | `2m × 2m` |
-| `wa[2mn+7m²+1:2mn+11m²]` | `K_chol` workspace | `2m × 2m` |
-| `wa[2mn+11m²+1:2mn+11m²+5n]` | working vectors `z, r, d, t, xp` | `5 × n` |
+| `wa[1:mn]` | `S` flattened (column-major) | `n * m` |
+| `wa[mn+1:2mn]` | `Y` flattened | `n * m` |
+| `wa[2mn+1:2mn+m^2]` | `sy` packed | `m * m` |
+| `wa[2mn+m^2+1:2mn+2m^2]` | `ss` packed | `m * m` |
+| `wa[2mn+2m^2+1:2mn+3m^2]` | `T` (Cholesky factor) | `m * m` |
+| `wa[2mn+3m^2+1:2mn+7m^2]` | `K` workspace | `2m * 2m` |
+| `wa[2mn+7m^2+1:2mn+11m^2]` | `K_chol` workspace | `2m * 2m` |
+| `wa[2mn+11m^2+1:2mn+11m^2+5n]` | working vectors `z, r, d, t, xp` | `5 * n` |
 | `wa[remaining]` | scratch for `cauchy`, `bmv`, etc. | `8m` |
 
 `iwa` is the integer workspace, sized `3n`:
@@ -153,7 +153,7 @@ The F77 `task` string on exit:
 
 | `task` | Meaning |
 |--------|---------|
-| `CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL` | `‖g_proj‖_∞ ≤ pgtol`. |
+| `CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL` | `||g_proj||_Inf <= pgtol`. |
 | `CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH` | Function decrease below `factr * eps`. |
 | `ABNORMAL TERMINATION IN LNSRLB` | Line search failed (more than `maxls` evaluations, or step too small/large). |
 | `ERROR: ...` | Input validation failed (see `errclb.md`). |

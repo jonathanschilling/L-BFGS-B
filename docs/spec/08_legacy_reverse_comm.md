@@ -27,24 +27,24 @@ appendix only if:
 ### State diagram
 
 ```
-                                       ┌──────┐
-                                       ▼      │
-   START ──► (compute f,g) ──► FG ──►  user  │
+                                       +------+
+                                       v      |
+   START --> (compute f,g) --> FG -->  user  |
               [task='FG'              evaluates
-               first time]            f, g    │
-                                       │      │
-                                       ▼      │
-                                    NEW_X ────┘   (outer iter complete;
-                                       │           user may inspect, then
-                                       │           re-call setulb)
-                                       │
-                                       ▼
+               first time]            f, g    |
+                                       |      |
+                                       v      |
+                                    NEW_X ----+   (outer iter complete;
+                                       |           user may inspect, then
+                                       |           re-call setulb)
+                                       |
+                                       v
                   CONV* / ABNORMAL* / ERROR* / STOP*  (terminal)
 ```
 
 ### Task strings
 
-`task` is a `character*60` buffer. The first 1–8 non-space characters
+`task` is a `character*60` buffer. The first 1-8 non-space characters
 are the state code; the rest is human-readable description. Test
 state with prefix matching: `task(1:2) == 'FG'`, `task(1:5) == 'NEW_X'`,
 etc.
@@ -118,10 +118,10 @@ allocated internally. Sizes:
 
 | Array | Type | Size | Purpose |
 |-------|------|------|---------|
-| `wa` | `real(8)` | `2*m*n + 5*n + 11*m² + 8*m` | All double-precision working storage. |
+| `wa` | `real(8)` | `2*m*n + 5*n + 11*m^2 + 8*m` | All double-precision working storage. |
 | `iwa` | `integer` | `3*n` | All integer working storage (`index`, `iwhere`, `indx2`). |
-| `task` | `character*60` | — | Reverse-comm state code. |
-| `csave` | `character*60` | — | Inner reverse-comm state for `dcsrch`. |
+| `task` | `character*60` | -- | Reverse-comm state code. |
+| `csave` | `character*60` | -- | Inner reverse-comm state for `dcsrch`. |
 | `lsave` | `logical` | `4` | `prjctd`, `cnstnd`, `boxed`, `updatd`. |
 | `isave` | `integer` | `44` | Saved integer state across calls. |
 | `dsave` | `real(8)` | `29` | Saved real state across calls. |
@@ -136,15 +136,15 @@ subsequent calls. The first 16 slots of `isave` hold the offsets:
 
 | `isave[k]` | Stores | Logical object | F77 name |
 |-----------|--------|----------------|----------|
-| `1` | `m*n` | (size constant) | — |
-| `2` | `m²` | (size constant) | — |
-| `3` | `4*m²` | (size constant) | — |
+| `1` | `m*n` | (size constant) | -- |
+| `2` | `m^2` | (size constant) | -- |
+| `3` | `4*m^2` | (size constant) | -- |
 | `4` | offset | `S` matrix (history of `s`-vectors) | `ws` |
 | `5` | offset | `Y` matrix (history of `y`-vectors) | `wy` |
 | `6` | offset | `sy` (`S'Y` packed: `D` + `L`) | `sy` |
 | `7` | offset | `ss` (`S'S` upper triangle) | `ss` |
 | `8` | offset | `T` (Cholesky factor) | `wt` |
-| `9` | offset | `K` (`2m × 2m` reduced Hessian) | `wn` |
+| `9` | offset | `K` (`2m * 2m` reduced Hessian) | `wn` |
 | `10` | offset | `K_chol` (Cholesky of `K`) | `snd` |
 | `11` | offset | `xc` (Cauchy point) | `z` |
 | `12` | offset | `r` (reduced gradient) | `r` |
@@ -197,7 +197,7 @@ counters and saved internal state. The slots documented for users
 | `40` | Sentinel `n + 1 - isave[40]` = number of variables that *left* the active set this iteration. |
 | `41` | Number of variables that *entered* the active set this iteration. |
 
-Slots 17–21, 23–25, 27–29, 32, 35, 42–44 are private to `mainlb` and
+Slots 17-21, 23-25, 27-29, 32, 35, 42-44 are private to `mainlb` and
 its callees (saving control-flow state for resume-after-`'FG'`); the
 user must not read or modify them.
 
@@ -217,16 +217,16 @@ Available on exit with `task = 'NEW_X'`:
 | `9` | Accumulated wallclock on line search. |
 | `11` | Slope of `f` along `d` at the current line-search point. |
 | `12` | Maximum relative step length imposed by the box geometry. |
-| `13` | `‖g_proj‖_∞`. |
+| `13` | `||g_proj||_Inf`. |
 | `14` | Relative step length accepted in the line search. |
 | `15` | Slope of `f` along `d` at the start of the line search. |
 | `16` | Square of the 2-norm of `d`. |
 
-Slots 6, 10, 17–29 are private to internal routines.
+Slots 6, 10, 17-29 are private to internal routines.
 
 ## `csave` saved state
 
-Holds the inner reverse-comm state for the More–Thuente line search
+Holds the inner reverse-comm state for the More-Thuente line search
 (`dcsrch`). The user must not modify it. When the line search needs
 another `f`/`g` evaluation, the outer state machine in `mainlb` sets
 `task = 'FG'` and the user provides values; `dcsrch` resumes from the
@@ -274,7 +274,7 @@ Most languages support this shape via:
   with synchronization), or virtual threads (Loom).
 
 Ports that need the legacy ABI but can't use coroutines must
-implement the protocol natively as the F77 source does — saving
+implement the protocol natively as the F77 source does -- saving
 program-counter and local state in `isave`/`dsave`. This is more
 work than the coroutine wrapper but has no extra runtime cost.
 

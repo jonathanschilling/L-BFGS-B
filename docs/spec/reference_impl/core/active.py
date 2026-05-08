@@ -1,4 +1,4 @@
-"""active — initial projection and bound-status setup.
+"""active -- initial projection and bound-status setup.
 
 Reference implementation following ``docs/spec/subroutines/active.md``.
 """

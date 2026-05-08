@@ -2,7 +2,7 @@ program test_dcsrch
    use test_assert, only: dp, assert_true, assert_eq_int, assert_eq_str, assert_close_real, assert_array_close
    implicit none
 
-   ! dcsrch is the Moré–Thuente line search driver, called via reverse
+   ! dcsrch is the More-Thuente line search driver, called via reverse
    ! communication: the user evaluates phi(stp) and phi'(stp), then calls
    ! again. Test cases below cover input-validation, normal convergence on
    ! a quadratic, and the STPMAX hit warning.
@@ -174,8 +174,8 @@ contains
    end subroutine case_warning_stp_at_stpmax
 
    subroutine case_phi1_more_thuente()
-      ! Moré–Thuente test function phi1(t) = -t/(t^2 + b), b=2.
-      ! Minimum at t = sqrt(b) = sqrt(2) ≈ 1.4142.
+      ! More-Thuente test function phi1(t) = -t/(t^2 + b), b=2.
+      ! Minimum at t = sqrt(b) = sqrt(2) ~= 1.4142.
       ! With a small initial step (0.001) the line search has to travel
       ! far and ends up bracketing once it overshoots, which exercises
       ! the brackt=true paths (state restore L172, bisection L259-260,

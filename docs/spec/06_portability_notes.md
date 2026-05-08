@@ -2,8 +2,8 @@
 
 The L-BFGS-B reference implementation in `src/` is Fortran 77 (with
 Doxygen comment markup). Port authors reading the F77 source
-alongside the spec — to verify behavior or to confirm operation order
-— need to be aware of F77 conventions that differ from C-family
+alongside the spec -- to verify behavior or to confirm operation order
+-- need to be aware of F77 conventions that differ from C-family
 languages.
 
 This document is **not** a Fortran tutorial. It catalogues the
@@ -20,10 +20,10 @@ varies fastest"). C, C++, Java, Rust, Go, NumPy default-row-major.
 For a 2D array `A(i, j)` declared `double precision A(M, N)`:
 - F77 in-memory order: `A(1,1), A(2,1), ..., A(M,1), A(1,2), ...`
 - C-equivalent declaration `double A[N][M]`: in-memory order
-  `A[0][0], A[0][1], ..., A[0][M-1], A[1][0], ...` — **different**.
+  `A[0][0], A[0][1], ..., A[0][M-1], A[1][0], ...` -- **different**.
 
 For the C-equivalent layout (so the ports can index naturally), the
-declaration order is *reversed*: F77 `A(M, N)` ↔ C `A[N][M]`.
+declaration order is *reversed*: F77 `A(M, N)` <-> C `A[N][M]`.
 
 **Affects spec conformance**:
 - Operation order in inner loops sometimes depends on memory layout
@@ -32,7 +32,7 @@ declaration order is *reversed*: F77 `A(M, N)` ↔ C `A[N][M]`.
   choice.
 - BLAS/LAPACK calls assume column-major. Ports using a row-major BLAS
   binding must transpose accordingly. The standard CBLAS bindings
-  expose a layout flag (`CblasColMajor`/`CblasRowMajor`) — ports must
+  expose a layout flag (`CblasColMajor`/`CblasRowMajor`) -- ports must
   pick `CblasColMajor` to match the F77 reference.
 
 **For reading F77 source**: when you see `A(i, j)`, mentally translate
@@ -48,7 +48,7 @@ both ends.
 **Spec convention**: this pack uses 1-based indexing in pseudocode
 to match the F77 source for ease of cross-reference. Ports in 0-based
 languages (C, Python, Rust, ...) translate to 0-based in the obvious
-way. Where the index value matters numerically (rare — usually only
+way. Where the index value matters numerically (rare -- usually only
 for diagnostic output), the spec calls it out.
 
 ## Character strings: `character*60` and trailing-space padding
@@ -59,7 +59,7 @@ are **right-padded with spaces**. Comparisons (`task .eq. 'FG'`) match
 on the full padded buffer, so `'FG' || 58 spaces == 'FG'` (with
 `||` denoting concatenation).
 
-The L-BFGS-B convention: the first 1–8 non-space characters are the
+The L-BFGS-B convention: the first 1-8 non-space characters are the
 state code; the remainder is human-readable diagnostic text:
 
 ```
@@ -126,7 +126,7 @@ language.
 F77 integer division truncates toward zero (`5 / 2 = 2`, `-5 / 2 = -2`).
 Most modern languages match this; Python's `/` on integers used to do
 true division (Python 2) and now does true division everywhere
-(Python 3 — use `//` for truncating).
+(Python 3 -- use `//` for truncating).
 
 **For ports**: use the language's truncating-divide operator (or floor
 divide for non-negative operands; the difference only matters for
@@ -163,7 +163,7 @@ do i = 5, 4
 end do
 ```
 
-This is the same as `for(i=5; i<=4; i++)` in C — body never runs. No
+This is the same as `for(i=5; i<=4; i++)` in C -- body never runs. No
 conformance gotcha; mentioned only because some ancient F77 dialects
 behaved differently.
 
@@ -211,9 +211,9 @@ should use callbacks instead (see `02_api.md`).
 
 ## Source-file format: fixed-form columns
 
-The F77 sources in `src/*.f` use **fixed-form Fortran**: columns 1–5
+The F77 sources in `src/*.f` use **fixed-form Fortran**: columns 1-5
 are reserved for labels, column 6 for continuation marker, columns
-7–72 for code, columns beyond 72 ignored. The newer drivers in
+7-72 for code, columns beyond 72 ignored. The newer drivers in
 `drivers/*.f90` use free-form.
 
 Port authors do not need to worry about column conventions, but

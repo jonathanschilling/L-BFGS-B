@@ -16,7 +16,7 @@ will fail.
 
 This fork (jonathanschilling/L-BFGS-B) drops four `info` output
 parameters from internal helper routines (`bmv`, `cmprlb`, `cauchy`,
-`subsm`) that were left dead by the LINPACK→LAPACK migration. Upstream
+`subsm`) that were left dead by the LINPACK->LAPACK migration. Upstream
 3.0 still has them. The signatures of these four routines therefore
 differ from any other L-BFGS-B fork that retains the LINPACK-era
 parameters:
@@ -36,7 +36,7 @@ this fork: call subsm(..., wn, iprint)
 ```
 
 The `info` outputs were always `0` once `dtrsl` was replaced by
-`dtrsm` (which cannot fail on a non-singular factor — guaranteed by
+`dtrsm` (which cannot fail on a non-singular factor -- guaranteed by
 `formt` / `formk` Cholesky checks). The dead-branch handling in
 `mainlb` was removed at the same time.
 
@@ -50,20 +50,20 @@ real Cholesky factorisations (`dpotrf`) that can legitimately fail.
 | Where | Value | Reference |
 |-------|-------|-----------|
 | Implemented | `ftol = 1.0d-3` | `src/lnsrlb.f:110` |
-| Published (algorithm tech report) | `α = 1.0e-4` | More & Thuente 1994 §6 |
+| Published (algorithm tech report) | `alpha = 1.0e-4` | More & Thuente 1994 sec.6 |
 
 The algorithm.pdf tech report and the More-Thuente paper specify
 `ftol = 1e-4` (the sufficient-decrease constant in the Wolfe
 conditions). The L-BFGS-B implementation uses `1e-3`, a looser value.
 
 This deviation is documented in the F77 source itself in the comment
-block of `src/lnsrlb.f` (lines 99–105): *"the looser value 1.0d-3
+block of `src/lnsrlb.f` (lines 99-105): *"the looser value 1.0d-3
 matches the implementation that ships with Algorithm 778; neither the
 ACM paper (docs/code.pdf) nor the 2011 remark documents the change
 explicitly"*.
 
 **Impact**: the Wolfe sufficient-decrease test
-`f(stp) ≤ f(0) + ftol · stp · g(0)` is satisfied at slightly larger
+`f(stp) <= f(0) + ftol * stp * g(0)` is satisfied at slightly larger
 function values with `ftol = 1e-3` than with `1e-4`. In practice the
 line search accepts step lengths a bit earlier than the strict paper
 algorithm would. The integration test bounds in `tests/check_output.py`
@@ -80,16 +80,16 @@ algorithm or its referenced sources.
 
 ### `gtol = 0.9` (curvature condition)
 
-`src/lnsrlb.f:110`. Matches More & Thuente 1994 §6 and the
+`src/lnsrlb.f:110`. Matches More & Thuente 1994 sec.6 and the
 algorithm.pdf tech report (eq 2.6).
 
 ### `xtol = 0.1` (relative bracket-width tolerance)
 
-`src/lnsrlb.f:110`. Matches More & Thuente 1994 §6.
+`src/lnsrlb.f:110`. Matches More & Thuente 1994 sec.6.
 
 ### `p66 = 0.66` (bracket safeguarding factor)
 
-`src/dcstep.f:81`, `src/dcsrch.f:111`. From More & Thuente 1994 §3,
+`src/dcstep.f:81`, `src/dcsrch.f:111`. From More & Thuente 1994 sec.3,
 the safeguarded-step heuristic. Not in algorithm.pdf (which doesn't
 describe the line search in detail); present in code.pdf and the
 MINPACK-2 reference. Treated as algorithmic, not arbitrary.
@@ -120,8 +120,8 @@ f2 = f2 + 2.0d0*dibp*wmp - dibp2*wmw
 ```
 
 Coefficient in the Taylor expansion of `f1, f2` updates across a
-breakpoint; matches the derivation in algorithm.pdf §4 and code.pdf
-§3 (the `2` comes from the cross term in the quadratic).
+breakpoint; matches the derivation in algorithm.pdf sec.4 and code.pdf
+sec.3 (the `2` comes from the cross term in the quadratic).
 
 ## Numerical safeguards (not algorithmic deviations, but worth noting)
 
@@ -133,11 +133,11 @@ on well-conditioned inputs.
 
 Floor for the segment-curvature variable to prevent
 division-by-near-zero in `dtm = -f1 / f2`. Triggered only on
-numerical noise; the floor is `epsmch ≈ 2.22e-16` times the original
+numerical noise; the floor is `epsmch ~= 2.22e-16` times the original
 `f2`, so it is many orders of magnitude smaller than typical values
 of `f2`.
 
-### `dr ≤ epsmch * ddum` curvature-condition gate in `mainlb.f:566`
+### `dr <= epsmch * ddum` curvature-condition gate in `mainlb.f:566`
 
 ```fortran
 if (dr .le. epsmch*ddum) then
@@ -166,14 +166,14 @@ For each `src/*.f`:
 2. `grep` for `parameter (` blocks.
 3. `grep` for `epsmch` usage to identify scaled tolerances.
 4. Cross-reference each non-trivial constant against:
-   - `algorithm.pdf` (Byrd/Lu/Nocedal/Zhu 1995) — the original derivation.
-   - `code.pdf` (Zhu/Byrd/Nocedal 1997) — the algorithm-as-implemented paper.
-   - `acm-remark.pdf` (Morales/Nocedal 2011) — the `subsm` correction.
+   - `algorithm.pdf` (Byrd/Lu/Nocedal/Zhu 1995) -- the original derivation.
+   - `code.pdf` (Zhu/Byrd/Nocedal 1997) -- the algorithm-as-implemented paper.
+   - `acm-remark.pdf` (Morales/Nocedal 2011) -- the `subsm` correction.
    - Cited references in the F77 source headers (e.g., More-Thuente
      1994 cited in `dcstep.f` and `dcsrch.f`).
 
 If you spot a deviation not listed above, please open an issue or PR
-against the spec pack — the audit was performed once and may have
+against the spec pack -- the audit was performed once and may have
 missed something subtle.
 
 ## Summary

@@ -26,7 +26,7 @@ The algorithm is HEAPSORT (Williams 1964, CACM Algorithm 232).
 
 ### Preconditions
 
-- `n ≥ 1`.
+- `n >= 1`.
 - `iorder[i]` are arbitrary integers (typically distinct, but the
   routine treats them as opaque tags).
 
@@ -36,7 +36,7 @@ The algorithm is HEAPSORT (Williams 1964, CACM Algorithm 232).
 - `iorder[n]` is the index (from the original parallel `iorder`) of
   that minimum element.
 - `t[1..n-1]` is a valid min-heap.
-- The multiset `{(t[i], iorder[i]) : 1 ≤ i ≤ n}` after the call
+- The multiset `{(t[i], iorder[i]) : 1 <= i <= n}` after the call
   equals the multiset before the call (only the order changes).
 
 ## Algorithm
@@ -118,7 +118,7 @@ None.
 ### Order-of-operations dependencies
 
 - The sift-up sequence (insert order `k = 2, 3, ..., n`) is *not* an
-  algorithmic invariant — any valid heap-build (e.g., bottom-up
+  algorithmic invariant -- any valid heap-build (e.g., bottom-up
   Floyd's heapify) produces a valid heap. **However**, the F77
   source uses sift-up insertion in this specific order, and ties in
   `t` are broken by insertion order. For `--strict` conformance the

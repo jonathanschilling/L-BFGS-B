@@ -2,18 +2,18 @@
 
 ## Purpose
 
-Form the **`LEL'`-factorization** of the `2col × 2col` indefinite
+Form the **`LEL'`-factorization** of the `2col * 2col` indefinite
 matrix `K` used in subspace minimization (`subsm`):
 
 ```
 K = [-D - Y'ZZ'Y/theta     L_a' - R_z'  ]
-    [L_a - R_z         theta · S'AA'S   ]
+    [L_a - R_z         theta * S'AA'S   ]
 ```
 
 where `Z` is the projection onto free variables, `A` onto active,
 `L_a` is the strict-lower triangle of `S'AA'Y`, and `R_z` is the
-upper triangle of `S'ZZ'Y`. (See `code.pdf` §4 and Byrd/Lu/Nocedal/Zhu
-1995 §5.)
+upper triangle of `S'ZZ'Y`. (See `code.pdf` sec.4 and Byrd/Lu/Nocedal/Zhu
+1995 sec.5.)
 
 The factorization is incrementally maintained across iterations via
 the helper matrix `wn1`, which holds (updated) inner-products that
@@ -28,23 +28,23 @@ or `info = -2` (second block).
 | Name | Type | Description |
 |------|------|-------------|
 | `n` | positive integer | Problem dimension. |
-| `nsub` | integer ≥ 0 | Number of currently-free variables. |
+| `nsub` | integer >= 0 | Number of currently-free variables. |
 | `ind` | integer vector, length `n` | `ind[1..nsub]` = currently-free indices, `ind[nsub+1..n]` = currently-active. |
 | `nenter`, `ileave` | integers | From `freev`: change-detection counters. |
 | `indx2` | integer vector, length `n` | From `freev`: entered (`[1..nenter]`) and leaving (`[ileave..n]`) variables. |
-| `iupdat` | integer ≥ 0 | Total L-BFGS updates so far. |
+| `iupdat` | integer >= 0 | Total L-BFGS updates so far. |
 | `updatd` | boolean | Whether L-BFGS history was just updated. |
 | `m`, `col`, `head` | integers | Memory layout parameters. |
 | `theta` | positive real | Hessian scaling. |
-| `ws`, `wy` | real matrices, `n × m` | L-BFGS history columns. |
-| `sy` | real matrix, `m × m` | Compact representation (diagonal `D`, lower `L`). |
+| `ws`, `wy` | real matrices, `n * m` | L-BFGS history columns. |
+| `sy` | real matrix, `m * m` | Compact representation (diagonal `D`, lower `L`). |
 
 ### Logical outputs
 
 | Name | Type | Description |
 |------|------|-------------|
-| `wn` | real matrix, `2m × 2m` | Upper triangle holds the `LEL'` factorization. |
-| `wn1` (in/out) | real matrix, `2m × 2m` | Lower triangle of the auxiliary inner-product matrix (carried across iterations). |
+| `wn` | real matrix, `2m * 2m` | Upper triangle holds the `LEL'` factorization. |
+| `wn1` (in/out) | real matrix, `2m * 2m` | Lower triangle of the auxiliary inner-product matrix (carried across iterations). |
 | `info` | integer | `0` success; `-1` first Cholesky failed; `-2` second Cholesky failed. |
 
 ### Preconditions
@@ -52,7 +52,7 @@ or `info = -2` (second block).
 - On the first iteration, `wn1` must be zeroed.
 - `ind` and `indx2` are produced by `freev` for the current iteration.
 - The first call must have `updatd = false` (no L-BFGS pair to add yet)
-  unless `iupdat ≥ 1` is genuinely true.
+  unless `iupdat >= 1` is genuinely true.
 
 ### Postconditions
 
@@ -235,7 +235,7 @@ None.
 |------|------|------------------|
 | 1 | `data/formk_case_1.json` | `updatd = false`, no entering/leaving: phases 1a/1b/2 are no-ops |
 | 2 | `data/formk_case_2.json` | `updatd = true`, `iupdat = 1`: phase 1b fills new row/col |
-| 3 | `data/formk_case_3.json` | First Cholesky fails (non-PD `(1,1)` block) → `info = -1` |
+| 3 | `data/formk_case_3.json` | First Cholesky fails (non-PD `(1,1)` block) -> `info = -1` |
 
 ## Reference implementation
 
@@ -243,8 +243,8 @@ None.
 
 ## Cross-references
 
-- **Paper**: Byrd/Lu/Nocedal/Zhu 1995 §5 (subspace minimization),
-  `code.pdf` §4.
+- **Paper**: Byrd/Lu/Nocedal/Zhu 1995 sec.5 (subspace minimization),
+  `code.pdf` sec.4.
 - **Related subroutines**: called by `mainlb` per iteration when
   `wrk = true` (active set changed or L-BFGS updated). Output `wn`
   consumed by `subsm`.

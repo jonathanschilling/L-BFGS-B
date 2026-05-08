@@ -178,7 +178,7 @@ def main(argv: list[str]) -> int:
 
     cov = run_gcovr(args.root, args.build)
     if cov is None:
-        # No data — common in Phase A before any tests run.
+        # No data -- common in Phase A before any tests run.
         if args.fail:
             print("FAIL: no coverage data available")
             return 1

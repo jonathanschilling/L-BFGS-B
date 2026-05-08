@@ -8,9 +8,9 @@ the final iterate.
 
 This is the natural interface for languages with first-class function
 values. Ports are free to expose their own user-facing API on top of
-this — generators, async iterators, builder patterns, observer
+this -- generators, async iterators, builder patterns, observer
 callbacks, or even the F77 reverse-comm protocol described in
-`08_legacy_reverse_comm.md` — but the spec describes the algorithm in
+`08_legacy_reverse_comm.md` -- but the spec describes the algorithm in
 callback terms.
 
 ## Signature
@@ -52,45 +52,45 @@ result {
 
 ## Inputs
 
-### `n` — dimension
+### `n` -- dimension
 
-Positive integer. Must be `≥ 1`.
+Positive integer. Must be `>= 1`.
 
-### `x0` — initial point
+### `x0` -- initial point
 
 Real vector of length `n`. May be infeasible: the optimizer will
-project onto the box `l ≤ x ≤ u` before iterating; the caller is
+project onto the box `l <= x <= u` before iterating; the caller is
 notified via `info` if projection occurred.
 
-### `l`, `u` — bounds
+### `l`, `u` -- bounds
 
 Real vectors of length `n`. Entries are **only consulted** where
 `nbd[i]` indicates the corresponding bound is active (see below).
 Entries with `nbd[i] = 0` may be any value (commonly `0`).
 
-### `nbd` — bound types
+### `nbd` -- bound types
 
 Integer vector of length `n`. Per variable:
 
 | `nbd[i]` | Meaning |
 |----------|---------|
 | `0` | Variable is unbounded. `l[i]`, `u[i]` ignored. |
-| `1` | Lower bound active: `x[i] ≥ l[i]`. |
-| `2` | Both bounds active: `l[i] ≤ x[i] ≤ u[i]`. Allowed `l[i] = u[i]` (variable fixed). |
-| `3` | Upper bound active: `x[i] ≤ u[i]`. |
+| `1` | Lower bound active: `x[i] >= l[i]`. |
+| `2` | Both bounds active: `l[i] <= x[i] <= u[i]`. Allowed `l[i] = u[i]` (variable fixed). |
+| `3` | Upper bound active: `x[i] <= u[i]`. |
 
-Validation: `nbd[i] ∈ {0,1,2,3}` is required; if `nbd[i] = 2` then
-`l[i] ≤ u[i]` is required. Violations cause an immediate return with
+Validation: `nbd[i] in {0,1,2,3}` is required; if `nbd[i] = 2` then
+`l[i] <= u[i]` is required. Violations cause an immediate return with
 `info` set to an error code (see `errclb.md`).
 
-### `m` — memory parameter
+### `m` -- memory parameter
 
 Positive integer. Number of L-BFGS pairs `(s_i, y_i)` retained.
 Typical values: `5` (default), up to `17`. Larger `m` improves the
 Hessian approximation at the cost of `O(mn)` extra storage and
-`O(m²n)` per-iteration work.
+`O(m^2n)` per-iteration work.
 
-### `f_eval`, `g_eval` — callbacks
+### `f_eval`, `g_eval` -- callbacks
 
 Pure functions called by the optimizer. Contract:
 
@@ -98,11 +98,11 @@ Pure functions called by the optimizer. Contract:
   (the optimizer may call them with the same `x` more than once,
   although it tries to avoid this).
 - **Inputs**: `f_eval` and `g_eval` receive the current trial iterate
-  `x`. The optimizer guarantees `l ≤ x ≤ u` (the trial point is always
+  `x`. The optimizer guarantees `l <= x <= u` (the trial point is always
   feasible after the initial projection).
 - **Outputs**: `f_eval` returns a finite real (`NaN` / `Inf` cause
   abnormal termination); `g_eval` returns a real vector of length `n`.
-- **Cost**: the optimizer minimizes calls but cannot avoid them — for
+- **Cost**: the optimizer minimizes calls but cannot avoid them -- for
   expensive objectives, the user controls cost via `max_fg` and
   `factr`/`pgtol` tolerances.
 
@@ -111,15 +111,15 @@ both `(f, g)`; this is more efficient when the gradient is computed as
 a byproduct of the function evaluation. Both styles are valid; this
 spec describes them as separate callbacks for clarity.
 
-### `factr` — relative function-decrease tolerance
+### `factr` -- relative function-decrease tolerance
 
 Convergence triggers when
 
 ```
-(f_old - f_new) / max(|f_old|, |f_new|, 1) ≤ factr · eps
+(f_old - f_new) / max(|f_old|, |f_new|, 1) <= factr * eps
 ```
 
-where `eps` is the machine epsilon (`≈ 2.22e-16`). Recommended values:
+where `eps` is the machine epsilon (`~= 2.22e-16`). Recommended values:
 
 - `factr = 1e12`: low accuracy (~6 digits).
 - `factr = 1e7`: medium accuracy (~10 digits, default).
@@ -127,22 +127,22 @@ where `eps` is the machine epsilon (`≈ 2.22e-16`). Recommended values:
 
 Setting `factr = 0` disables the test (only `pgtol` and limits remain).
 
-### `pgtol` — projected-gradient tolerance
+### `pgtol` -- projected-gradient tolerance
 
-Convergence triggers when `‖g_proj‖_∞ ≤ pgtol`, where `g_proj` is the
+Convergence triggers when `||g_proj||_Inf <= pgtol`, where `g_proj` is the
 projected gradient (see `subroutines/projgr.md` for the exact
 definition).
 
 Setting `pgtol = 0` disables the test.
 
-### `max_iter`, `max_fg` — limits
+### `max_iter`, `max_fg` -- limits
 
 Optional caps. If reached, the optimizer terminates with
 `info = INFO_LIMIT` (see below). The F77 default in the drivers is
 `max_iter = 99` and unlimited `max_fg`; ports may choose their own
 defaults.
 
-### `iprint` — diagnostic verbosity
+### `iprint` -- diagnostic verbosity
 
 | Value | Behavior |
 |-------|----------|
@@ -161,13 +161,13 @@ mechanism. Conformance tests do not check diagnostic output.
 
 | Code | Symbolic name | Meaning |
 |------|---------------|---------|
-| `0` | `INFO_CONVERGED_PGTOL` | `‖g_proj‖_∞ ≤ pgtol`. |
-| `1` | `INFO_CONVERGED_FACTR` | Relative function decrease below `factr · eps`. |
+| `0` | `INFO_CONVERGED_PGTOL` | `||g_proj||_Inf <= pgtol`. |
+| `1` | `INFO_CONVERGED_FACTR` | Relative function decrease below `factr * eps`. |
 | `2` | `INFO_LIMIT_ITER` | Reached `max_iter` without converging. |
 | `3` | `INFO_LIMIT_FG` | Reached `max_fg` without converging. |
 | `4` | `INFO_ABNORMAL_LNSRLB` | Line search failed (function may be unbounded below, or gradient is inconsistent with `f`). |
 | `5` | `INFO_USER_STOP` | User requested early termination. |
-| `≤ -1` | `INFO_INPUT_ERROR_*` | Input validation failed. See `errclb.md` for the specific code per validation. |
+| `<= -1` | `INFO_INPUT_ERROR_*` | Input validation failed. See `errclb.md` for the specific code per validation. |
 
 Ports may use enums, exceptions, or sentinel values to expose this
 information; the codes above are the spec convention.
@@ -183,7 +183,7 @@ corresponding `info` code.
   optimizer projects to the nearest feasible point before any callback
   is invoked. The callbacks always receive feasible points.
 - **Monotonic decrease (within tolerance)**: each iteration either
-  reduces `f` or terminates. The line search (More–Thuente Wolfe)
+  reduces `f` or terminates. The line search (More-Thuente Wolfe)
   enforces sufficient decrease and curvature conditions; rejected
   steps trigger refresh of the L-BFGS history rather than accepting an
   ascent step.
@@ -197,12 +197,12 @@ corresponding `info` code.
 ## Behavior on invalid input
 
 The optimizer validates inputs before the first callback. On
-validation failure it returns immediately with `info ≤ -1` and
+validation failure it returns immediately with `info <= -1` and
 **no callbacks have been invoked**. See `errclb.md` for the full list
 of error cases and codes.
 
 NaN / Inf in the user-supplied `x0`, `l`, or `u` is allowed only where
-the bound is inactive (e.g., `u[i]` may be `+Inf` if `nbd[i] ∈ {0, 1}`).
+the bound is inactive (e.g., `u[i]` may be `+Inf` if `nbd[i] in {0, 1}`).
 NaN / Inf returned from `f_eval` or `g_eval` causes abnormal
 termination with `info = INFO_ABNORMAL_LNSRLB`.
 
@@ -216,8 +216,8 @@ For a callback-based port, the recommended idiom is an optional
 `should_stop: function(state) -> boolean` callback invoked at each
 iteration boundary; if it returns `true`, the optimizer terminates
 with `info = INFO_USER_STOP`. The state passed to `should_stop` may
-include `iter`, `n_fg`, current `f`, current `‖g_proj‖_∞`, and elapsed
-wall time — port's choice.
+include `iter`, `n_fg`, current `f`, current `||g_proj||_Inf`, and elapsed
+wall time -- port's choice.
 
 This is **not part of the algorithm spec** (the algorithm itself does
 nothing different); it is an interface convenience that ports may

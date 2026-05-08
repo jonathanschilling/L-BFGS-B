@@ -33,7 +33,7 @@ The algorithm uses machine epsilon (`eps`) in tolerance computations.
 
 | Spec | F77 | Value |
 |------|-----|-------|
-| `eps` | `epsmch` | `≈ 2.220446049250313e-16` (= `2⁻⁵²`) |
+| `eps` | `epsmch` | `~= 2.220446049250313e-16` (= `2^{-52}`) |
 
 The F77 source recomputes `epsmch` at startup in `mainlb` via:
 
@@ -61,12 +61,12 @@ Both choices produce identical tolerance arithmetic.
 The F77 user passes `factr` (default `1e7`) and the algorithm tests:
 
 ```
-(f_old - f_new) / max(|f_old|, |f_new|, 1.0) ≤ factr · eps
+(f_old - f_new) / max(|f_old|, |f_new|, 1.0) <= factr * eps
 ```
 
-Equivalent to: relative function decrease `≤ factr · eps`. With
-`factr = 1e7`, this is roughly `2.2e-9` — about 9 digits of accuracy.
-With `factr = 1e1`, it is roughly `2.2e-15` — close to machine
+Equivalent to: relative function decrease `<= factr * eps`. With
+`factr = 1e7`, this is roughly `2.2e-9` -- about 9 digits of accuracy.
+With `factr = 1e1`, it is roughly `2.2e-15` -- close to machine
 precision.
 
 Setting `factr = 0` disables this convergence test.
@@ -74,7 +74,7 @@ Setting `factr = 0` disables this convergence test.
 ### Projected-gradient tolerance: `pgtol`
 
 ```
-‖g_proj‖_∞ ≤ pgtol
+||g_proj||_Inf <= pgtol
 ```
 
 where `g_proj` is the projected gradient defined in `subroutines/projgr.md`.
@@ -87,7 +87,7 @@ Whichever fires first determines the `info` code (see `02_api.md`).
 
 ## Line-search tolerances
 
-The More–Thuente line search (`dcsrch`) uses three internal tolerances
+The More-Thuente line search (`dcsrch`) uses three internal tolerances
 plus step-length bounds.
 
 | Symbol | F77 | Value | Meaning |
@@ -99,7 +99,7 @@ plus step-length bounds.
 | `stpmax` | `stepmx` | computed | Max step (limited by box geometry). |
 
 **`ftol = 1e-3` is a documented deviation from the published algorithm**,
-which prescribes `α = 1e-4` in More–Thuente 1994. The L-BFGS-B
+which prescribes `alpha = 1e-4` in More-Thuente 1994. The L-BFGS-B
 implementation uses `1e-3` and has been validated against the test
 suite at this value. See `lnsrlb.md` for the comment in `src/lnsrlb.f`
 explaining this. **Ports must use `ftol = 1e-3`** (not `1e-4`) to be
@@ -117,9 +117,9 @@ would be catastrophic. Each is guarded:
 |------|-------|------------------------|
 | `cauchy`: breakpoint computation `(u - x) / d` | implicit (skip if `d = 0`) | Variable treated as having no breakpoint in this direction. |
 | `cauchy`: `dt = -fp / fpp` | check `fpp > eps` (else use earlier breakpoint) | Algorithm exits the breakpoint loop. |
-| `formt`: Cholesky pivot `T[i,i]² > 0` | LAPACK `dpotrf` returns `info > 0` | Caller (`mainlb`) signals refresh; L-BFGS history discarded. |
+| `formt`: Cholesky pivot `T[i,i]^2 > 0` | LAPACK `dpotrf` returns `info > 0` | Caller (`mainlb`) signals refresh; L-BFGS history discarded. |
 | `bmv`: `1 / sqrt(sy[i,i])` | precondition: `sy[i,i] > 0` enforced by `matupd` | If precondition violated, behavior undefined. |
-| `matupd`: `s'y` curvature test | `s'y > eps · ‖y‖²` (refresh threshold) | New pair rejected; `updatd = false`. |
+| `matupd`: `s'y` curvature test | `s'y > eps * ||y||^2` (refresh threshold) | New pair rejected; `updatd = false`. |
 
 ### Overflow / underflow
 
@@ -132,7 +132,7 @@ return finite values for feasible inputs.
 ### Step-length floor
 
 The line search has an implicit minimum step set by `stpmin = 0`.
-After the bracket has shrunk so that `stx ≈ sty`, `dcsrch` returns
+After the bracket has shrunk so that `stx ~= sty`, `dcsrch` returns
 with the best step found so far rather than continuing to shrink. See
 `dcsrch.md`.
 
@@ -143,11 +143,11 @@ The algorithm calls these BLAS-level-1 and LAPACK routines:
 | Call | Used in | Purpose |
 |------|---------|---------|
 | `dcopy` | many | Copy a vector. |
-| `daxpy` | many | `y ← α·x + y`. |
-| `dscal` | many | `y ← α·y`. |
+| `daxpy` | many | `y <- alpha*x + y`. |
+| `dscal` | many | `y <- alpha*y`. |
 | `ddot` | many | `x' y`. |
-| `dnrm2` | line search, gradients | `‖x‖_2`. |
-| `dgemv` | `formk`, `subsm`, `cauchy` | `y ← α·A·x + β·y`. |
+| `dnrm2` | line search, gradients | `||x||_2`. |
+| `dgemv` | `formk`, `subsm`, `cauchy` | `y <- alpha*A*x + beta*y`. |
 | `dtrsm` | `bmv`, `subsm` | Triangular solve `A x = b`. |
 | `dpotrf` | `formt`, `formk` | Cholesky factorization. |
 
@@ -163,7 +163,7 @@ against the **same reference BLAS/LAPACK build**:
 
 - **Reference BLAS**: netlib BLAS, single-threaded, source build.
 - **Reference LAPACK**: netlib LAPACK, single-threaded, source build.
-- **Reference compiler**: `gfortran` (any version ≥ 9 in CI).
+- **Reference compiler**: `gfortran` (any version >= 9 in CI).
 - **Reference flags**: `-O2 -fno-fast-math -fno-associative-math
   -frounding-math` to disable algebraic reordering and float-contract.
 
@@ -181,7 +181,7 @@ numerical tolerances instead of bit-equality. See `07_conformance.md`
 for the per-routine tolerances.
 
 The `--tolerance` mode is for **validation**, not for "real"
-conformance — a port that only passes `--tolerance` may diverge from
+conformance -- a port that only passes `--tolerance` may diverge from
 the F77 reference under sufficiently long iteration sequences. For
 production use of a non-reference BLAS, the port must accept this
 risk; it is not an algorithmic bug, but a consequence of BLAS
@@ -218,9 +218,9 @@ the full audit notes.
 | Constant | Site | Value | Origin | Tunable? |
 |----------|------|-------|--------|----------|
 | `ftol` | `lnsrlb.f`, `dcsrch.f` | `1.0e-3` | **Deviation from More-Thuente 1994 (which uses `1e-4`).** Code-only. See `05_deviations.md`. | No. Validated test bounds depend on this. |
-| `gtol` | `lnsrlb.f`, `dcsrch.f` | `0.9` | More-Thuente 1994 §6 standard. | No. |
-| `xtol` | `lnsrlb.f`, `dcsrch.f` | `0.1` | More-Thuente 1994 §6. | No. |
-| `p66` | `dcstep.f`, `dcsrch.f` | `0.66` | More-Thuente 1994 §3 bracket safeguard. | No. |
+| `gtol` | `lnsrlb.f`, `dcsrch.f` | `0.9` | More-Thuente 1994 sec.6 standard. | No. |
+| `xtol` | `lnsrlb.f`, `dcsrch.f` | `0.1` | More-Thuente 1994 sec.6. | No. |
+| `p66` | `dcstep.f`, `dcsrch.f` | `0.66` | More-Thuente 1994 sec.3 bracket safeguard. | No. |
 | `xtrapl` | `dcsrch.f` | `1.1` | MINPACK-2 line search lower-extrapolation. | No. |
 | `xtrapu` | `dcsrch.f` | `4.0` | MINPACK-2 line search upper-extrapolation. | No. |
 
@@ -230,7 +230,7 @@ the full audit notes.
 |----------|-------|-------|-------|
 | `zero`, `one` | many | `0.0d0`, `1.0d0` | Universal. |
 | `p5`, `two`, `three` | `dcstep.f`, `dcsrch.f` | `0.5`, `2.0`, `3.0` | Cubic / quadratic interpolation coefficients. |
-| `2.0d0` | `cauchy.f:420` | `2.0` | Cross-term coefficient in the `f2` update across a breakpoint. From the Taylor expansion in `algorithm.pdf` §4. |
+| `2.0d0` | `cauchy.f:420` | `2.0` | Cross-term coefficient in the `f2` update across a breakpoint. From the Taylor expansion in `algorithm.pdf` sec.4. |
 
 ### Implementation-detail sentinels
 
@@ -246,8 +246,8 @@ machine precision of the running platform.
 | Where | Form | Purpose |
 |-------|------|---------|
 | `cauchy.f:423` | `max(epsmch * f2_org, f2)` | Lower bound on segment curvature to prevent `0/0` in `dtm = -f1/f2`. |
-| `mainlb.f:566` | `dr ≤ epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s'y`. |
-| `formt.f`, `formk.f` | LAPACK `dpotrf` failure | Cholesky pivot non-positivity → caller refreshes L-BFGS history. |
+| `mainlb.f:566` | `dr <= epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s'y`. |
+| `formt.f`, `formk.f` | LAPACK `dpotrf` failure | Cholesky pivot non-positivity -> caller refreshes L-BFGS history. |
 
 ### Constants from earlier suspicion that DO NOT exist
 

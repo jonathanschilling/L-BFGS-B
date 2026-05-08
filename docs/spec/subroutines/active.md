@@ -5,7 +5,7 @@
 Initialize the bound-status state at the start of an optimization:
 
 1. Project the user-supplied initial point `x0` onto the feasible
-   box `l ≤ x ≤ u` if necessary.
+   box `l <= x <= u` if necessary.
 2. Compute the per-variable bound-status array `iwhere` in its
    coarse-initial form (`-1` = unbounded, `0` = bounded but free,
    `3` = fixed by `l = u`).
@@ -21,8 +21,8 @@ iteration.
 | Name | Type | Description |
 |------|------|-------------|
 | `n` | positive integer | Number of variables. |
-| `l` | real vector, length `n` | Lower bounds (consulted only where `nbd[i] ∈ {1, 2}`). |
-| `u` | real vector, length `n` | Upper bounds (consulted only where `nbd[i] ∈ {2, 3}`). |
+| `l` | real vector, length `n` | Lower bounds (consulted only where `nbd[i] in {1, 2}`). |
+| `u` | real vector, length `n` | Upper bounds (consulted only where `nbd[i] in {2, 3}`). |
 | `nbd` | integer vector, length `n` | Bound-type codes per variable. Validated by `errclb` before this call. |
 | `x` | real vector, length `n` | Initial iterate (may be infeasible on entry). |
 | `iprint` | integer | Diagnostic verbosity flag (see `02_api.md`). |
@@ -34,19 +34,19 @@ iteration.
 | `x` | real vector, length `n` | **In/out**: projected to feasible set componentwise. |
 | `iwhere` | integer vector, length `n` | Initial bound status per variable: `-1`, `0`, or `3`. |
 | `prjctd` | boolean | `true` if any `x[i]` was strictly outside its bounds and projected. |
-| `cnstnd` | boolean | `true` if any variable has at least one bound (`nbd[i] ≠ 0`). |
+| `cnstnd` | boolean | `true` if any variable has at least one bound (`nbd[i] != 0`). |
 | `boxed` | boolean | `true` if every variable has both bounds (`nbd[i] = 2` for all `i`). |
 
 ### Preconditions
 
-- Inputs validated by `errclb`: `n ≥ 1`, `nbd[i] ∈ {0, 1, 2, 3}` for
-  all `i`, and where `nbd[i] = 2`, `l[i] ≤ u[i]`.
+- Inputs validated by `errclb`: `n >= 1`, `nbd[i] in {0, 1, 2, 3}` for
+  all `i`, and where `nbd[i] = 2`, `l[i] <= u[i]`.
 
 ### Postconditions
 
-- `x` is feasible: `l[i] ≤ x[i]` if `nbd[i] ∈ {1, 2}` and
-  `x[i] ≤ u[i]` if `nbd[i] ∈ {2, 3}`.
-- `iwhere[i] ∈ {-1, 0, 3}` (the coarse initial values; the finer
+- `x` is feasible: `l[i] <= x[i]` if `nbd[i] in {1, 2}` and
+  `x[i] <= u[i]` if `nbd[i] in {2, 3}`.
+- `iwhere[i] in {-1, 0, 3}` (the coarse initial values; the finer
   values `1`, `2` are introduced later by `cauchy`).
 - `l`, `u`, `nbd`, `n` are unchanged.
 
@@ -75,7 +75,7 @@ The `else if` is critical: a variable cannot be both "at lower" and
 "at upper" in the same iteration of the outer loop. The lower-bound
 check fires first; if it fires, the upper-bound check is skipped for
 that variable. (For `nbd = 2` with `l < u` and `x` interior, neither
-`x ≤ l` nor `x ≥ u` is true, so the variable isn't counted in
+`x <= l` nor `x >= u` is true, so the variable isn't counted in
 `nbdd`.)
 
 ### Phase 2: initialize `iwhere`, `cnstnd`, `boxed`
@@ -148,7 +148,7 @@ None.
 
 - The condition `u[i] - l[i] <= 0` uses subtraction rather than
   `u[i] <= l[i]` directly. For finite IEEE-754 doubles these are
-  equivalent; for inputs where `u[i]` or `l[i]` is `±Inf`, `Inf - Inf
+  equivalent; for inputs where `u[i]` or `l[i]` is `+/-Inf`, `Inf - Inf
   = NaN`, but in this routine such pairs would never have `nbd = 2`
   (per `errclb` validation). No defensive handling required.
 - The `nbdd` counter is informational (used only for diagnostic
@@ -185,12 +185,12 @@ F77 output.
 
 ## Reference implementation
 
-`reference_impl/core/active.py` — Python implementation.
+`reference_impl/core/active.py` -- Python implementation.
 
 ## Cross-references
 
-- **Paper**: `algorithm.pdf` §2 (active-set framework). The initial
-  projection appears in `code.pdf` §3.
+- **Paper**: `algorithm.pdf` sec.2 (active-set framework). The initial
+  projection appears in `code.pdf` sec.3.
 - **Related subroutines**: called once by `mainlb` at startup. Result
   feeds `cauchy` (refines `iwhere`), `freev`, and the projected-
   gradient test (`projgr`).

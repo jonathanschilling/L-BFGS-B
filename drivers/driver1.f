@@ -1,8 +1,8 @@
 c> \file driver1.f
 
 c                                                                                      
-c  L-BFGS-B is released under the “New BSD License” (aka “Modified BSD License”        
-c  or “3-clause license”)                                                              
+c  L-BFGS-B is released under the "New BSD License" (aka "Modified BSD License"        
+c  or "3-clause license")                                                              
 c  Please read attached file License.txt                                               
 c                                        
 c                             DRIVER 1 in Fortran 77

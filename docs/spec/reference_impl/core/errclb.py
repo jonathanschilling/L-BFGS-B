@@ -1,4 +1,4 @@
-"""errclb — input validation.
+"""errclb -- input validation.
 
 Reference implementation following ``docs/spec/subroutines/errclb.md``.
 """

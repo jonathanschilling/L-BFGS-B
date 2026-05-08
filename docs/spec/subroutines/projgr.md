@@ -3,7 +3,7 @@
 ## Purpose
 
 Compute the infinity norm of the *projected gradient* at the current
-iterate, for use in the convergence test `‖g_proj‖_∞ ≤ pgtol`.
+iterate, for use in the convergence test `||g_proj||_Inf <= pgtol`.
 
 The projected gradient measures how far the algorithm has converged
 relative to the bounds: it is zero at any KKT point of the
@@ -16,11 +16,11 @@ bound-constrained problem and positive elsewhere.
 | Name | Type | Description |
 |------|------|-------------|
 | `n` | positive integer | Number of variables. |
-| `x` | real vector, length `n` | Current iterate. Caller guarantees `l ≤ x ≤ u` componentwise (where bounds apply). |
-| `l` | real vector, length `n` | Lower bounds. Entries with `nbd[i] ∈ {0, 3}` are not consulted. |
-| `u` | real vector, length `n` | Upper bounds. Entries with `nbd[i] ∈ {0, 1}` are not consulted. |
+| `x` | real vector, length `n` | Current iterate. Caller guarantees `l <= x <= u` componentwise (where bounds apply). |
+| `l` | real vector, length `n` | Lower bounds. Entries with `nbd[i] in {0, 3}` are not consulted. |
+| `u` | real vector, length `n` | Upper bounds. Entries with `nbd[i] in {0, 1}` are not consulted. |
 | `nbd` | integer vector, length `n` | Bound types per variable: `0`, `1`, `2`, or `3` (see `02_api.md`). |
-| `g` | real vector, length `n` | Gradient `∇f(x)` at the current iterate. |
+| `g` | real vector, length `n` | Gradient `gradf(x)` at the current iterate. |
 
 ### Logical output
 
@@ -30,15 +30,15 @@ bound-constrained problem and positive elsewhere.
 
 ### Preconditions
 
-- `n ≥ 1`.
-- `nbd[i] ∈ {0, 1, 2, 3}` for all `i` (caller validates via `errclb`).
-- `x[i]` is feasible: `l[i] ≤ x[i]` if `nbd[i] ∈ {1, 2}` and
-  `x[i] ≤ u[i]` if `nbd[i] ∈ {2, 3}`. (Caller ensures via initial
+- `n >= 1`.
+- `nbd[i] in {0, 1, 2, 3}` for all `i` (caller validates via `errclb`).
+- `x[i]` is feasible: `l[i] <= x[i]` if `nbd[i] in {1, 2}` and
+  `x[i] <= u[i]` if `nbd[i] in {2, 3}`. (Caller ensures via initial
   projection in `active`.)
 
 ### Postconditions
 
-- `sbgnrm ≥ 0`.
+- `sbgnrm >= 0`.
 - Inputs `n`, `x`, `l`, `u`, `nbd`, `g` are unchanged.
 
 ## Algorithm
@@ -85,7 +85,7 @@ return sbgnrm
 ### Interpretation
 
 The value `gi` is the negative of the standard "projected gradient
-component" `(P[x - g, l, u] - x)[i]`, where `P[·, l, u]` is the
+component" `(P[x - g, l, u] - x)[i]`, where `P[*, l, u]` is the
 componentwise projection onto the box. To see this for a single
 variable with both bounds (`nbd = 2`) and `g < 0`:
 
@@ -97,7 +97,7 @@ P[x - g, l, u] - x  =  P[x + |g|, l, u] - x      (since g < 0)
                    =  -gi                         (matches the spec)
 ```
 
-The infinity norm is invariant under sign flip, so `‖gi‖_∞` equals the
+The infinity norm is invariant under sign flip, so `||gi||_Inf` equals the
 standard projected-gradient norm.
 
 ### Magic constants
@@ -150,15 +150,15 @@ the active branch* (both have `nbd != 0`).
 
 ## Reference implementation
 
-`reference_impl/core/projgr.py` — NumPy implementation that follows
+`reference_impl/core/projgr.py` -- NumPy implementation that follows
 this spec.
 
 ## Cross-references
 
-- **Paper**: Conn/Gould/Toint 1988 §3 (active-set framework), the
+- **Paper**: Conn/Gould/Toint 1988 sec.3 (active-set framework), the
   projected-gradient termination criterion is standard for box-
   constrained optimization. L-BFGS-B's specific formulation appears
-  in `code.pdf` §3.
+  in `code.pdf` sec.3.
 - **Related subroutines**: called by `mainlb` once per outer
   iteration. The result feeds the `pgtol` convergence test.
 - **F77 source**: `src/projgr.f`.

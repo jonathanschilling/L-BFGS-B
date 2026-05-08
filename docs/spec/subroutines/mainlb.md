@@ -36,7 +36,7 @@ state-machine F77 form is captured separately in
 |------|------|-------------|
 | `x` | real vector, length `n` | Final iterate. |
 | `f` | real | `f(x)` at final iterate. |
-| `g` | real vector, length `n` | `∇f(x)` at final iterate. |
+| `g` | real vector, length `n` | `gradf(x)` at final iterate. |
 | `info` | integer | Termination code (see `02_api.md`). |
 | `n_iter`, `n_fg` | integers | Counters. |
 | `message` | string | Human-readable termination reason. |
@@ -153,11 +153,11 @@ def mainlb(n, m, x0, l, u, nbd, f_eval, g_eval, factr, pgtol, max_iter, max_fg, 
         y = g - g_old
         ddum = max(abs(f_old), abs(f), 1.0)    # for relative test
         sy_new = dot(s, y)
-        if sy_new > eps * ‖y‖**2:              # curvature condition
+        if sy_new > eps * ||y||**2:              # curvature condition
             iupdat += 1
             matupd(n, m, S, Y, sy, ss, d=s, r=y, iupdat=iupdat,
                    itail=itail, col=col, head=head, theta=theta,
-                   rr=‖y‖**2, dr=sy_new, stp=1.0, dtd=‖s‖**2)
+                   rr=||y||**2, dr=sy_new, stp=1.0, dtd=||s||**2)
             updatd = true
             info = formt(m, T, sy, ss, col, theta)
             if info != 0:
@@ -172,12 +172,12 @@ def mainlb(n, m, x0, l, u, nbd, f_eval, g_eval, factr, pgtol, max_iter, max_fg, 
 
 | Constant | F77 | Value | Meaning |
 |----------|-----|-------|---------|
-| `eps * ‖y‖²` curvature gate | (matupd caller) | machine eps | Refresh threshold. |
-| All others | (in callees) | — | See `04_numerics.md`. |
+| `eps * ||y||^2` curvature gate | (matupd caller) | machine eps | Refresh threshold. |
+| All others | (in callees) | -- | See `04_numerics.md`. |
 
 ### Numerical safeguards
 
-- `errclb` validates inputs; failure → immediate return.
+- `errclb` validates inputs; failure -> immediate return.
 - Sub-calls (`cauchy`, `cmprlb`, `formk`, `formt`) report Cholesky /
   matrix-solve failures via nonzero `info`. The handler refreshes
   the L-BFGS history (`col = 0`, `theta = 1`) and continues.
@@ -189,8 +189,8 @@ def mainlb(n, m, x0, l, u, nbd, f_eval, g_eval, factr, pgtol, max_iter, max_fg, 
 
 Within `mainlb` itself, the per-iteration sub-routine call sequence
 is fixed:
-**`projgr → cauchy → freev → cmprlb → formk(if wrk) → subsm → lnsrlb →
-projgr (again) → matupd / formt`**.
+**`projgr -> cauchy -> freev -> cmprlb -> formk(if wrk) -> subsm -> lnsrlb ->
+projgr (again) -> matupd / formt`**.
 
 Reordering would change the algorithm. The order matches the F77
 source's state-machine flow.
@@ -223,8 +223,8 @@ The 7 F77 test cases:
 
 | F77 case | Conformance scenario |
 |---|---|
-| `case_invalid_input_returns_error` | `n = 0` → `INFO_INPUT_ERROR_*`. |
-| `case_pgtol_convergence` | Quadratic, `pgtol = 1e-3` → converges via projected gradient. |
+| `case_invalid_input_returns_error` | `n = 0` -> `INFO_INPUT_ERROR_*`. |
+| `case_pgtol_convergence` | Quadratic, `pgtol = 1e-3` -> converges via projected gradient. |
 | `case_user_signals_stop` | User sets `task = 'STOP'` mid-iteration. |
 | `case_factr_convergence` | Slow `pgtol`; `factr` fires first. |
 | `case_immediate_pgtol_convergence` | `x0` already at minimum. |
@@ -238,8 +238,8 @@ other `core` module).
 
 ## Cross-references
 
-- **Paper**: `code.pdf` §3 (the algorithm flow). `algorithm.pdf`
-  §1–§5 for derivation. `acm-remark.pdf` for the `subsm`
+- **Paper**: `code.pdf` sec.3 (the algorithm flow). `algorithm.pdf`
+  sec.1-sec.5 for derivation. `acm-remark.pdf` for the `subsm`
   safeguarding.
 - **Related subroutines**: every other in-scope routine.
 - **F77 source**: `src/mainlb.f`.

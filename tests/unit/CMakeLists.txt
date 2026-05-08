@@ -8,7 +8,7 @@
 # whatever test_*.f90 sources exist in this directory as ctest entries.
 #
 # Phase A delivers the harness + the coverage gate skeleton with no tests.
-# Phases B–E add tests one tier at a time.
+# Phases B-E add tests one tier at a time.
 
 # Assertion helpers (compiled once to avoid .mod-file races under -j).
 add_library(test_assert STATIC test_assert.f90)
@@ -52,7 +52,7 @@ lbfgsb_add_unit_test(setulb)
 lbfgsb_add_unit_test(mainlb)
 
 # Branch coverage gate. Wired only when LBFGSB_COVERAGE=ON; otherwise there
-# is no coverage data to check. In Phases A–E it runs in warn-only mode
+# is no coverage data to check. In Phases A-E it runs in warn-only mode
 # (always exits 0 with a printed report); Phase F flips it to fail-on-gap.
 if(LBFGSB_COVERAGE)
    find_package(Python3 REQUIRED COMPONENTS Interpreter)

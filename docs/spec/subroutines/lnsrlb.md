@@ -4,7 +4,7 @@
 
 Drive the More-Thuente line search (`dcsrch`) along a search direction
 `d`, with safeguarding so that all trial points stay inside the
-feasible box. Computes the actual `x = t + stp · d` at each trial
+feasible box. Computes the actual `x = t + stp * d` at each trial
 (or `x = z` exactly when `stp = 1`), and clamps the maximum step
 `stpmx` to keep `x` feasible.
 
@@ -30,7 +30,7 @@ its own logic and `dcsrch`.
 | `d` | in | Search direction. |
 | `r, t` | in/out | Saved `g` and `x` at start of search. |
 | `z` | in | The Cauchy/subsm output point (used when `stp = 1`). |
-| `stp, dnorm, dtd, xstep` | in/out | Step length, `||d||`, `d'd`, `stp · ||d||`. |
+| `stp, dnorm, dtd, xstep` | in/out | Step length, `||d||`, `d'd`, `stp * ||d||`. |
 | `stpmx` | in/out | Maximum allowed step (computed from box geometry). |
 | `iter` | in | Outer iteration counter. |
 | `ifun, iback, nfgv` | in/out | f/g eval counters. |
@@ -120,7 +120,7 @@ else:
   the precomputed `z` directly (avoids redundant arithmetic). The
   numerical result is the same as computing `t + stp*d`; the branch is
   for efficiency.
-- The descent-direction check (`gd >= 0` ⟹ `info = -4`) catches cases
+- The descent-direction check (`gd >= 0` ==> `info = -4`) catches cases
   where the subspace minimizer produces a non-descent `d` (rare but
   possible with degenerate Hessian approximations).
 
@@ -142,10 +142,10 @@ else:
 | 2 | `data/lnsrlb_case_2.json` | `cnstnd = true`, `iter = 0`: `stpmx = 1` |
 | 3 | `data/lnsrlb_case_3.json` | `cnstnd = true`, `iter > 0`, `d < 0` lower-bound: `stpmx = (l-x)/d` |
 | 4 | `data/lnsrlb_case_4.json` | `cnstnd = true`, `iter > 0`, `d > 0` upper-bound: `stpmx = (u-x)/d` |
-| 5 | `data/lnsrlb_case_5.json` | `gd ≥ 0` ascent direction: `info = -4` |
+| 5 | `data/lnsrlb_case_5.json` | `gd >= 0` ascent direction: `info = -4` |
 | 6 | `data/lnsrlb_case_6.json` | Continuation path: `task = 'FG_LN'` skips setup |
-| 7 | `data/lnsrlb_case_7.json` | Variable already at lower bound: `a2 = 0 → stpmx = 0` |
-| 8 | `data/lnsrlb_case_8.json` | Variable already at upper bound: `a2 = 0 → stpmx = 0` |
+| 7 | `data/lnsrlb_case_7.json` | Variable already at lower bound: `a2 = 0 -> stpmx = 0` |
+| 8 | `data/lnsrlb_case_8.json` | Variable already at upper bound: `a2 = 0 -> stpmx = 0` |
 
 ## Reference implementation
 
@@ -154,7 +154,7 @@ else:
 ## Cross-references
 
 - **Paper**: Wraps More-Thuente 1994; the bound-projection logic is
-  in `code.pdf` §3.
+  in `code.pdf` sec.3.
 - **Related subroutines**: called by `mainlb` per iteration. Calls
   `dcsrch` for the 1D search.
 - **F77 source**: `src/lnsrlb.f`.

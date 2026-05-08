@@ -15,39 +15,39 @@ the previous iteration. The result feeds the subspace minimization
 | Name | Type | Description |
 |------|------|-------------|
 | `n` | positive integer | Number of variables. |
-| `nfree` (in) | integer, `0 ≤ nfree ≤ n` | Previous-iteration count of free variables. Only consulted when `iter > 0` and `cnstnd`; otherwise unused. |
+| `nfree` (in) | integer, `0 <= nfree <= n` | Previous-iteration count of free variables. Only consulted when `iter > 0` and `cnstnd`; otherwise unused. |
 | `index` (in) | integer vector, length `n` | Previous-iteration partition: `index[1..nfree]` are previously-free indices, `index[nfree+1..n]` are previously-active. Only consulted when `iter > 0` and `cnstnd`. |
-| `iwhere` | integer vector, length `n` | Current bound status per variable (set by `cauchy`): `≤ 0` = free at GCP, `> 0` = at a bound. |
+| `iwhere` | integer vector, length `n` | Current bound status per variable (set by `cauchy`): `<= 0` = free at GCP, `> 0` = at a bound. |
 | `updatd` | boolean | `true` if the L-BFGS matrix was updated in the previous iteration. |
 | `cnstnd` | boolean | `true` if at least one variable has a bound. |
-| `iter` | integer ≥ 0 | Outer iteration counter. |
+| `iter` | integer >= 0 | Outer iteration counter. |
 | `iprint` | integer | Diagnostic verbosity. |
 
 ### Logical outputs
 
 | Name | Type | Description |
 |------|------|-------------|
-| `nfree` (out) | integer | New count of free variables (number of `i` with `iwhere[i] ≤ 0`). |
+| `nfree` (out) | integer | New count of free variables (number of `i` with `iwhere[i] <= 0`). |
 | `index` (out) | integer vector, length `n` | New partition: `index[1..nfree]` lists currently-free indices in ascending order, `index[nfree+1..n]` lists currently-active indices in descending order (see Algorithm). |
-| `nenter` | integer ≥ 0 | Number of variables that *entered* the free set this iteration (were active, now free). |
-| `ileave` | integer, `1 ≤ ileave ≤ n+1` | Sentinel: `indx2[ileave..n]` lists the variables that *left* the free set this iteration. `ileave = n+1` means none left. |
+| `nenter` | integer >= 0 | Number of variables that *entered* the free set this iteration (were active, now free). |
+| `ileave` | integer, `1 <= ileave <= n+1` | Sentinel: `indx2[ileave..n]` lists the variables that *left* the free set this iteration. `ileave = n+1` means none left. |
 | `indx2` | integer vector, length `n` | Change record: `indx2[1..nenter]` are entering variables (in ascending order of their original index `i`); `indx2[ileave..n]` are leaving variables (in descending order). |
-| `wrk` | boolean | `true` if the active set changed *or* `updatd` was `true` — signals that the `wn` matrix must be rebuilt before subspace minimization. |
+| `wrk` | boolean | `true` if the active set changed *or* `updatd` was `true` -- signals that the `wn` matrix must be rebuilt before subspace minimization. |
 
 ### Preconditions
 
-- `iwhere` is consistent with `cauchy`'s output: each `iwhere[i] ∈ {-1, 0, 1, 2, 3}`.
-  Values `≤ 0` (`-1`, `0`) indicate "free"; values `> 0` (`1`, `2`, `3`) indicate "at a bound".
+- `iwhere` is consistent with `cauchy`'s output: each `iwhere[i] in {-1, 0, 1, 2, 3}`.
+  Values `<= 0` (`-1`, `0`) indicate "free"; values `> 0` (`1`, `2`, `3`) indicate "at a bound".
 - When `iter > 0` and `cnstnd`, the input `(nfree, index)` reflects the
   previous iteration's partition.
-- `iter == 0` ⟹ no previous partition; the function uses only `iwhere`
+- `iter == 0` ==> no previous partition; the function uses only `iwhere`
   and skips change detection.
 
 ### Postconditions
 
-- `nfree = |{i : iwhere[i] ≤ 0}|`.
+- `nfree = |{i : iwhere[i] <= 0}|`.
 - `index` partitions `{1, ..., n}` into free and active.
-- `nenter + (n + 1 - ileave) ≤ n` (no variable both entered and left).
+- `nenter + (n + 1 - ileave) <= n` (no variable both entered and left).
 - `wrk = (ileave < n+1) or (nenter > 0) or updatd`.
 
 ## Algorithm
@@ -155,7 +155,7 @@ None (entirely integer arithmetic and array indexing).
 
 - The change-detection loops iterate `i = 1..nfree` (then
   `nfree+1..n`) in ascending order. Order matters because `indx2`
-  records *positional* slots: with `iprint ≥ 100`, ports that match
+  records *positional* slots: with `iprint >= 100`, ports that match
   the F77 diagnostic output must visit the variables in the same
   order.
 - The partition loop iterates `i = 1..n` in ascending order;
@@ -191,7 +191,7 @@ None (entirely integer arithmetic and array indexing).
 
 ## Cross-references
 
-- **Paper**: `code.pdf` §3 (active-set bookkeeping). The
+- **Paper**: `code.pdf` sec.3 (active-set bookkeeping). The
   enter/leave detection is needed to know when the reduced Hessian
   must be refactored.
 - **Related subroutines**: called by `mainlb` after `cauchy`. The

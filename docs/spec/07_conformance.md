@@ -69,7 +69,7 @@ This mode is for ports that:
 
 A port that only passes `--tolerance` may diverge from the F77
 reference under sufficiently long iteration sequences. This is not a
-bug — it's the natural consequence of BLAS non-determinism. For most
+bug -- it's the natural consequence of BLAS non-determinism. For most
 applications this is acceptable; for bit-reproducible scientific
 computing it is not.
 
@@ -88,7 +88,7 @@ Used in `--tolerance` mode. Match constants in
 | `bmv` | 1e-14 | 1e-14 | Triangular solves (small ULP from BLAS). |
 | `cmprlb` | 1e-14 | 1e-14 | Calls `bmv`; inherits its tolerance. |
 | `formt` | 1e-14 | 1e-14 | Cholesky factor (LAPACK). |
-| `matupd` | 0 | 0 | Pure dot products at the BLAS level — F77 inner-product order is used. |
+| `matupd` | 0 | 0 | Pure dot products at the BLAS level -- F77 inner-product order is used. |
 | `dcstep` | 1e-14 | 1e-14 | Cubic / secant interpolation. |
 | `formk` | 1e-14 | 1e-14 | Two Choleskys + triangular-solve block. |
 | `dcsrch` | 1e-14 | 1e-14 | Full line-search arithmetic. |

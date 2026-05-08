@@ -2,18 +2,18 @@
 
 ## Purpose
 
-Drive the More–Thuente line search to find a step `stp` along a
+Drive the More-Thuente line search to find a step `stp` along a
 descent direction that satisfies both the **sufficient decrease**
 condition
 
 ```
-phi(stp) ≤ phi(0) + ftol · stp · phi'(0)
+phi(stp) <= phi(0) + ftol * stp * phi'(0)
 ```
 
 and the **curvature** condition
 
 ```
-|phi'(stp)| ≤ gtol · |phi'(0)|
+|phi'(stp)| <= gtol * |phi'(0)|
 ```
 
 (strong Wolfe conditions). Internally, the algorithm maintains an
@@ -46,8 +46,8 @@ The two styles are equivalent; this spec describes both.
 | `f` (in/out) | real | On `'START'`: `phi(0)`. On subsequent: `phi(stp_trial)`. On exit: `phi(stp_final)`. |
 | `g` (in/out) | real | On `'START'`: `phi'(0)` (must be `< 0`). On subsequent: `phi'(stp_trial)`. On exit: `phi'(stp_final)`. |
 | `stp` (in/out) | real | On `'START'`: initial guess. On subsequent: trial step from previous call. On exit: next trial / final step. |
-| `ftol`, `gtol`, `xtol` | real, ≥ 0 | Tolerances. |
-| `stpmin`, `stpmax` | real, `0 ≤ stpmin ≤ stpmax` | Step bounds. |
+| `ftol`, `gtol`, `xtol` | real, >= 0 | Tolerances. |
+| `stpmin`, `stpmax` | real, `0 <= stpmin <= stpmax` | Step bounds. |
 | `task` (in/out) | string | Reverse-comm state code. |
 | `isave[2]`, `dsave[13]` | (state arrays) | Carry inner state across calls. |
 
@@ -59,7 +59,7 @@ result dcsrch(
     f0: real,                            # phi(0) = caller-supplied
     g0: real,                            # phi'(0), must be < 0
     stp_initial: real,                   # first trial step
-    ftol, gtol, xtol: real ≥ 0,
+    ftol, gtol, xtol: real >= 0,
     stpmin, stpmax: real,
 )
 ```
@@ -84,7 +84,7 @@ result {
 | `'FG'` | (internal) | Reverse-comm: caller must compute `f` and `g`. |
 | `'CONV'` | `CONV` | Both Wolfe conditions met. |
 | `'WARN: ROUNDING ERRORS PREVENT PROGRESS'` | `WARN_ROUNDING` | Bracket too tight to advance. |
-| `'WARN: XTOL TEST SATISFIED'` | `WARN_XTOL` | `(stmax - stmin) ≤ xtol · stmax`. |
+| `'WARN: XTOL TEST SATISFIED'` | `WARN_XTOL` | `(stmax - stmin) <= xtol * stmax`. |
 | `'WARN: STP = STPMAX'` | `WARN_STPMAX` | Step at upper bound, function still decreasing. |
 | `'WARN: STP = STPMIN'` | `WARN_STPMIN` | Step at lower bound, no improvement. |
 | `'ERROR: STP .LT. STPMIN'` | `ERROR_STP_LT_STPMIN` | Initial `stp` below `stpmin`. |
@@ -112,9 +112,9 @@ result {
 
 The algorithm has two stages:
 
-- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol · stp · phi'(0)`
-  — a curve translated so the sufficient-decrease line is the
-  zero-axis. Once `psi(stp) ≤ 0` and `phi'(stp) ≥ 0`, switch to
+- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol * stp * phi'(0)`
+  -- a curve translated so the sufficient-decrease line is the
+  zero-axis. Once `psi(stp) <= 0` and `phi'(stp) >= 0`, switch to
   stage 2.
 - **Stage 2**: search uses the original `phi` directly.
 
@@ -151,9 +151,9 @@ Per call, `dcsrch`:
 
 - The "modified function" `psi` avoids numerical issues when `phi`
   decreases very slowly near the minimum.
-- Bisection step (when `|sty - stx| ≥ 0.66 · width1`) ensures the
+- Bisection step (when `|sty - stx| >= 0.66 * width1`) ensures the
   bracket halves regularly.
-- Forced `stp ∈ [stpmin, stpmax]` after each computation.
+- Forced `stp in [stpmin, stpmax]` after each computation.
 - If the bracket interval gets stuck (not advancing past `stmin` or
   `stmax`), `dcsrch` falls back to `stx` (the best step seen).
 
@@ -167,7 +167,7 @@ state-machine; ports validate by replaying the trajectory.
 |------|------|------|------------------|
 | 1 | `data/dcsrch_case_1.json` | single | `stp < stpmin` |
 | 2 | `data/dcsrch_case_2.json` | single | `stp > stpmax` |
-| 3 | `data/dcsrch_case_3.json` | single | `g ≥ 0` |
+| 3 | `data/dcsrch_case_3.json` | single | `g >= 0` |
 | 4 | `data/dcsrch_case_4.json` | single | `ftol < 0` |
 | 5 | `data/dcsrch_case_5.json` | single | `gtol < 0` |
 | 6 | `data/dcsrch_case_6.json` | single | `xtol < 0` |
@@ -175,14 +175,14 @@ state-machine; ports validate by replaying the trajectory.
 | 8 | `data/dcsrch_case_8.json` | single | `stpmax < stpmin` |
 
 Multi-call trajectory cases (`*_traj_*.json`) are deferred to the
-conformance runner (Phase C) — they require a phi-function dispatch
+conformance runner (Phase C) -- they require a phi-function dispatch
 table plus a step-by-step replay protocol. The four candidate
 trajectories from the F77 unit test:
 
-- `phi(t) = (t-1)² - 1` (quadratic, converges to `stp = 1`).
-- `phi(t) = -t` (monotone descent → `WARN_STPMAX`).
-- `phi(t) = -t / (t² + 2)` (Moré-Thuente phi1, brackets across overshoot).
-- `phi(t) = -t + 0.5·t²` with `stp_initial = 2` (modified-function path).
+- `phi(t) = (t-1)^2 - 1` (quadratic, converges to `stp = 1`).
+- `phi(t) = -t` (monotone descent -> `WARN_STPMAX`).
+- `phi(t) = -t / (t^2 + 2)` (More-Thuente phi1, brackets across overshoot).
+- `phi(t) = -t + 0.5*t^2` with `stp_initial = 2` (modified-function path).
 
 ## Reference implementation
 

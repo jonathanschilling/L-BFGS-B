@@ -1,4 +1,4 @@
-"""freev — free/active partition at the generalized Cauchy point.
+"""freev -- free/active partition at the generalized Cauchy point.
 
 Reference implementation following ``docs/spec/subroutines/freev.md``.
 """

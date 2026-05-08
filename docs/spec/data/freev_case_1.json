@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_1",
+  "description": "iter=0, mixed iwhere: phase 1 (change detection) skipped via iter check; partition built from iwhere alone.",
+  "inputs": {
+    "n": 2, "nfree_in": 0,
+    "index_in": [0, 0],
+    "indx2_in": [0, 0],
+    "iwhere": [-1, 2],
+    "updatd": false, "cnstnd": true,
+    "iter": 0, "iprint": -1
+  },
+  "expected": {
+    "nfree": 1,
+    "index": [1, 2],
+    "indx2": [0, 0],
+    "nenter": 0, "ileave": 3,
+    "wrk": false
+  }
+}

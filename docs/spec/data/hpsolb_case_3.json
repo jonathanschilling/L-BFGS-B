@@ -1,0 +1,14 @@
+{
+  "name": "hpsolb_case_3",
+  "description": "Build heap from arbitrary input then extract min. Input t=[3,1,4,2] iorder=[1,2,3,4]. After build: t=[1,2,4,3], iorder=[2,4,3,1]. After extract: t=[2,3,4,1], iorder=[4,1,3,2]. Min t_in[2-1]=1 lands at t[n].",
+  "inputs": {
+    "n": 4,
+    "t_in": [3.0, 1.0, 4.0, 2.0],
+    "iorder_in": [1, 2, 3, 4],
+    "iheap": 0
+  },
+  "expected": {
+    "t": [2.0, 3.0, 4.0, 1.0],
+    "iorder": [4, 1, 3, 2]
+  }
+}

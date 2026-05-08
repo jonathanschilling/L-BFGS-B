@@ -1,0 +1,19 @@
+{
+  "name": "active_case_8",
+  "description": "nbd=3 (upper only) with x>u: projects down.",
+  "inputs": {
+    "n": 1,
+    "l": [0.0],
+    "u": [2.0],
+    "nbd": [3],
+    "x_in": [7.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [2.0],
+    "iwhere": [0],
+    "prjctd": true,
+    "cnstnd": true,
+    "boxed": false
+  }
+}

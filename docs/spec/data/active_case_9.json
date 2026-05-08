@@ -1,0 +1,19 @@
+{
+  "name": "active_case_9",
+  "description": "nbd=2 with l == u: variable is fixed; iwhere=3.",
+  "inputs": {
+    "n": 1,
+    "l": [4.0],
+    "u": [4.0],
+    "nbd": [2],
+    "x_in": [4.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [4.0],
+    "iwhere": [3],
+    "prjctd": false,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_8",
+  "description": "nbd=2 with l<=u: covers the nbd==2 outer-true / l>u inner-false branch combination. No error.",
+  "inputs": {
+    "n": 1, "m": 5, "factr": 1.0e7,
+    "l": [1.0],
+    "u": [2.0],
+    "nbd": [2],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "START", "info": 0, "k": 0
+  }
+}

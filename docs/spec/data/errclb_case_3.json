@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_3",
+  "description": "m=0 triggers the m<=0 check.",
+  "inputs": {
+    "n": 1, "m": 0, "factr": 1.0e7,
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [0],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: M .LE. 0", "info": 0, "k": 0
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "active_case_4",
+  "description": "x strictly below l with nbd=2: projects x up to l, sets prjctd=true.",
+  "inputs": {
+    "n": 1,
+    "l": [1.0],
+    "u": [5.0],
+    "nbd": [2],
+    "x_in": [-3.0],
+    "iprint": 0
+  },
+  "expected": {
+    "x": [1.0],
+    "iwhere": [0],
+    "prjctd": true,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

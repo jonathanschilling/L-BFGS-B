@@ -1,0 +1,15 @@
+{
+  "name": "projgr_case_3",
+  "description": "nbd=2 (both bounds), x in interior, g>0: hits min(x-l, g) which returns g.",
+  "inputs": {
+    "n": 1,
+    "x": [5.0],
+    "l": [1.0],
+    "u": [10.0],
+    "nbd": [2],
+    "g": [2.0]
+  },
+  "expected": {
+    "sbgnrm": 2.0
+  }
+}

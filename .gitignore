@@ -38,3 +38,7 @@ iterate.dat
 # cmake
 build
 Testing
+
+# Python (reference implementation in docs/spec/reference_impl/)
+__pycache__/
+*.pyc

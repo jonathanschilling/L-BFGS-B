@@ -1,0 +1,15 @@
+{
+  "name": "projgr_case_1",
+  "description": "nbd=0 (unbounded), positive gradient: outer if FALSE, contributes |g|.",
+  "inputs": {
+    "n": 1,
+    "x": [0.0],
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [0],
+    "g": [3.0]
+  },
+  "expected": {
+    "sbgnrm": 3.0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "projgr_case_5",
+  "description": "nbd=2, x near upper bound, g<0: gi=max(x-u, g)=max(-1, -2)=-1, |gi|=1.",
+  "inputs": {
+    "n": 1,
+    "x": [9.0],
+    "l": [1.0],
+    "u": [10.0],
+    "nbd": [2],
+    "g": [-2.0]
+  },
+  "expected": {
+    "sbgnrm": 1.0
+  }
+}

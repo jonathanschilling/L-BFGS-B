@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_7",
+  "description": "nbd=2 with l>u: infeasible; info=-7.",
+  "inputs": {
+    "n": 1, "m": 5, "factr": 1.0e7,
+    "l": [5.0],
+    "u": [3.0],
+    "nbd": [2],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: NO FEASIBLE SOLUTION", "info": -7, "k": 1
+  }
+}

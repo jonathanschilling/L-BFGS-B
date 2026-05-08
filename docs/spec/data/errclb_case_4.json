@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_4",
+  "description": "factr<0 triggers the factr check; the sequential-overwrite semantics put this third in priority.",
+  "inputs": {
+    "n": 1, "m": 5, "factr": -1.0,
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [0],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: FACTR .LT. 0", "info": 0, "k": 0
+  }
+}

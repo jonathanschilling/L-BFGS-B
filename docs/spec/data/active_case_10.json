@@ -1,0 +1,19 @@
+{
+  "name": "active_case_10",
+  "description": "iprint>=0 with cnstnd=false: F77 emits the 'unconstrained' diagnostic. No projection.",
+  "inputs": {
+    "n": 1,
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [0],
+    "x_in": [1.0],
+    "iprint": 0
+  },
+  "expected": {
+    "x": [1.0],
+    "iwhere": [-1],
+    "prjctd": false,
+    "cnstnd": false,
+    "boxed": false
+  }
+}

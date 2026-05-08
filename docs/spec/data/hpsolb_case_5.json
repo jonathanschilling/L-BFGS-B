@@ -1,0 +1,14 @@
+{
+  "name": "hpsolb_case_5",
+  "description": "Heap [1,3,2] iheap=1: ddum=t[3]=2 equals chosen child after right-smaller branch; sift-down 't[j]<ddum' false at first iteration so siftdown stops early.",
+  "inputs": {
+    "n": 3,
+    "t_in": [1.0, 3.0, 2.0],
+    "iorder_in": [1, 2, 3],
+    "iheap": 1
+  },
+  "expected": {
+    "t": [2.0, 3.0, 1.0],
+    "iorder": [3, 2, 1]
+  }
+}

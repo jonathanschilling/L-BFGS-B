@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_1",
+  "description": "Valid input, n=2, mixed nbd. errclb does not write task/info/k on success.",
+  "inputs": {
+    "n": 2, "m": 5, "factr": 1.0e7,
+    "l": [-1.0, 0.0],
+    "u": [1.0, 0.0],
+    "nbd": [0, 1],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "START", "info": 0, "k": 0
+  }
+}

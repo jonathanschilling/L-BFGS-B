@@ -1,0 +1,19 @@
+{
+  "name": "active_case_11",
+  "description": "iprint>0 with cnstnd=true: F77 emits the 'nbdd at bounds' diagnostic. No projection (interior).",
+  "inputs": {
+    "n": 1,
+    "l": [0.0],
+    "u": [1.0],
+    "nbd": [2],
+    "x_in": [0.5],
+    "iprint": 1
+  },
+  "expected": {
+    "x": [0.5],
+    "iwhere": [0],
+    "prjctd": false,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

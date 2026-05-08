@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_2",
+  "description": "n=0 triggers the n<=0 check; nbd loop is empty.",
+  "inputs": {
+    "n": 0, "m": 5, "factr": 1.0e7,
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [0],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: N .LE. 0", "info": 0, "k": 0
+  }
+}

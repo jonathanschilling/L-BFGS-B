@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_2",
+  "description": "iter>0 but cnstnd=false: phase 1 also skipped via cnstnd check; partition built from iwhere.",
+  "inputs": {
+    "n": 2, "nfree_in": 0,
+    "index_in": [0, 0],
+    "indx2_in": [0, 0],
+    "iwhere": [-1, -1],
+    "updatd": false, "cnstnd": false,
+    "iter": 1, "iprint": -1
+  },
+  "expected": {
+    "nfree": 2,
+    "index": [1, 2],
+    "indx2": [0, 0],
+    "nenter": 0, "ileave": 3,
+    "wrk": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "hpsolb_case_6",
+  "description": "iheap=0 with min already at position 1: heap-build is a no-op (each newly-added element is larger so does not swap up). Extract proceeds normally.",
+  "inputs": {
+    "n": 3,
+    "t_in": [1.0, 2.0, 3.0],
+    "iorder_in": [1, 2, 3],
+    "iheap": 0
+  },
+  "expected": {
+    "t": [2.0, 3.0, 1.0],
+    "iorder": [2, 3, 1]
+  }
+}

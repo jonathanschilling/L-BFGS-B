@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_6",
+  "description": "nbd[i]>3 trips invalid-nbd from the upper end of the valid range.",
+  "inputs": {
+    "n": 1, "m": 5, "factr": 1.0e7,
+    "l": [0.0],
+    "u": [0.0],
+    "nbd": [4],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: INVALID NBD", "info": -6, "k": 1
+  }
+}

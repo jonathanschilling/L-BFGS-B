@@ -1,0 +1,14 @@
+{
+  "name": "errclb_case_5",
+  "description": "nbd[i]<0 trips invalid-nbd; info=-6, k records 1-based index of last offender.",
+  "inputs": {
+    "n": 2, "m": 5, "factr": 1.0e7,
+    "l": [0.0, 0.0],
+    "u": [0.0, 0.0],
+    "nbd": [0, -1],
+    "task_in": "START", "info_in": 0, "k_in": 0
+  },
+  "expected": {
+    "task": "ERROR: INVALID NBD", "info": -6, "k": 2
+  }
+}

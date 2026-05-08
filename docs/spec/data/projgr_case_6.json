@@ -1,0 +1,15 @@
+{
+  "name": "projgr_case_6",
+  "description": "nbd=1 (lower only), g<0: variable can move up freely; inner nbd>=2 is FALSE so no clip; gi=g, sbgnrm=|g|.",
+  "inputs": {
+    "n": 1,
+    "x": [5.0],
+    "l": [1.0],
+    "u": [0.0],
+    "nbd": [1],
+    "g": [-7.0]
+  },
+  "expected": {
+    "sbgnrm": 7.0
+  }
+}

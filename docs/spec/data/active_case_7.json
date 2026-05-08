@@ -1,0 +1,19 @@
+{
+  "name": "active_case_7",
+  "description": "nbd=1 (lower only) with x<l: projects up. boxed=false because nbd!=2.",
+  "inputs": {
+    "n": 1,
+    "l": [2.0],
+    "u": [0.0],
+    "nbd": [1],
+    "x_in": [-1.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [2.0],
+    "iwhere": [0],
+    "prjctd": true,
+    "cnstnd": true,
+    "boxed": false
+  }
+}

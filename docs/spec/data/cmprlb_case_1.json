@@ -1,0 +1,23 @@
+{
+  "name": "cmprlb_case_1",
+  "description": "cnstnd=false AND col>0: shortcut path; r = -g across the full n-vector. No bmv call, no index lookup.",
+  "inputs": {
+    "n": 3, "m": 2, "col": 1, "head": 1, "nfree": 3,
+    "theta": 1.0,
+    "cnstnd": false,
+    "index": [1, 2, 3],
+    "x": [0.0, 0.0, 0.0],
+    "z": [0.0, 0.0, 0.0],
+    "g": [1.5, -2.5, 0.25],
+    "ws": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+    "wy": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+    "sy": [[0.0, 0.0], [0.0, 0.0]],
+    "wt": [[0.0, 0.0], [0.0, 0.0]],
+    "wa_in": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "r_in": [-999.0, -999.0, -999.0]
+  },
+  "expected": {
+    "r": [-1.5, 2.5, -0.25],
+    "info": 0
+  }
+}

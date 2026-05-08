@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_5",
+  "description": "iter>0: var 1 was bound, now free -> 'enters' the free set; nenter increments, indx2[nenter]=1.",
+  "inputs": {
+    "n": 2, "nfree_in": 1,
+    "index_in": [2, 1],
+    "indx2_in": [0, 0],
+    "iwhere": [-1, -1],
+    "updatd": false, "cnstnd": true,
+    "iter": 1, "iprint": -1
+  },
+  "expected": {
+    "nfree": 2,
+    "index": [1, 2],
+    "indx2": [1, 0],
+    "nenter": 1, "ileave": 3,
+    "wrk": true
+  }
+}

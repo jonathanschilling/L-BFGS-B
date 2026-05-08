@@ -1,0 +1,15 @@
+{
+  "name": "projgr_case_4",
+  "description": "nbd=2, x near lower bound, g>0: gradient pushes toward lower; gi=min(x-l, g)=min(0.5, 2)=0.5.",
+  "inputs": {
+    "n": 1,
+    "x": [1.5],
+    "l": [1.0],
+    "u": [10.0],
+    "nbd": [2],
+    "g": [2.0]
+  },
+  "expected": {
+    "sbgnrm": 0.5
+  }
+}

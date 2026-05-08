@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_6",
+  "description": "iter>0, both events: var 1 was free -> bound (leaves), var 2 was bound -> free (enters). iprint=100 in F77 exercises diagnostic prints.",
+  "inputs": {
+    "n": 2, "nfree_in": 1,
+    "index_in": [1, 2],
+    "indx2_in": [0, 0],
+    "iwhere": [2, -1],
+    "updatd": false, "cnstnd": true,
+    "iter": 1, "iprint": 100
+  },
+  "expected": {
+    "nfree": 1,
+    "index": [2, 1],
+    "indx2": [2, 1],
+    "nenter": 1, "ileave": 2,
+    "wrk": true
+  }
+}

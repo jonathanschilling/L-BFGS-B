@@ -1,0 +1,14 @@
+{
+  "name": "hpsolb_case_2",
+  "description": "n=1 with iheap=1: skips heap-build (iheap!=0), n>1 guard also false. Both arrays unchanged.",
+  "inputs": {
+    "n": 1,
+    "t_in": [-3.25],
+    "iorder_in": [5],
+    "iheap": 1
+  },
+  "expected": {
+    "t": [-3.25],
+    "iorder": [5]
+  }
+}

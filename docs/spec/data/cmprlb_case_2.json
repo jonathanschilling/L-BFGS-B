@@ -1,0 +1,23 @@
+{
+  "name": "cmprlb_case_2",
+  "description": "cnstnd=true AND col=0: j-loop empty (no L-BFGS history yet); r[i] = -theta*(z-x)[k] - g[k] only.",
+  "inputs": {
+    "n": 2, "m": 1, "col": 0, "head": 1, "nfree": 2,
+    "theta": 1.0,
+    "cnstnd": true,
+    "index": [1, 2],
+    "x": [0.0, 0.0],
+    "z": [2.0, 1.0],
+    "g": [1.0, 1.0],
+    "ws": [[0.0], [0.0]],
+    "wy": [[0.0], [0.0]],
+    "sy": [[0.0]],
+    "wt": [[0.0]],
+    "wa_in": [0.0, 0.0, 0.0, 0.0],
+    "r_in": [-999.0, -999.0]
+  },
+  "expected": {
+    "r": [-3.0, -2.0],
+    "info": 0
+  }
+}

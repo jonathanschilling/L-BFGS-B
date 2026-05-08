@@ -1,0 +1,19 @@
+{
+  "name": "active_case_2",
+  "description": "All nbd=2 with x strictly inside (l, u): boxed=true, no projection, iwhere=0.",
+  "inputs": {
+    "n": 2,
+    "l": [0.0, -1.0],
+    "u": [10.0, 1.0],
+    "nbd": [2, 2],
+    "x_in": [5.0, 0.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [5.0, 0.0],
+    "iwhere": [0, 0],
+    "prjctd": false,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

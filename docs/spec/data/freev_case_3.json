@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_3",
+  "description": "iter>0 cnstnd=true: enters phase 1 but no var changes status; updatd=true forces wrk=true via the OR-clause.",
+  "inputs": {
+    "n": 2, "nfree_in": 1,
+    "index_in": [2, 1],
+    "indx2_in": [0, 0],
+    "iwhere": [1, -1],
+    "updatd": true, "cnstnd": true,
+    "iter": 1, "iprint": -1
+  },
+  "expected": {
+    "nfree": 1,
+    "index": [2, 1],
+    "indx2": [0, 0],
+    "nenter": 0, "ileave": 3,
+    "wrk": true
+  }
+}

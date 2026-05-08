@@ -1,0 +1,19 @@
+{
+  "name": "active_case_3",
+  "description": "nbd=2 with x exactly at l: enters at-lower branch (x<=l) but skips strict-inequality projection.",
+  "inputs": {
+    "n": 1,
+    "l": [1.0],
+    "u": [5.0],
+    "nbd": [2],
+    "x_in": [1.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [1.0],
+    "iwhere": [0],
+    "prjctd": false,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

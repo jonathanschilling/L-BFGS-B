@@ -1,0 +1,19 @@
+{
+  "name": "freev_case_4",
+  "description": "iter>0: var 2 was free, now bound -> 'leaves' the free set; ileave decrements, indx2[ileave]=2.",
+  "inputs": {
+    "n": 2, "nfree_in": 2,
+    "index_in": [1, 2],
+    "indx2_in": [0, 0],
+    "iwhere": [-1, 1],
+    "updatd": false, "cnstnd": true,
+    "iter": 1, "iprint": -1
+  },
+  "expected": {
+    "nfree": 1,
+    "index": [1, 2],
+    "indx2": [0, 2],
+    "nenter": 0, "ileave": 2,
+    "wrk": true
+  }
+}

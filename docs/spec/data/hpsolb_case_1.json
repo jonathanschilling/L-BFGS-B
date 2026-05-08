@@ -1,0 +1,14 @@
+{
+  "name": "hpsolb_case_1",
+  "description": "n=1 with iheap=0: heap-build loop is empty; extract phase guard (n>1) is false so nothing happens.",
+  "inputs": {
+    "n": 1,
+    "t_in": [7.5],
+    "iorder_in": [1],
+    "iheap": 0
+  },
+  "expected": {
+    "t": [7.5],
+    "iorder": [1]
+  }
+}

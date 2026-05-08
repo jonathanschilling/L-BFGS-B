@@ -1,0 +1,19 @@
+{
+  "name": "active_case_5",
+  "description": "nbd=2 with x exactly at u: enters at-upper branch (x>=u) but no projection.",
+  "inputs": {
+    "n": 1,
+    "l": [0.0],
+    "u": [5.0],
+    "nbd": [2],
+    "x_in": [5.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [5.0],
+    "iwhere": [0],
+    "prjctd": false,
+    "cnstnd": true,
+    "boxed": true
+  }
+}

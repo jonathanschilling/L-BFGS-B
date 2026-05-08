@@ -1,0 +1,19 @@
+{
+  "name": "active_case_1",
+  "description": "nbd=0 for all variables: cnstnd=false, boxed=false (no var is nbd=2), iwhere=-1, no projection.",
+  "inputs": {
+    "n": 2,
+    "l": [0.0, 0.0],
+    "u": [0.0, 0.0],
+    "nbd": [0, 0],
+    "x_in": [1.5, -2.0],
+    "iprint": -1
+  },
+  "expected": {
+    "x": [1.5, -2.0],
+    "iwhere": [-1, -1],
+    "prjctd": false,
+    "cnstnd": false,
+    "boxed": false
+  }
+}

@@ -54,26 +54,38 @@ numerics:
 
 ## Known partial-coverage subroutines
 
-The following subroutines have residual uncovered lines that aren't
-individually exempted but reflect specific algorithm-state combinations
-not yet exercised. They are tracked here so the gate's line-coverage
-threshold can stay snug rather than being relaxed to absorb them.
+After Phase F follow-up tightening, the residual uncovered lines fall
+into two buckets:
 
-- **`src/cauchy.f`** (~91% line coverage): the iter==2 ibkmin-swap branch
-  (line 335-336), some col>0 update sub-branches (428-433, 440-443),
-  and `iprint >= 100` print blocks (350-352).
-- **`src/dcsrch.f`** (~86% line coverage): the modified-function
-  (psi-stage) branch (229-234, 239, 243-246) and the warning paths
-  (204, 206, 210) need adversarial line-search inputs to fire.
-- **`src/dcstep.f`** (~96% line coverage): three sub-branches (158, 169,
-  176) of Case 3's r/stp safeguarding need targeted inputs where stp <
-  stx with specific gamma signs.
-- **`src/mainlb.f`** (~74% line coverage): inner-loop dispatch paths
-  for `info != 0` returns from cauchy/subsm/formk (genuinely
-  defensive given the rest of the algorithm), iprint=99/100 diagnostic
-  blocks, and line-search re-entry replays on warning.
-- **`src/subsm.f`** (~58% line coverage): the bound-clipping projection
-  for nbd=1 and nbd=3 single-bound cases (247-249, 258-260) and the
-  positive-directional-derivative backtracking branch (281-283 and
-  the line-search clipping at 290-333). Worth closing in a dedicated
-  follow-up since these are the largest remaining gap.
+### dcsrch / dcstep tail-end conditionals
+
+- **`src/dcsrch.f` line 204, 206, 210**: the three "WARNING:..." paths.
+  Trigger only when bracketing causes rounding-driven progress failure,
+  the xtol-based shrink fires, or stp lands exactly on stpmin. Reachable
+  in adversarial line searches; covered by the existing Moré–Thuente
+  test suite (driver runs) but not by the n=2 test inputs we author
+  for unit-test scope. Remaining uncovered fraction: 3 lines / 104 = 3%.
+
+- **`src/dcstep.f` line 169**: `stpf = stpc` in Case 3 brackt=T when the
+  cubic interpolation lands closer to stp than the secant. Specific
+  numerical comparison that the existing test inputs don't satisfy.
+
+### mainlb error-recovery paths
+
+`src/mainlb.f` (~76% line coverage). The bulk of the gap is internal
+"refresh-the-lbfgs-memory" blocks fired by:
+
+- cauchy returning info != 0 (singular triangular system)        — L375-384
+- subsm returning info != 0                                      — L423-432
+- iback >= 20 in lnsrlb, restart lbfgs                           — L449-458
+- abnormal-termination-in-lnsrch                                  — L483-497
+- formt non-PD Cholesky                                           — L598-605
+- skip-the-l-bfgs-update (s'y < eps*||y||^2 curvature condition)  — L500-511
+
+Each is a defensive recovery path the algorithm uses when its compact
+representation degrades. They are genuinely unreachable from
+well-conditioned bound-Rosenbrock problems and would require
+constructing pathological L-BFGS state to trigger. The driver-level
+integration tests cover the well-conditioned trajectories, and these
+internal recovery paths are the one place where a port could legitimately
+diverge in implementation detail without affecting correctness.

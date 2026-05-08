@@ -67,7 +67,7 @@ if(LBFGSB_COVERAGE)
          --exclude-file prn1lb.f
          --exclude-file prn2lb.f
          --exclude-file prn3lb.f
-         --line-threshold 0.85
+         --line-threshold 0.90
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
    )
    # Run after all other tests so .gcda data exists.

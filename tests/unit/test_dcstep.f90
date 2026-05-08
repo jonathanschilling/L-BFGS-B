@@ -22,6 +22,8 @@ program test_dcstep
    call case4_brackt_true()
    call case4_brackt_false_stp_above()
    call case4_brackt_false_stp_below()
+   call case3_stp_below_stx_r_nonneg()
+   call case3_brackt_true_stp_below_stx()
 
    write(*, '("test_dcstep: PASS")')
 
@@ -170,5 +172,34 @@ contains
       call assert_close_real(stp, stpmin, where="case4_below stp=stpmin")
       call assert_close_real(stx, 1.0_dp, where="case4_below stx<-stp_in")
    end subroutine case4_brackt_false_stp_below
+
+   subroutine case3_stp_below_stx_r_nonneg()
+      ! Case 3 (fp <= fx, sgnd >= 0, |dp| < |dx|) with stp < stx and the
+      ! cubic interpolation giving r >= 0. The r-classification then falls
+      ! through to the "else: stpc = stpmin" branch (L158) since stp <= stx
+      ! disqualifies the stpmax branch.
+      real(dp) :: stx, fx, dx, sty, fy, dy, stp, fp, dpval, stpmin, stpmax
+      logical  :: brackt
+      stx = 2.0_dp; fx = 1.0_dp;   dx =  2.0_dp        ! dx > 0 (descent in -1 direction)
+      sty = 0.0_dp; fy = 0.0_dp;   dy =  0.0_dp
+      stp = 1.0_dp; fp = 0.9_dp;   dpval = 1.99_dp     ! |dp| < |dx|, sgnd > 0
+      brackt = .false.; stpmin = 0.0_dp; stpmax = 10.0_dp
+      call dcstep(stx, fx, dx, sty, fy, dy, stp, fp, dpval, brackt, stpmin, stpmax)
+      call assert_in_range(stp, stpmin, stpmax, "case3_stp_below_stx_r_nonneg")
+   end subroutine case3_stp_below_stx_r_nonneg
+
+   subroutine case3_brackt_true_stp_below_stx()
+      ! Case 3 with brackt=T and stp < stx: exercises the cubic-vs-secant
+      ! comparison favouring cubic (L168-169) and the stp <= stx
+      ! safeguard line "stpf = max(stp + p66*(sty-stp), stpf)" (L176).
+      real(dp) :: stx, fx, dx, sty, fy, dy, stp, fp, dpval, stpmin, stpmax
+      logical  :: brackt
+      stx = 2.0_dp; fx = 1.0_dp;   dx =  2.0_dp
+      sty = 0.0_dp; fy = 5.0_dp;   dy = -1.0_dp        ! sty < stp < stx, fy > fx
+      stp = 1.0_dp; fp = 0.5_dp;   dpval = 0.5_dp
+      brackt = .true.; stpmin = 0.0_dp; stpmax = 10.0_dp
+      call dcstep(stx, fx, dx, sty, fy, dy, stp, fp, dpval, brackt, stpmin, stpmax)
+      call assert_in_range(stp, stpmin, stpmax, "case3_brackt_true_stp_below_stx")
+   end subroutine case3_brackt_true_stp_below_stx
 
 end program test_dcstep

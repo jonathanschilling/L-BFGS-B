@@ -11,6 +11,10 @@ program test_cauchy
    call case_unbounded_no_breakpoints()
    call case_one_breakpoint_col_zero()
    call case_with_history_col_one()
+   call case_var_at_upper_pos_neggi()
+   call case_mixed_bounded_unbounded()
+   call case_all_bounded_with_fixed_var()
+   call case_iprint_100_diagnostic()
 
    write(*, '("test_cauchy: PASS")')
 
@@ -188,5 +192,119 @@ contains
       call assert_true(xcp(2) >= l(2) .and. xcp(2) <= u(2), &
                        "case_with_history xcp(2) feasible")
    end subroutine case_with_history_col_one
+
+   subroutine case_var_at_upper_pos_neggi()
+      ! n=1, x at upper bound with neggi >= 0 (gradient pulls away from upper):
+      ! variable should be marked iwhere = 2 (at upper, no descent).
+      ! Hits L222 branch.
+      integer, parameter :: n = 1, m = 1, col = 0
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
+      real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
+      real(dp) :: p(2), c(2), wbp(2), v(2)
+      real(dp) :: theta, sbgnrm, epsmch
+      nbd = (/ 2 /)
+      l = (/ 0.0_dp /); u = (/ 1.0_dp /)
+      x = (/ 1.0_dp /)              ! at upper bound
+      g = (/ -1.0_dp /)             ! neggi = 1 >= 0
+      iwhere = 0
+      iorder = 0; t = 0.0_dp; d = 0.0_dp; xcp = -42.0_dp
+      wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
+      p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
+      theta = 1.0_dp; sbgnrm = 1.0_dp; epsmch = 2.22e-16_dp
+      info = 0; head = 1; nseg = 0
+      call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
+                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
+                  v, nseg, -1, sbgnrm, info, epsmch)
+      call assert_eq_int(iwhere(1), 2, where="case_var_at_upper_pos_neggi iwhere")
+      ! With iwhere=2, d(1)=0; xcp=x=1.0.
+      call assert_close_real(xcp(1), 1.0_dp, where="case_var_at_upper_pos_neggi xcp")
+   end subroutine case_var_at_upper_pos_neggi
+
+   subroutine case_mixed_bounded_unbounded()
+      ! n=2 with var 1 unbounded and var 2 bounded with one breakpoint.
+      ! After fixing var 2 in the breakpoint loop, nleft=0, nbreak=1<n=2,
+      ! and bnded=false (var 1 has |neggi|>0). Hits the post-loop
+      ! "else dtm = -f1/f2" branch (L432-434).
+      integer, parameter :: n = 2, m = 1, col = 0
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
+      real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
+      real(dp) :: p(2), c(2), wbp(2), v(2)
+      real(dp) :: theta, sbgnrm, epsmch
+      nbd = (/ 0, 2 /)              ! var 1 unbounded
+      l = (/ 0.0_dp, 0.0_dp /); u = (/ 0.0_dp, 1.0_dp /)
+      x = (/ 0.5_dp, 0.5_dp /)
+      g = (/ -1.0_dp, -2.0_dp /)
+      iwhere = (/ -1, 0 /)          ! var 1 unbounded -> -1
+      iorder = 0; t = 0.0_dp; d = 0.0_dp; xcp = -42.0_dp
+      wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
+      p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
+      theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
+      info = 0; head = 1; nseg = 0
+      call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
+                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
+                  v, nseg, -1, sbgnrm, info, epsmch)
+      call assert_eq_int(info, 0, where="case_mixed info")
+      ! Final var 2 should be at upper bound; var 1 in interior somewhere.
+      call assert_close_real(xcp(2), 1.0_dp, where="case_mixed xcp(2)=u")
+   end subroutine case_mixed_bounded_unbounded
+
+   subroutine case_all_bounded_with_fixed_var()
+      ! n=2 with var 1 marked already-fixed (iwhere=3) and var 2 bounded with
+      ! one breakpoint. After fixing var 2: nleft=0, nbreak=1<n=2, but
+      ! bnded=true (no unbounded var sets bnded=false). Hits the
+      ! "else if (bnded)" branch setting f1=f2=dtm=0 (L428-431).
+      integer, parameter :: n = 2, m = 1, col = 0
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
+      real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
+      real(dp) :: p(2), c(2), wbp(2), v(2)
+      real(dp) :: theta, sbgnrm, epsmch
+      nbd = (/ 2, 2 /)
+      l = (/ 0.5_dp, 0.0_dp /); u = (/ 0.5_dp, 1.0_dp /)   ! var 1 fixed (l=u)
+      x = (/ 0.5_dp, 0.5_dp /)
+      g = (/ -1.0_dp, -2.0_dp /)
+      iwhere = (/ 3, 0 /)           ! var 1 already fixed
+      iorder = 0; t = 0.0_dp; d = 0.0_dp; xcp = -42.0_dp
+      wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
+      p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
+      theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
+      info = 0; head = 1; nseg = 0
+      call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
+                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
+                  v, nseg, -1, sbgnrm, info, epsmch)
+      call assert_eq_int(info, 0, where="case_all_bounded info")
+      call assert_close_real(xcp(1), 0.5_dp, where="case_all_bounded xcp(1)")
+      call assert_close_real(xcp(2), 1.0_dp, where="case_all_bounded xcp(2)")
+   end subroutine case_all_bounded_with_fixed_var
+
+   subroutine case_iprint_100_diagnostic()
+      ! iprint=100 fires the per-piece diagnostic prints (L350-352) and the
+      ! end-of-loop GCP-found prints (L305, L440-443). Reuses the n=2
+      ! breakpoint-walkthrough setup but redirects unit 6 verbosity to
+      ! force coverage of those branches.
+      integer, parameter :: n = 2, m = 1, col = 0
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
+      real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
+      real(dp) :: p(2), c(2), wbp(2), v(2)
+      real(dp) :: theta, sbgnrm, epsmch
+      nbd = (/ 2, 2 /)
+      l = (/ 0.0_dp, 0.0_dp /); u = (/ 1.0_dp, 1.0_dp /)
+      x = (/ 0.5_dp, 0.5_dp /)
+      g = (/ -1.0_dp, -2.0_dp /)
+      iwhere = (/ 0, 0 /)
+      iorder = 0
+      t = 0.0_dp; d = 0.0_dp; xcp = -42.0_dp
+      wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
+      p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
+      theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
+      info = 0; head = 1; nseg = 0
+      call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
+                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
+                  v, nseg, 100, sbgnrm, info, epsmch)
+      call assert_eq_int(info, 0, where="case_iprint_100 info")
+   end subroutine case_iprint_100_diagnostic
 
 end program test_cauchy

@@ -18,6 +18,7 @@ program test_dcsrch
    call case_quadratic_converges()
    call case_warning_stp_at_stpmax()
    call case_phi1_more_thuente()
+   call case_modified_function_path()
 
    write(*, '("test_dcsrch: PASS")')
 
@@ -207,5 +208,32 @@ contains
       call assert_true(stp > 1.0_dp .and. stp < 2.0_dp, &
                        "case_phi1 stp in (1, 2)")
    end subroutine case_phi1_more_thuente
+
+   subroutine case_modified_function_path()
+      ! Drives the line search through the "psi" / modified-function branch
+      ! at L225-246. To reach it we need stage=1, f<=fx, f>ftest -- meaning
+      ! the step decreased f but by less than the sufficient-decrease line
+      ! ftest = finit + stp*ftol*ginit predicts. Starting from a step that
+      ! lands AT the minimum of phi(t) = -t + 0.5*t^2 (where phi' = 0)
+      ! gives exactly that condition.
+      real(dp) :: f, g, stp, ftol, gtol, xtol, stpmin, stpmax
+      character(len=60) :: task
+      integer :: isave(2), iter
+      real(dp) :: dsave(13)
+      f = 0.0_dp
+      g = -1.0_dp
+      stp = 2.0_dp                   ! overshoots the t=1 minimum
+      ftol = 1.0e-3_dp; gtol = 0.9_dp; xtol = 1.0e-10_dp
+      stpmin = 0.0_dp; stpmax = 10.0_dp
+      task = 'START'
+      isave = 0; dsave = 0.0_dp
+      do iter = 1, 50
+         call dcsrch(f, g, stp, ftol, gtol, xtol, stpmin, stpmax, task, isave, dsave)
+         if (task(1:2) /= 'FG') exit
+         f = -stp + 0.5_dp*stp*stp     ! phi(t)  = -t + t^2 / 2
+         g = -1.0_dp + stp             ! phi'(t) = -1 + t
+      end do
+      call assert_true(task(1:4) == 'CONV', "case_modified_function_path task")
+   end subroutine case_modified_function_path
 
 end program test_dcsrch

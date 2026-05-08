@@ -241,148 +241,147 @@ $(document).ready(function(){initNavTree('driver3_8f-example.html',''); initResi
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">c</span></div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      task = <span class="stringliteral">&#39;START&#39;</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">c     Test instrumentation: open JSON output if env var is set.</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">c     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.</span></div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keyword">call </span>get_environment_variable(<span class="stringliteral">&#39;LBFGSB_JSON_OUTPUT&#39;</span>, lbfgsb_json)</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      json_active = (len_trim(lbfgsb_json) .gt. 0)</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keyword">call </span>json_open(trim(lbfgsb_json))</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="comment">c        ------- the beginning of the loop ----------</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="comment">c     We begin counting the CPU time.</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;      <span class="keyword">call </span><a class="code" href="timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118">timer</a>(time1)</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; 111  <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="comment">c     This is the call to the L-BFGS-B code.</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      <span class="keyword">call </span><a class="code" href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a>(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;     +            csave,lsave,isave,dsave)</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      <span class="keywordflow">if</span> (json_active .and. task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>)</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;     +   <span class="keyword">call </span>json_iter(n, x, g, f, dsave(13), isave)</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      <span class="keywordflow">if</span> (task(1:2) .eq. <span class="stringliteral">&#39;FG&#39;</span>) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">c        the minimization routine has returned to request the</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">c        function f and gradient g values at the current x.</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="comment">c        Before evaluating f and g we check the CPU time spent.</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">c        ------- the beginning of the loop ----------</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">c     We begin counting the CPU time.</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;      <span class="keyword">call </span><a class="code" href="timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118">timer</a>(time1)</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; 111  <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment">c     This is the call to the L-BFGS-B code.</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      <span class="keyword">call </span><a class="code" href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a>(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;     +            csave,lsave,isave,dsave)</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      <span class="keywordflow">if</span> (task(1:2) .eq. <span class="stringliteral">&#39;FG&#39;</span>) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="comment">c        the minimization routine has returned to request the</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="comment">c        function f and gradient g values at the current x.</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">c        Before evaluating f and g we check the CPU time spent.</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;         <span class="keyword">call </span><a class="code" href="timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118">timer</a>(time2)</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;         <span class="keywordflow">if</span> (time2-time1 .gt. tlimit) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            task=<span class="stringliteral">&#39;STOP: CPU EXCEEDING THE TIME LIMIT.&#39;</span></div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;         <span class="keyword">call </span><a class="code" href="timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118">timer</a>(time2)</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;         <span class="keywordflow">if</span> (time2-time1 .gt. tlimit) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            task=<span class="stringliteral">&#39;STOP: CPU EXCEEDING THE TIME LIMIT.&#39;</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">c          Note: Assigning task(1:4)=&#39;STOP&#39; will terminate the run;</span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">c          setting task(7:9)=&#39;CPU&#39; will restore the information at</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">c          the latest iterate generated by the code so that it can</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment">c          be correctly printed by the driver.</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">c          In this driver we have chosen to disable the</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="comment">c          printing options of the code (we set iprint=-1);</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">c          instead we are using customized output: we print the</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment">c          latest value of x, the corresponding function value f and</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">c          the norm of the projected gradient |proj g|.</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="comment">c          Note: Assigning task(1:4)=&#39;STOP&#39; will terminate the run;</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="comment">c          setting task(7:9)=&#39;CPU&#39; will restore the information at</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="comment">c          the latest iterate generated by the code so that it can</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="comment">c          be correctly printed by the driver.</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">c          In this driver we have chosen to disable the</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">c          printing options of the code (we set iprint=-1);</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment">c          instead we are using customized output: we print the</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment">c          latest value of x, the corresponding function value f and</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">c          the norm of the projected gradient |proj g|.</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">c          We print out the information contained in task.</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <span class="keyword">write</span> (6,*) task</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">c          We print out the information contained in task.</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="keyword">write</span> (6,*) task</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">c          We print the latest iterate contained in wa(j+1:j+n), where</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">c </span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            j = 3*n+2*m*n+11*m**2</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;Latest iterate X =&#39;</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;((1x,1p, 6(1x,d11.4)))&#39;</span>) (wa(i),i = j+1,j+n) </div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">c          We print the latest iterate contained in wa(j+1:j+n), where</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">c </span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            j = 3*n+2*m*n+11*m**2</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;Latest iterate X =&#39;</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;((1x,1p, 6(1x,d11.4)))&#39;</span>) (wa(i),i = j+1,j+n) </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">c          We print the function value f and the norm of the projected</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">c          gradient |proj g| at the last iterate; they are stored in</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">c          dsave(2) and dsave(13) respectively.</span></div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">c          We print the function value f and the norm of the projected</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment">c          gradient |proj g| at the last iterate; they are stored in</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment">c          dsave(2) and dsave(13) respectively.</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;(a,1p,d12.5,4x,a,1p,d12.5)&#39;</span>)</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;     +         <span class="stringliteral">&#39;At latest iterate   f =&#39;</span>,dsave(2),<span class="stringliteral">&#39;|proj g| =&#39;</span>,dsave(13)</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;         <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">c          The time limit has not been reached and we compute</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">c          the function value f for the sample problem.</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            f=.25d0*(x(1)-1.d0)**2</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            <span class="keywordflow">do</span> 20 i=2,n</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;               f=f+(x(i)-x(i-1)**2)**2</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  20        <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            f=4.d0*f</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">c          Compute gradient g for the sample problem.</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            t1=x(2)-x(1)**2</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            g(1)=2.d0*(x(1)-1.d0)-1.6d1*x(1)*t1</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="keywordflow">do</span> 22 i=2,n-1</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;               t2=t1</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;               t1=x(i+1)-x(i)**2</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;               g(i)=8.d0*t2-1.6d1*x(i)*t1</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;  22        <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            g(n)=8.d0*t1</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="keywordflow">         endif</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;         <span class="keywordflow">goto</span> 111</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      <span class="keywordflow">if</span> (task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>) <span class="keywordflow">then</span>        </div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment">c        the minimization routine has returned with a new iterate.</span></div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment">c        The time limit has not been reached, and we test whether</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment">c        the following two stopping tests are satisfied:</span></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment">c        1) Terminate if the total number of f and g evaluations</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment">c             exceeds 900.</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;         <span class="keywordflow">if</span> (isave(34) .ge. 900)</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;     +      task=<span class="stringliteral">&#39;STOP: TOTAL NO. of f AND g EVALUATIONS EXCEEDS LIMIT&#39;</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment">c        2) Terminate if  |proj g|/(1+|f|) &lt; 1.0d-10.</span></div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;         <span class="keywordflow">if</span> (dsave(13) .le. 1.d-10*(1.0d0 + abs(f)))</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;     +      task=<span class="stringliteral">&#39;STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL&#39;</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment">c        We wish to print the following information at each iteration:</span></div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment">c          1) the current iteration number, isave(30),</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment">c          2) the total number of f and g evaluations, isave(34),</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment">c          3) the value of the objective function f,</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="comment">c          4) the norm of the projected gradient,  dsve(13)</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="comment">c        See the comments at the end of driver1 for a description</span></div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="comment">c        of the variables isave and dsave.</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;(a,1p,d12.5,4x,a,1p,d12.5)&#39;</span>)</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;     +         <span class="stringliteral">&#39;At latest iterate   f =&#39;</span>,dsave(2),<span class="stringliteral">&#39;|proj g| =&#39;</span>,dsave(13)</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;         <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment">c          The time limit has not been reached and we compute</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">c          the function value f for the sample problem.</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            f=.25d0*(x(1)-1.d0)**2</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            <span class="keywordflow">do</span> 20 i=2,n</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;               f=f+(x(i)-x(i-1)**2)**2</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  20        <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            f=4.d0*f</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">c          Compute gradient g for the sample problem.</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            t1=x(2)-x(1)**2</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            g(1)=2.d0*(x(1)-1.d0)-1.6d1*x(1)*t1</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            <span class="keywordflow">do</span> 22 i=2,n-1</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;               t2=t1</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;               t1=x(i+1)-x(i)**2</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;               g(i)=8.d0*t2-1.6d1*x(i)*t1</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  22        <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            g(n)=8.d0*t1</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="keywordflow">         endif</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;         <span class="keywordflow">goto</span> 111</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <span class="keywordflow">if</span> (task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>) <span class="keywordflow">then</span>        </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment">c        the minimization routine has returned with a new iterate.</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment">c        The time limit has not been reached, and we test whether</span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">c        the following two stopping tests are satisfied:</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment">c        1) Terminate if the total number of f and g evaluations</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="comment">c             exceeds 900.</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;         <span class="keywordflow">if</span> (isave(34) .ge. 900)</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;     +      task=<span class="stringliteral">&#39;STOP: TOTAL NO. of f AND g EVALUATIONS EXCEEDS LIMIT&#39;</span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment">c        2) Terminate if  |proj g|/(1+|f|) &lt; 1.0d-10.</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;         <span class="keywordflow">if</span> (dsave(13) .le. 1.d-10*(1.0d0 + abs(f)))</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;     +      task=<span class="stringliteral">&#39;STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL&#39;</span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment">c        We wish to print the following information at each iteration:</span></div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="comment">c          1) the current iteration number, isave(30),</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="comment">c          2) the total number of f and g evaluations, isave(34),</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment">c          3) the value of the objective function f,</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="comment">c          4) the norm of the projected gradient,  dsve(13)</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment">c        See the comments at the end of driver1 for a description</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment">c        of the variables isave and dsave.</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;         </div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;         <span class="keyword">write</span> (6,<span class="stringliteral">&#39;(2(a,i5,4x),a,1p,d12.5,4x,a,1p,d12.5)&#39;</span>) <span class="stringliteral">&#39;Iterate&#39;</span></div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;     +      ,isave(30),<span class="stringliteral">&#39;nfg =&#39;</span>,isave(34),<span class="stringliteral">&#39;f =&#39;</span>,f,<span class="stringliteral">&#39;|proj g| =&#39;</span>,dsave(13)</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;         </div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;         <span class="keyword">write</span> (6,<span class="stringliteral">&#39;(2(a,i5,4x),a,1p,d12.5,4x,a,1p,d12.5)&#39;</span>) <span class="stringliteral">&#39;Iterate&#39;</span></div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;     +      ,isave(30),<span class="stringliteral">&#39;nfg =&#39;</span>,isave(34),<span class="stringliteral">&#39;f =&#39;</span>,f,<span class="stringliteral">&#39;|proj g| =&#39;</span>,dsave(13)</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">c        If the run is to be terminated, we print also the information</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">c        contained in task as well as the final value of x.</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment">c        If the run is to be terminated, we print also the information</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment">c        contained in task as well as the final value of x.</span></div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;         <span class="keywordflow">if</span> (task(1:4) .eq. <span class="stringliteral">&#39;STOP&#39;</span>) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <span class="keyword">write</span> (6,*) task  </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;Final X=&#39;</span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;((1x,1p, 6(1x,d11.4)))&#39;</span>) (x(i),i = 1,n)</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keywordflow">         endif</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;         <span class="keywordflow">goto</span> 111</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;         <span class="keywordflow">if</span> (task(1:4) .eq. <span class="stringliteral">&#39;STOP&#39;</span>) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            <span class="keyword">write</span> (6,*) task  </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;Final X=&#39;</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keyword">write</span> (6,<span class="stringliteral">&#39;((1x,1p, 6(1x,d11.4)))&#39;</span>) (x(i),i = 1,n)</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordflow">         endif</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;         <span class="keywordflow">goto</span> 111</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">c           ---------- the end of the loop -------------</span></div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="comment">c     If task is neither FG nor NEW_X we terminate execution.</span></div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment">c           ---------- the end of the loop -------------</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="comment">c     If task is neither FG nor NEW_X we terminate execution.</span></div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keyword">call </span>json_close(n, x, f, task)</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      stop</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="keyword">end</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment">c======================= The end of driver3 ============================</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;         <span class="keyword">call </span>json_write_aggregate(trim(lbfgsb_json), task, f,</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;     +                             dsave(13))</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      stop</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="keyword">end</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment">c======================= The end of driver3 ============================</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
 <div class="ttc" id="asetulb_8f_html_a98990772aba60ae5986ecbbcc015ebed"><div class="ttname"><a href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a></div><div class="ttdeci">subroutine setulb(n, m, x, l, u, nbd, f, g, factr, pgtol, wa, iwa, task, iprint, csave, lsave, isave, dsave)</div><div class="ttdoc">This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho...</div><div class="ttdef"><b>Definition:</b> <a href="setulb_8f_source.html#l00188">setulb.f:190</a></div></div>
 <div class="ttc" id="atimer_8f_html_ab582fd1ba3cb021020eb67c22b03d118"><div class="ttname"><a href="timer_8f.html#ab582fd1ba3cb021020eb67c22b03d118">timer</a></div><div class="ttdeci">subroutine timer(ttime)</div><div class="ttdoc">This routine computes cpu time in double precision.</div><div class="ttdef"><b>Definition:</b> <a href="timer_8f_source.html#l00010">timer.f:11</a></div></div>
 </div><!-- fragment --> </div><!-- contents -->

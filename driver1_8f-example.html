@@ -368,65 +368,64 @@ $(document).ready(function(){initNavTree('driver1_8f-example.html',''); initResi
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">c</span></div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;      task = <span class="stringliteral">&#39;START&#39;</span></div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">c     Test instrumentation: open JSON output if env var is set.</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">c     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.</span></div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;      <span class="keyword">call </span>get_environment_variable(<span class="stringliteral">&#39;LBFGSB_JSON_OUTPUT&#39;</span>, lbfgsb_json)</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;      json_active = (len_trim(lbfgsb_json) .gt. 0)</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keyword">call </span>json_open(trim(lbfgsb_json))</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="comment">c        ------- the beginning of the loop ----------</span></div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; 111  <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment">c     This is the call to the L-BFGS-B code.</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="keyword">call </span><a class="code" href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a>(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;     +            csave,lsave,isave,dsave)</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      <span class="keywordflow">if</span> (json_active .and. task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>)</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;     +   <span class="keyword">call </span>json_iter(n, x, g, f, dsave(13), isave)</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="comment">c        ------- the beginning of the loop ----------</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; 111  <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment">c     This is the call to the L-BFGS-B code.</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="keyword">call </span><a class="code" href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a>(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;     +            csave,lsave,isave,dsave)</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      <span class="keywordflow">if</span> (task(1:2) .eq. <span class="stringliteral">&#39;FG&#39;</span>) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment">c        the minimization routine has returned to request the</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment">c        function f and gradient g values at the current x.</span></div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      <span class="keywordflow">if</span> (task(1:2) .eq. <span class="stringliteral">&#39;FG&#39;</span>) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment">c        the minimization routine has returned to request the</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment">c        function f and gradient g values at the current x.</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment">c        Compute function value f for the sample problem.</span></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;         f=.25d0*(x(1)-1.d0)**2</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;         <span class="keywordflow">do</span> 20 i=2,n</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            f=f+(x(i)-x(i-1)**2)**2</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  20     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;         f=4.d0*f</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment">c        Compute gradient g for the sample problem.</span></div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;         t1=x(2)-x(1)**2</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;         g(1)=2.d0*(x(1)-1.d0)-1.6d1*x(1)*t1</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;         <span class="keywordflow">do</span> 22 i=2,n-1</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            t2=t1</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            t1=x(i+1)-x(i)**2</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            g(i)=8.d0*t2-1.6d1*x(i)*t1</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  22     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;         g(n)=8.d0*t1</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;         <span class="keywordflow">goto</span> 111</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      <span class="keywordflow">if</span> (task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>)  <span class="keywordflow">goto</span> 111</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment">c        the minimization routine has returned with a new iterate,</span></div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment">c         and we have opted to continue the iteration.</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment">c        Compute function value f for the sample problem.</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;         f=.25d0*(x(1)-1.d0)**2</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;         <span class="keywordflow">do</span> 20 i=2,n</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;            f=f+(x(i)-x(i-1)**2)**2</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  20     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;         f=4.d0*f</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="comment">c        Compute gradient g for the sample problem.</span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;         t1=x(2)-x(1)**2</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;         g(1)=2.d0*(x(1)-1.d0)-1.6d1*x(1)*t1</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;         <span class="keywordflow">do</span> 22 i=2,n-1</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            t2=t1</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            t1=x(i+1)-x(i)**2</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;            g(i)=8.d0*t2-1.6d1*x(i)*t1</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;  22     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;         g(n)=8.d0*t1</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment">c          go back to the minimization routine.</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;         <span class="keywordflow">goto</span> 111</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      <span class="keywordflow">if</span> (task(1:5) .eq. <span class="stringliteral">&#39;NEW_X&#39;</span>)  <span class="keywordflow">goto</span> 111</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="comment">c        the minimization routine has returned with a new iterate,</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment">c         and we have opted to continue the iteration.</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="comment">c           ---------- the end of the loop -------------</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment">c     If task is neither FG nor NEW_X we terminate execution.</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="comment">c           ---------- the end of the loop -------------</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment">c     If task is neither FG nor NEW_X we terminate execution.</span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keyword">call </span>json_close(n, x, f, task)</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;      stop</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;      <span class="keyword">end</span></div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="comment">c======================= The end of driver1 ============================</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      <span class="keywordflow">if</span> (json_active) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;         <span class="keyword">call </span>json_write_aggregate(trim(lbfgsb_json), task, f,</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;     +                             dsave(13))</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;      stop</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;      <span class="keyword">end</span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="comment">c======================= The end of driver1 ============================</span></div>
 <div class="ttc" id="asetulb_8f_html_a98990772aba60ae5986ecbbcc015ebed"><div class="ttname"><a href="setulb_8f.html#a98990772aba60ae5986ecbbcc015ebed">setulb</a></div><div class="ttdeci">subroutine setulb(n, m, x, l, u, nbd, f, g, factr, pgtol, wa, iwa, task, iprint, csave, lsave, isave, dsave)</div><div class="ttdoc">This subroutine partitions the working arrays wa and iwa, and then uses the limited memory BFGS metho...</div><div class="ttdef"><b>Definition:</b> <a href="setulb_8f_source.html#l00188">setulb.f:190</a></div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,0 +1,22 @@
+{
+  "name": "matupd_case_4",
+  "description": "First update with stp=1.0 exactly: covers the L112 true branch (ss[col,col] = dtd, no stp^2 multiply).",
+  "inputs": {
+    "n": 2, "m": 2, "iupdat": 1,
+    "head_in": 1, "itail_in": 0, "col_in": 0,
+    "ws_in": [[0.0, 0.0], [0.0, 0.0]],
+    "wy_in": [[0.0, 0.0], [0.0, 0.0]],
+    "sy_in": [[0.0, 0.0], [0.0, 0.0]],
+    "ss_in": [[0.0, 0.0], [0.0, 0.0]],
+    "d": [2.0, 0.0],
+    "r": [1.0, 1.0],
+    "rr": 2.0, "dr": 2.0, "stp": 1.0, "dtd": 4.0
+  },
+  "expected": {
+    "head": 1, "itail": 1, "col": 1, "theta": 1.0,
+    "ws": [[2.0, 0.0], [0.0, 0.0]],
+    "wy": [[1.0, 0.0], [1.0, 0.0]],
+    "sy": [[2.0, 0.0], [0.0, 0.0]],
+    "ss": [[4.0, 0.0], [0.0, 0.0]]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "dcstep_case_2",
+  "description": "Case 1 with stp < stx: triggers gamma sign flip.",
+  "inputs": {
+    "stx_in": 0.0,
+    "fx_in": 0.16,
+    "dx_in": -0.8,
+    "sty_in": 0.0,
+    "fy_in": 0.0,
+    "dy_in": 0.0,
+    "stp_in": -1.0,
+    "fp": 5.0,
+    "dp": -3.0,
+    "brackt_in": false,
+    "stpmin": -10.0,
+    "stpmax": 10.0
+  },
+  "expected": {
+    "stx": 0.0,
+    "fx": 0.16,
+    "dx": -0.8,
+    "sty": -1.0,
+    "fy": 5.0,
+    "dy": -3.0,
+    "stp": 0.03897216931139384,
+    "brackt": true
+  }
+}

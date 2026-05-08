@@ -1,0 +1,22 @@
+{
+  "name": "matupd_case_3",
+  "description": "Third update with iupdat>m: cyclic overflow. itail wraps to 1, head wraps to 2. Phase 4 shifts old sy/ss to drop the oldest pair; Phase 5 fills the new row/column.",
+  "inputs": {
+    "n": 2, "m": 2, "iupdat": 3,
+    "head_in": 1, "itail_in": 2, "col_in": 2,
+    "ws_in": [[1.0, 0.0], [0.0, 1.0]],
+    "wy_in": [[1.0, 0.0], [1.0, 1.0]],
+    "sy_in": [[1.0, 0.0], [1.0, 1.0]],
+    "ss_in": [[0.25, 0.0], [0.0, 0.25]],
+    "d": [1.0, 1.0],
+    "r": [2.0, 0.0],
+    "rr": 4.0, "dr": 2.0, "stp": 0.5, "dtd": 2.0
+  },
+  "expected": {
+    "head": 2, "itail": 1, "col": 2, "theta": 2.0,
+    "ws": [[1.0, 0.0], [1.0, 1.0]],
+    "wy": [[2.0, 0.0], [0.0, 1.0]],
+    "sy": [[1.0, 0.0], [1.0, 2.0]],
+    "ss": [[0.25, 1.0], [0.0, 0.5]]
+  }
+}

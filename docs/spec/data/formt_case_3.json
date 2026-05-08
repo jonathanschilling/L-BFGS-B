@@ -1,0 +1,14 @@
+{
+  "name": "formt_case_3",
+  "description": "col=2 with T diagonal by construction. sy=[[1,0],[3,2]], ss=diag(2,5), theta=1. T_pre = [[2,0],[*,14]]; Cholesky -> [[sqrt(2),0],[*,sqrt(14)]] in upper.",
+  "inputs": {
+    "m": 2, "col": 2, "theta": 1.0,
+    "sy": [[1.0, 0.0], [3.0, 2.0]],
+    "ss": [[2.0, 0.0], [0.0, 5.0]],
+    "wt_in": [[-42.0, -42.0], [-42.0, -42.0]]
+  },
+  "expected": {
+    "wt_upper": [[1.4142135623730951, 0.0], [-42.0, 3.7416573867739413]],
+    "info": 0
+  }
+}

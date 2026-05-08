@@ -1,0 +1,22 @@
+{
+  "name": "matupd_case_2",
+  "description": "Second update; col grows from 1 to 2. Phase 5 fills sy[2,1]=d.wy[:,head] and ss[1,2]=ws[:,head].d.",
+  "inputs": {
+    "n": 2, "m": 2, "iupdat": 2,
+    "head_in": 1, "itail_in": 1, "col_in": 1,
+    "ws_in": [[1.0, 0.0], [0.0, 0.0]],
+    "wy_in": [[1.0, 0.0], [1.0, 0.0]],
+    "sy_in": [[1.0, 0.0], [0.0, 0.0]],
+    "ss_in": [[0.25, 0.0], [0.0, 0.0]],
+    "d": [0.0, 1.0],
+    "r": [0.0, 1.0],
+    "rr": 1.0, "dr": 1.0, "stp": 0.5, "dtd": 1.0
+  },
+  "expected": {
+    "head": 1, "itail": 2, "col": 2, "theta": 1.0,
+    "ws": [[1.0, 0.0], [0.0, 1.0]],
+    "wy": [[1.0, 0.0], [1.0, 1.0]],
+    "sy": [[1.0, 0.0], [1.0, 1.0]],
+    "ss": [[0.25, 0.0], [0.0, 0.25]]
+  }
+}

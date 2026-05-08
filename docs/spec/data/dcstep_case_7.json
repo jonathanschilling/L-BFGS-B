@@ -1,0 +1,28 @@
+{
+  "name": "dcstep_case_7",
+  "description": "Case 4 with brackt=True: cubic step computed using sty data.",
+  "inputs": {
+    "stx_in": 0.0,
+    "fx_in": 2.0,
+    "dx_in": -1.0,
+    "sty_in": 5.0,
+    "fy_in": 1.0,
+    "dy_in": -2.0,
+    "stp_in": 1.0,
+    "fp": 1.5,
+    "dp": -1.5,
+    "brackt_in": true,
+    "stpmin": 0.0,
+    "stpmax": 10.0
+  },
+  "expected": {
+    "stx": 1.0,
+    "fx": 1.5,
+    "dx": -1.5,
+    "sty": 5.0,
+    "fy": 1.0,
+    "dy": -2.0,
+    "stp": 1.8303255360674457,
+    "brackt": true
+  }
+}

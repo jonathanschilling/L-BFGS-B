@@ -1,0 +1,28 @@
+{
+  "name": "dcstep_case_11",
+  "description": "Case 3 brackt=True with stp<stx: cubic-vs-secant + max safeguard.",
+  "inputs": {
+    "stx_in": 2.0,
+    "fx_in": 1.0,
+    "dx_in": 2.0,
+    "sty_in": 0.0,
+    "fy_in": 5.0,
+    "dy_in": -1.0,
+    "stp_in": 1.0,
+    "fp": 0.5,
+    "dp": 0.5,
+    "brackt_in": true,
+    "stpmin": 0.0,
+    "stpmax": 10.0
+  },
+  "expected": {
+    "stx": 1.0,
+    "fx": 0.5,
+    "dx": 0.5,
+    "sty": 0.0,
+    "fy": 5.0,
+    "dy": -1.0,
+    "stp": 0.6666666666666667,
+    "brackt": true
+  }
+}

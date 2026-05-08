@@ -1,0 +1,13 @@
+{
+  "name": "formt_case_4",
+  "description": "theta<0 makes T(1,1) negative, so dpotrf fails. formt maps to info=-3. Output wt[upper] is implementation-defined on failure (not asserted).",
+  "inputs": {
+    "m": 1, "col": 1, "theta": -1.0,
+    "sy": [[1.0]],
+    "ss": [[1.0]],
+    "wt_in": [[0.0]]
+  },
+  "expected": {
+    "info": -3
+  }
+}

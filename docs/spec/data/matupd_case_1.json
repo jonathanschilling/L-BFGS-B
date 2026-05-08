@@ -1,0 +1,22 @@
+{
+  "name": "matupd_case_1",
+  "description": "First update from a fresh state. iupdat=1, stp=0.5. Buffer not full so col grows; new pair lands in slot 1.",
+  "inputs": {
+    "n": 2, "m": 2, "iupdat": 1,
+    "head_in": 1, "itail_in": 0, "col_in": 0,
+    "ws_in": [[0.0, 0.0], [0.0, 0.0]],
+    "wy_in": [[0.0, 0.0], [0.0, 0.0]],
+    "sy_in": [[0.0, 0.0], [0.0, 0.0]],
+    "ss_in": [[0.0, 0.0], [0.0, 0.0]],
+    "d": [1.0, 0.0],
+    "r": [1.0, 1.0],
+    "rr": 2.0, "dr": 1.0, "stp": 0.5, "dtd": 1.0
+  },
+  "expected": {
+    "head": 1, "itail": 1, "col": 1, "theta": 2.0,
+    "ws": [[1.0, 0.0], [0.0, 0.0]],
+    "wy": [[1.0, 0.0], [1.0, 0.0]],
+    "sy": [[1.0, 0.0], [0.0, 0.0]],
+    "ss": [[0.25, 0.0], [0.0, 0.0]]
+  }
+}

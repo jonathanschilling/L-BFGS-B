@@ -1,0 +1,80 @@
+{
+  "name": "formk_case_3",
+  "description": "Non-PD (1,1) block: dpotrf fails, formk returns info=-1.",
+  "inputs": {
+    "n": 1,
+    "m": 1,
+    "nsub": 1,
+    "nenter": 0,
+    "ileave": 2,
+    "iupdat": 1,
+    "col": 1,
+    "head": 1,
+    "theta": 1.0,
+    "ind": [
+      1
+    ],
+    "indx2": [
+      0
+    ],
+    "ws": [
+      [
+        0.0
+      ]
+    ],
+    "wy": [
+      [
+        1.0
+      ]
+    ],
+    "sy": [
+      [
+        -10.0
+      ]
+    ],
+    "wn1_in": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "wn_in": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "updatd": true
+  },
+  "expected": {
+    "info": -1,
+    "wn": [
+      [
+        -9.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "wn1": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  }
+}

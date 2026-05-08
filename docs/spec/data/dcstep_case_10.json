@@ -1,0 +1,28 @@
+{
+  "name": "dcstep_case_10",
+  "description": "Case 3 stp<stx with r>=0 falls through to 'stpc=stpmin'.",
+  "inputs": {
+    "stx_in": 2.0,
+    "fx_in": 1.0,
+    "dx_in": 2.0,
+    "sty_in": 0.0,
+    "fy_in": 0.0,
+    "dy_in": 0.0,
+    "stp_in": 1.0,
+    "fp": 0.9,
+    "dp": 1.99,
+    "brackt_in": false,
+    "stpmin": 0.0,
+    "stpmax": 10.0
+  },
+  "expected": {
+    "stx": 1.0,
+    "fx": 0.9,
+    "dx": 1.99,
+    "sty": 0.0,
+    "fy": 0.0,
+    "dy": 0.0,
+    "stp": 0.0,
+    "brackt": false
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "name": "formk_case_1",
+  "description": "updatd=False, no entering/leaving: phases 1a/1b/2 are no-ops; wn1 is consumed as-is to form wn.",
+  "inputs": {
+    "n": 1,
+    "m": 1,
+    "nsub": 1,
+    "nenter": 0,
+    "ileave": 2,
+    "iupdat": 0,
+    "col": 1,
+    "head": 1,
+    "theta": 1.0,
+    "ind": [
+      1
+    ],
+    "indx2": [
+      0
+    ],
+    "ws": [
+      [
+        0.5
+      ]
+    ],
+    "wy": [
+      [
+        1.0
+      ]
+    ],
+    "sy": [
+      [
+        0.5
+      ]
+    ],
+    "wn1_in": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.25
+      ]
+    ],
+    "wn_in": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "updatd": false
+  },
+  "expected": {
+    "info": 0,
+    "wn": [
+      [
+        1.224744871391589,
+        0.4082482904638631
+      ],
+      [
+        0.0,
+        0.6454972243679029
+      ]
+    ],
+    "wn1": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.25
+      ]
+    ]
+  }
+}

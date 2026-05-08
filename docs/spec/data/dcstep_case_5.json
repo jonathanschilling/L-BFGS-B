@@ -1,0 +1,28 @@
+{
+  "name": "dcstep_case_5",
+  "description": "Case 3 with brackt=False; cubic vs secant; explicit clamp to [stpmin,stpmax].",
+  "inputs": {
+    "stx_in": 0.0,
+    "fx_in": 1.0,
+    "dx_in": -2.0,
+    "sty_in": 0.0,
+    "fy_in": 0.0,
+    "dy_in": 0.0,
+    "stp_in": 1.0,
+    "fp": 0.0,
+    "dp": -0.5,
+    "brackt_in": false,
+    "stpmin": 0.0,
+    "stpmax": 10.0
+  },
+  "expected": {
+    "stx": 1.0,
+    "fx": 0.0,
+    "dx": -0.5,
+    "sty": 0.0,
+    "fy": 0.0,
+    "dy": 0.0,
+    "stp": 10.0,
+    "brackt": false
+  }
+}

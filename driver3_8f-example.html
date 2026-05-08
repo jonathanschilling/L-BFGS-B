@@ -141,7 +141,7 @@ $(document).ready(function(){initNavTree('driver3_8f-example.html',''); initResi
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">c     **************</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keyword">program</span> driver</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keywordtype">use </span>json_writer</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keywordtype">use </span>json_writer, <span class="keywordtype">only</span>: json_write_aggregate</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c     This time-controlled driver shows that it is possible to terminate</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c     a run by elapsed CPU time, and yet be able to print all desired</span></div>

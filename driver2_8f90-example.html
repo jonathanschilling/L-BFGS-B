@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('driver2_8f90-example.html',''); initRe
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">!</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">!    **************</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">program</span> driver</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordtype">use </span>json_writer</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordtype">use </span>json_writer, <span class="keywordtype">only</span>: json_write_aggregate</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">!     This driver shows how to replace the default stopping test</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">!     by other termination criteria. It also illustrates how to</span></div>

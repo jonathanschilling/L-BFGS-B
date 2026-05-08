@@ -170,18 +170,12 @@ Functions/Subroutines</h2></td></tr>
     <tr><td class="paramname">p</td><td>On entry p is unspecified.<br  />
  On exit p is the product Mv.</td></tr>
     <tr><td class="paramname">info</td><td>On entry info is unspecified.<br  />
- On exit info = <ul>
-<li>
-0 for normal return, </li>
-<li>
-nonzero for abnormal return when the system to be solved by dtrsl is singular.</li>
-</ul>
-</td></tr>
+ On exit info is always 0. (The original LINPACK dtrsl could set info nonzero on a singular triangular system; the LAPACK dtrsm replacement does not return such a status, so bmv now sets info = 0 unconditionally and callers checking "if info /= 0 ... return" hit dead code.) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="bmv_8f_source.html#l00035">35</a> of file <a class="el" href="bmv_8f_source.html">bmv.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bmv_8f_source.html#l00037">37</a> of file <a class="el" href="bmv_8f_source.html">bmv.f</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be">cauchy()</a>, and <a class="el" href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">cmprlb()</a>.</p>
 <div class="dynheader">

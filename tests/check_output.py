@@ -74,29 +74,33 @@ DRIVER_SPECS = {
     "driver1": {
         "n":           25,
         "task_prefix": "CONVERGENCE: ",
-        # factr=1e7 stops on REL_REDUCTION; observed f ~1e-9 (100x margin).
-        "f_max":       1e-7,
-        # projg not directly bounded by stopping criterion; observed ~1.7e-4.
-        "projg_max":   1e-3,
+        # factr=1e7 stops on REL_REDUCTION; the f-rate criterion fires
+        # when consecutive iterates differ by < factr*epsmch ~= 2.2e-9.
+        # Observed f at stop is 1.08e-9 on both local and Docker; bound
+        # at 5e-9 leaves ~5x margin for the (rare) case where a
+        # different toolchain trips the criterion one iteration earlier.
+        "f_max":       5e-9,
+        # projg at REL_REDUCTION termination is incidental, not bounded
+        # by the criterion. Observed 1.72e-4 identical local/Docker.
+        "projg_max":   5e-4,
     },
     "driver2": {
         "n":           25,
         "task_prefix": "STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL",
         # factr=0, pgtol=0; user stops on |proj g|/(1+|f|) < 1e-10.
-        # Observed f ~6e-15 (~150x margin). Tight enough to catch
-        # convergence regressions without accumulating cross-env noise.
-        "f_max":       1e-12,
-        # User criterion is exactly 1e-10. Bound just above with slack
+        # Observed f = 5.81e-15, identical local/Docker. ~17x margin.
+        "f_max":       1e-13,
+        # User criterion is exactly 1e-10; bound just above with slack
         # for FP rounding in the comparison itself.
         "projg_max":   1.5e-10,
     },
     "driver3": {
         "n":           1000,
         "task_prefix": "STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL",
-        # n=1000 with chain x_{i+1}=x_i^2 squashes f deep below ULP at
-        # convergence; observed 5e-22, but margin is generous since
-        # tail-element drift across BLAS implementations is amplified.
-        "f_max":       1e-15,
+        # n=1000 with chain x_{i+1}=x_i^2 squashes f far below ULP at
+        # convergence. Observed 5.35e-22 local vs 5.35e-22 Docker --
+        # 1 ULP drift in the tail. Bound at 1e-19 = ~200x margin.
+        "f_max":       1e-19,
         "projg_max":   1.5e-10,
     },
 }

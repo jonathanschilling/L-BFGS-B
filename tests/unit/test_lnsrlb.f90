@@ -8,6 +8,8 @@ program test_lnsrlb
    call case_bounded_iter_pos_upper()
    call case_ascent_direction()
    call case_continuation_path()
+   call case_var_at_lower_bound()
+   call case_var_at_upper_bound()
 
    write(*, '("test_lnsrlb: PASS")')
 
@@ -194,5 +196,56 @@ contains
                   info, task, boxed, cnstnd, csave, isave, dsave)
       call assert_eq_int(info, 0, where="case_continuation_path info")
    end subroutine case_continuation_path
+
+   subroutine case_var_at_lower_bound()
+      ! d<0 and x already at lower bound (l-x = 0): a2 = 0 -> stpmx = 0
+      ! immediately. Hits L93 (the a2 >= 0 branch).
+      integer, parameter :: n = 1
+      integer  :: nbd(n), iter, ifun, iback, nfgv, info, isave(2)
+      real(dp) :: l(n), u(n), x(n), g(n), d(n), r(n), t(n), z(n)
+      real(dp) :: f, fold, gd, gdold, stp, dnorm, dtd, xstep, stpmx
+      character(len=60) :: task, csave
+      logical  :: boxed, cnstnd
+      real(dp) :: dsave(13)
+      nbd = (/ 2 /)
+      l = (/ 0.0_dp /); u = (/ 1.0_dp /)
+      x = l            ! at lower bound
+      g = (/ 1.0_dp /); d = (/ -1.0_dp /)
+      r = 0.0_dp; t = 0.0_dp; z = 0.0_dp
+      f = 0.0_dp
+      iter = 1; ifun = 0; iback = 0; nfgv = 0; info = 0
+      task = 'START'; csave = ''
+      boxed = .true.; cnstnd = .true.
+      isave = 0; dsave = 0.0_dp
+      call lnsrlb(n, l, u, nbd, x, f, fold, gd, gdold, g, d, r, t, z, &
+                  stp, dnorm, dtd, xstep, stpmx, iter, ifun, iback, nfgv, &
+                  info, task, boxed, cnstnd, csave, isave, dsave)
+      call assert_close_real(stpmx, 0.0_dp, where="case_var_at_lower_bound stpmx=0")
+   end subroutine case_var_at_lower_bound
+
+   subroutine case_var_at_upper_bound()
+      ! d>0 and x already at upper bound: a2 = 0 -> stpmx = 0. Hits L100.
+      integer, parameter :: n = 1
+      integer  :: nbd(n), iter, ifun, iback, nfgv, info, isave(2)
+      real(dp) :: l(n), u(n), x(n), g(n), d(n), r(n), t(n), z(n)
+      real(dp) :: f, fold, gd, gdold, stp, dnorm, dtd, xstep, stpmx
+      character(len=60) :: task, csave
+      logical  :: boxed, cnstnd
+      real(dp) :: dsave(13)
+      nbd = (/ 2 /)
+      l = (/ 0.0_dp /); u = (/ 1.0_dp /)
+      x = u            ! at upper bound
+      g = (/ -1.0_dp /); d = (/ 1.0_dp /)
+      r = 0.0_dp; t = 0.0_dp; z = 0.0_dp
+      f = 0.0_dp
+      iter = 1; ifun = 0; iback = 0; nfgv = 0; info = 0
+      task = 'START'; csave = ''
+      boxed = .true.; cnstnd = .true.
+      isave = 0; dsave = 0.0_dp
+      call lnsrlb(n, l, u, nbd, x, f, fold, gd, gdold, g, d, r, t, z, &
+                  stp, dnorm, dtd, xstep, stpmx, iter, ifun, iback, nfgv, &
+                  info, task, boxed, cnstnd, csave, isave, dsave)
+      call assert_close_real(stpmx, 0.0_dp, where="case_var_at_upper_bound stpmx=0")
+   end subroutine case_var_at_upper_bound
 
 end program test_lnsrlb

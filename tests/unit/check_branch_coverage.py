@@ -166,6 +166,10 @@ def main(argv: list[str]) -> int:
                    help="exit 0 even if uncovered branches remain (default off)")
     p.add_argument("--fail", action="store_true",
                    help="exit non-zero on any uncovered, non-exempt branch")
+    p.add_argument("--line-threshold", type=float, default=None,
+                   help="minimum acceptable line-coverage fraction over the "
+                        "in-scope files (e.g. 0.85). Used as a regression "
+                        "detector: PR drops coverage below this -> fail.")
     args = p.parse_args(argv)
 
     if args.warn_only and args.fail:
@@ -185,6 +189,25 @@ def main(argv: list[str]) -> int:
 
     excluded_files = set(args.exclude_file)
     line_exclusions = parse_exclusions(args.exclusions)
+
+    if args.line_threshold is not None:
+        in_scope_total = in_scope_covered = 0
+        for fileinfo in cov.get("files", []):
+            name = Path(fileinfo.get("file", "")).name
+            if name in excluded_files:
+                continue
+            for line in fileinfo.get("lines", []):
+                in_scope_total += 1
+                if line.get("count", 0) > 0:
+                    in_scope_covered += 1
+        frac = (in_scope_covered / in_scope_total) if in_scope_total else 1.0
+        print(f"In-scope line coverage: "
+              f"{in_scope_covered}/{in_scope_total} ({100*frac:.1f}%) "
+              f"vs threshold {100*args.line_threshold:.1f}%")
+        if frac < args.line_threshold:
+            print(f"FAIL: line coverage {100*frac:.1f}% below "
+                  f"threshold {100*args.line_threshold:.1f}%")
+            return 1
 
     uncovered = collect_uncovered(cov, excluded_files, line_exclusions)
 

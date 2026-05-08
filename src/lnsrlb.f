@@ -96,6 +96,16 @@ c     **********
       double           precision ddot,a1,a2
       double precision one,zero,big
       parameter        (one=1.0d0,zero=0.0d0,big=1.0d+10)
+c     Wolfe-condition tolerances passed to dcsrch:
+c       ftol -- sufficient-decrease constant (alpha in eq (2.5) of the
+c               algorithm tech report; 1.0d-3 here, vs 1.0d-4 stated in
+c               that report). The looser value 1.0d-3 matches the
+c               implementation that ships with Algorithm 778; neither
+c               the ACM paper (docs/code.pdf) nor the 2011 remark
+c               documents the change explicitly.
+c       gtol -- curvature constant (beta in eq (2.6) of the tech report,
+c               0.9 -- matches the paper).
+c       xtol -- relative-step tolerance for dcsrch's bracketing safeguard.
       double precision ftol,gtol,xtol
       parameter        (ftol=1.0d-3,gtol=0.9d0,xtol=0.1d0)
 

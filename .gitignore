@@ -33,7 +33,6 @@
 
 # L-BFGS-B-specific
 x.*
-docs/
 iterate.dat
 
 # cmake

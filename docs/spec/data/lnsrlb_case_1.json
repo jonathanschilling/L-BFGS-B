@@ -1,0 +1,55 @@
+{
+  "name": "lnsrlb_case_1",
+  "description": "cnstnd=False iter=0 not boxed: stp = min(1/dnorm, big).",
+  "inputs": {
+    "n": 1,
+    "l": [
+      0.0
+    ],
+    "u": [
+      0.0
+    ],
+    "nbd": [
+      0
+    ],
+    "x": [
+      0.0
+    ],
+    "g": [
+      -1.0
+    ],
+    "d": [
+      1.0
+    ],
+    "r_in": [
+      0.0
+    ],
+    "t_in": [
+      0.0
+    ],
+    "z": [
+      1.0
+    ],
+    "f_in": 0.0,
+    "iter": 0,
+    "ifun_in": -1,
+    "iback_in": -1,
+    "nfgv_in": 0,
+    "info_in": 0,
+    "stp_in": -42.0,
+    "task_in": "START",
+    "boxed": false,
+    "cnstnd": false
+  },
+  "expected": {
+    "stpmx": 10000000000.0,
+    "stp": 1.0,
+    "dnorm": 1.0,
+    "info": 0,
+    "task": "FG_LNSRCH",
+    "ifun": 1,
+    "x": [
+      1.0
+    ]
+  }
+}

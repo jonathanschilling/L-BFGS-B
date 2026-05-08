@@ -1,0 +1,55 @@
+{
+  "name": "lnsrlb_case_4",
+  "description": "cnstnd=True iter>0 d>0 upper bound: stpmx = (u-x)/d.",
+  "inputs": {
+    "n": 1,
+    "l": [
+      -5.0
+    ],
+    "u": [
+      1.0
+    ],
+    "nbd": [
+      2
+    ],
+    "x": [
+      0.0
+    ],
+    "g": [
+      -1.0
+    ],
+    "d": [
+      2.0
+    ],
+    "r_in": [
+      0.0
+    ],
+    "t_in": [
+      0.0
+    ],
+    "z": [
+      1.0
+    ],
+    "f_in": 0.0,
+    "iter": 1,
+    "ifun_in": 0,
+    "iback_in": 0,
+    "nfgv_in": 0,
+    "info_in": 0,
+    "stp_in": 0.0,
+    "task_in": "START",
+    "boxed": true,
+    "cnstnd": true
+  },
+  "expected": {
+    "stpmx": 0.5,
+    "stp": 1.0,
+    "dnorm": 2.0,
+    "info": 0,
+    "task": "FG_LNSRCH",
+    "ifun": 1,
+    "x": [
+      1.0
+    ]
+  }
+}

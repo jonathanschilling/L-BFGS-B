@@ -1,0 +1,21 @@
+{
+  "name": "dcsrch_case_7",
+  "description": "stpmin < 0",
+  "inputs": {
+    "f": 0.0,
+    "g": -1.0,
+    "stp": 0.5,
+    "ftol": 0.001,
+    "gtol": 0.9,
+    "xtol": 1e-10,
+    "stpmin": -0.1,
+    "stpmax": 1.0,
+    "task_in": "START"
+  },
+  "expected": {
+    "task": "ERROR: STPMIN .LT. ZERO",
+    "stp": 0.5,
+    "f": 0.0,
+    "g": -1.0
+  }
+}

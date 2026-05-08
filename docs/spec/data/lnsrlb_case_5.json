@@ -1,0 +1,55 @@
+{
+  "name": "lnsrlb_case_5",
+  "description": "g'd >= 0: ascent direction; info=-4.",
+  "inputs": {
+    "n": 1,
+    "l": [
+      0.0
+    ],
+    "u": [
+      0.0
+    ],
+    "nbd": [
+      0
+    ],
+    "x": [
+      0.0
+    ],
+    "g": [
+      1.0
+    ],
+    "d": [
+      1.0
+    ],
+    "r_in": [
+      0.0
+    ],
+    "t_in": [
+      0.0
+    ],
+    "z": [
+      0.0
+    ],
+    "f_in": 0.0,
+    "iter": 0,
+    "ifun_in": 0,
+    "iback_in": 0,
+    "nfgv_in": 0,
+    "info_in": 0,
+    "stp_in": 0.0,
+    "task_in": "START",
+    "boxed": false,
+    "cnstnd": false
+  },
+  "expected": {
+    "stpmx": 10000000000.0,
+    "stp": 1.0,
+    "dnorm": 1.0,
+    "info": -4,
+    "task": "START",
+    "ifun": 0,
+    "x": [
+      0.0
+    ]
+  }
+}

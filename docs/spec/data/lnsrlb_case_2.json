@@ -1,0 +1,55 @@
+{
+  "name": "lnsrlb_case_2",
+  "description": "cnstnd=True iter=0: stpmx = 1.",
+  "inputs": {
+    "n": 1,
+    "l": [
+      -1.0
+    ],
+    "u": [
+      1.0
+    ],
+    "nbd": [
+      2
+    ],
+    "x": [
+      0.0
+    ],
+    "g": [
+      -1.0
+    ],
+    "d": [
+      0.5
+    ],
+    "r_in": [
+      0.0
+    ],
+    "t_in": [
+      0.0
+    ],
+    "z": [
+      0.5
+    ],
+    "f_in": 0.0,
+    "iter": 0,
+    "ifun_in": 0,
+    "iback_in": 0,
+    "nfgv_in": 0,
+    "info_in": 0,
+    "stp_in": 0.0,
+    "task_in": "START",
+    "boxed": true,
+    "cnstnd": true
+  },
+  "expected": {
+    "stpmx": 1.0,
+    "stp": 1.0,
+    "dnorm": 0.5,
+    "info": 0,
+    "task": "FG_LNSRCH",
+    "ifun": 1,
+    "x": [
+      0.5
+    ]
+  }
+}

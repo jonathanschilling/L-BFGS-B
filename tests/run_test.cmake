@@ -18,6 +18,8 @@ execute_process(
               LBFGSB_JSON_OUTPUT=${WORKDIR}/output.json
               LBFGSB_TLIMIT=86400
               LBFGSB_NFG_LIMIT=100000
+              OPENBLAS_NUM_THREADS=1
+              OMP_NUM_THREADS=1
               ${DRIVER}
    WORKING_DIRECTORY ${WORKDIR}
    OUTPUT_QUIET

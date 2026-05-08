@@ -28,6 +28,8 @@ for drv in driver1_f77 driver1_f90 driver2_f77 driver2_f90 driver3_f77 driver3_f
    LBFGSB_JSON_OUTPUT="${wd}/${drv}.json" \
    LBFGSB_TLIMIT=86400 \
    LBFGSB_NFG_LIMIT=100000 \
+   OPENBLAS_NUM_THREADS=1 \
+   OMP_NUM_THREADS=1 \
       "${BUILD}/${drv}" >/dev/null
    cp "${wd}/${drv}.json" "${HERE}/expected/${drv}.json"
    rm -rf "${wd}"

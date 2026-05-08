@@ -46,6 +46,8 @@ lbfgsb_add_unit_test(dcstep)
 lbfgsb_add_unit_test(formk)
 lbfgsb_add_unit_test(dcsrch)
 lbfgsb_add_unit_test(lnsrlb)
+lbfgsb_add_unit_test(cauchy)
+lbfgsb_add_unit_test(subsm)
 
 # Branch coverage gate. Wired only when LBFGSB_COVERAGE=ON; otherwise there
 # is no coverage data to check. In Phases A–E it runs in warn-only mode

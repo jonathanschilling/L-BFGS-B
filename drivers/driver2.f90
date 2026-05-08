@@ -46,7 +46,7 @@
 !
 !    **************
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 
 !     This driver shows how to replace the default stopping test
 !     by other termination criteria. It also illustrates how to

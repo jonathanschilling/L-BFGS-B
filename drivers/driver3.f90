@@ -47,7 +47,7 @@
 !     **************
 
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 
 !     This time-controlled driver shows that it is possible to terminate
 !     a run by elapsed CPU time, and yet be able to print all desired

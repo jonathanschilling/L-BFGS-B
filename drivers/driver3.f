@@ -51,7 +51,7 @@ c
 c     **************
 
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 
 c     This time-controlled driver shows that it is possible to terminate
 c     a run by elapsed CPU time, and yet be able to print all desired

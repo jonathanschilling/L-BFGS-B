@@ -190,7 +190,7 @@
 !     --------------------------------------------------------------
 !    
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 !
 !     This simple driver demonstrates how to call the L-BFGS-B code to
 !       solve a sample problem (the extended Rosenbrock function

@@ -32,8 +32,8 @@ c
 c     ************
 
       integer          i
-      double precision one,zero
-      parameter        (one=1.0d0,zero=0.0d0)
+      double precision zero
+      parameter        (zero=0.0d0)
 
 c     Check the input arguments for errors.
 

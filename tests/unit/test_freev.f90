@@ -1,5 +1,5 @@
 program test_freev
-   use test_assert
+   use test_assert, only: assert_true, assert_eq_int
    implicit none
 
    call case_iter_zero_mixed_iwhere()

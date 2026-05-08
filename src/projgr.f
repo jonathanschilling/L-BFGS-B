@@ -49,8 +49,8 @@ c     ************
 
       integer i
       double precision gi
-      double precision one,zero
-      parameter        (one=1.0d0,zero=0.0d0)
+      double precision zero
+      parameter        (zero=0.0d0)
 
       sbgnrm = zero
       do 15 i = 1, n

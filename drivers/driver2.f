@@ -50,7 +50,7 @@ c
 c     **************
 
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 
 c     This driver shows how to replace the default stopping test
 c       by other termination criteria. It also illustrates how to

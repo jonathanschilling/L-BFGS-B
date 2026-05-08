@@ -1,5 +1,5 @@
 program test_hpsolb
-   use test_assert
+   use test_assert, only: dp, assert_true, assert_eq_int, assert_eq_str, assert_close_real, assert_array_close
    implicit none
 
    call case_n1_iheap0()
@@ -84,7 +84,6 @@ contains
       integer, parameter :: n = 4
       real(dp) :: t(n), t_in(n)
       integer :: iorder(n), iorder_in(n)
-      integer :: i
       t_in = (/ 1.0_dp, 3.0_dp, 2.0_dp, 5.0_dp /)
       iorder_in = (/ 1, 2, 3, 4 /)
       t = t_in; iorder = iorder_in

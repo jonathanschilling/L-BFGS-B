@@ -1,5 +1,5 @@
 program test_cmprlb
-   use test_assert
+   use test_assert, only: dp, assert_true, assert_eq_int, assert_eq_str, assert_close_real, assert_array_close
    implicit none
 
    call case_unconstrained_with_history()
@@ -101,19 +101,19 @@ contains
       real(dp) :: ws(n,m), wy(n,m), sy(m,m), wt(m,m), wa(4*m)
       real(dp) :: x(n), g(n), z(n), r(n), theta
       logical  :: cnstnd
+      theta = 1.0_dp; col = 1; head = 1; nfree = 2
+      index = (/ 1, 2 /)
+      cnstnd = .true.; info = 0
       ws(:,1) = (/ 1.0_dp, 0.0_dp /)
       wy(:,1) = (/ 1.0_dp, 1.0_dp /)
       sy(1,1) = 1.0_dp; wt(1,1) = 1.0_dp
       x = (/ 0.0_dp, 0.0_dp /); z = (/ 2.0_dp, 1.0_dp /)
       g = (/ 1.0_dp, 1.0_dp /)
-      ! W'(z-x):
+      r = -999.0_dp
+      ! W'(z-x), evaluated after theta is set:
       wa = 0.0_dp
       wa(2*m + 1) = wy(1,1)*(z(1)-x(1)) + wy(2,1)*(z(2)-x(2))
       wa(2*m + 2) = theta*(ws(1,1)*(z(1)-x(1)) + ws(2,1)*(z(2)-x(2)))
-      r = -999.0_dp
-      theta = 1.0_dp; col = 1; head = 1; nfree = 2
-      index = (/ 1, 2 /)
-      cnstnd = .true.; info = 0
       call cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, &
                   theta, col, head, nfree, cnstnd, info)
       call assert_close_real(r(1), -4.0_dp, where="case_constrained_nontrivial_step r(1)")

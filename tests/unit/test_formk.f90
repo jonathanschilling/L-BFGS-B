@@ -1,5 +1,5 @@
 program test_formk
-   use test_assert
+   use test_assert, only: dp, assert_true, assert_eq_int, assert_eq_str, assert_close_real, assert_array_close
    implicit none
 
    ! formk forms the LEL^T factorisation of the indefinite K matrix used in

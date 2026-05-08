@@ -6,13 +6,23 @@ project(lbfgsb Fortran)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
-# Force every variable to be explicitly declared. The original F77 sources
-# rely on implicit typing in places, but at least one historical bug
-# (uninitialised `one` in src/bmv.f, used as alpha in dtrsm) slipped through
-# because of it; fixing was a one-line declaration. Make new instances fail
-# at compile time. gfortran-specific.
+# gfortran warning hygiene:
+#   -fimplicit-none  -- all variables must be declared. Catches missing
+#                      `parameter (one=1.0d0)` style mistakes (one such bug
+#                      shipped in src/bmv.f for ~5 years before being fixed).
+#   -Wall -Wextra    -- standard warning sets; surface unused vars/params,
+#                      uninitialised reads, real comparisons, etc.
+#   -Wno-compare-reals -- L-BFGS-B legitimately uses == / /= on REAL values
+#                      to detect exact algorithmic states (variable exactly
+#                      at a bound, exact unit step, theta == 1). The compiler
+#                      flag is a stylistic check; the comparisons are intentional.
+#
+# We deliberately do NOT enable -Wpedantic (which flags every `character*60`
+# F77 declaration as obsolescent) or -Wimplicit-interface (the F77 source
+# files call BLAS/LAPACK routines without explicit interface blocks, which
+# is the standard pattern for legacy F77 numerical code).
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-   add_compile_options(-fimplicit-none)
+   add_compile_options(-fimplicit-none -Wall -Wextra -Wno-compare-reals)
 endif()
 
 # Optional coverage instrumentation. Enable with -DLBFGSB_COVERAGE=ON.

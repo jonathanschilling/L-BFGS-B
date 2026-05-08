@@ -194,7 +194,7 @@ c           END OF THE DESCRIPTION OF THE VARIABLES IN L-BFGS-B
 c     --------------------------------------------------------------
 
       program driver
-      use json_writer
+      use json_writer, only: json_write_aggregate
 
 c     This simple driver demonstrates how to call the L-BFGS-B code to
 c       solve a sample problem (the extended Rosenbrock function

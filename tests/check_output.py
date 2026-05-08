@@ -56,24 +56,48 @@ def _x_bounds(i_zero_based):
 #   neutralises driver2's nfg cap (LBFGSB_NFG_LIMIT) and driver3's
 #   wallclock cap (LBFGSB_TLIMIT). With those overrides, final_task is
 #   exactly the corresponding driver-set string.
+# Bounds tightened after the bmv `one` bug was fixed (commit 45b14ae).
+# Pre-fix, the line-search was running with a uninitialised `alpha` argument
+# to dtrsm, which scaled bmv's output by random-stack values. That made
+# trajectories diverge ~10% across toolchains. Now the F77 and F90 drivers
+# produce bit-identical output on a single host and Docker ubuntu:24.04
+# reproduces values within 1 ULP of the local values:
+#
+#   driver1:  f = 1.083e-09       projg = 1.721e-04   (identical local/Docker)
+#   driver2:  f = 5.807e-15       projg = 6.620e-11   (1 ULP)
+#   driver3:  f = 5.352e-22       projg = 9.74e-11    (1 ULP, chain-amplified)
+#
+# Bounds below have ~10-100x margin over those observed values to absorb
+# CI-environment drift (different OpenBLAS / glibc / gfortran minor versions)
+# while still tightly catching algorithm regressions.
 DRIVER_SPECS = {
     "driver1": {
         "n":           25,
         "task_prefix": "CONVERGENCE: ",
-        "f_max":       1e-6,    # observed ~1e-9; ~1000x headroom
-        "projg_max":   1e-2,    # not directly bounded by stopping; sanity
+        # factr=1e7 stops on REL_REDUCTION; observed f ~1e-9 (100x margin).
+        "f_max":       1e-7,
+        # projg not directly bounded by stopping criterion; observed ~1.7e-4.
+        "projg_max":   1e-3,
     },
     "driver2": {
         "n":           25,
         "task_prefix": "STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL",
-        "f_max":       1e-6,    # observed ~1e-15; algorithm well-converged
-        "projg_max":   1e-9,    # criterion is < 1e-10*(1+|f|); 10x margin
+        # factr=0, pgtol=0; user stops on |proj g|/(1+|f|) < 1e-10.
+        # Observed f ~6e-15 (~150x margin). Tight enough to catch
+        # convergence regressions without accumulating cross-env noise.
+        "f_max":       1e-12,
+        # User criterion is exactly 1e-10. Bound just above with slack
+        # for FP rounding in the comparison itself.
+        "projg_max":   1.5e-10,
     },
     "driver3": {
         "n":           1000,
         "task_prefix": "STOP: THE PROJECTED GRADIENT IS SUFFICIENTLY SMALL",
-        "f_max":       1e-6,
-        "projg_max":   1e-9,
+        # n=1000 with chain x_{i+1}=x_i^2 squashes f deep below ULP at
+        # convergence; observed 5e-22, but margin is generous since
+        # tail-element drift across BLAS implementations is amplified.
+        "f_max":       1e-15,
+        "projg_max":   1.5e-10,
     },
 }
 

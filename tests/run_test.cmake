@@ -17,6 +17,7 @@ execute_process(
    COMMAND ${CMAKE_COMMAND} -E env
               LBFGSB_JSON_OUTPUT=${WORKDIR}/output.json
               LBFGSB_TLIMIT=86400
+              LBFGSB_NFG_LIMIT=100000
               ${DRIVER}
    WORKING_DIRECTORY ${WORKDIR}
    OUTPUT_QUIET

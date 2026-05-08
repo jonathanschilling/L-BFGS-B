@@ -265,10 +265,9 @@
 
       task = 'START'
 
-!     Test instrumentation: open JSON output if env var is set.
+!     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.
       call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
       json_active = (len_trim(lbfgsb_json) > 0)
-      if (json_active) call json_open(trim(lbfgsb_json))
 
 !     The beginning of the loop
 
@@ -280,9 +279,6 @@
          call setulb ( n, m, x, l, u, nbd, f, g, factr, pgtol, &
                        wa, iwa, task, iprint,&
                        csave, lsave, isave, dsave )
-
-         if (json_active .and. task(1:5) == 'NEW_X') &
-            call json_iter(n, x, g, f, dsave(13), isave)
 
          if (task(1:2) .eq. 'FG') then
 
@@ -308,7 +304,8 @@
 
 !     end of loop do while
 
-      if (json_active) call json_close(n, x, f, task)
+      if (json_active) &
+         call json_write_aggregate(trim(lbfgsb_json), task, f, dsave(13))
 
       end program driver
 

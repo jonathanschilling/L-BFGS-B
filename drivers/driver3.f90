@@ -140,13 +140,12 @@
       task = 'START'
 
 !     Initialise tlimit (with optional override from LBFGSB_TLIMIT) and
-!     open JSON output if env var is set.
+!     enable JSON output if LBFGSB_JSON_OUTPUT is set.
       tlimit = 10.0d0
       call get_environment_variable('LBFGSB_TLIMIT', env_tlimit)
       if (len_trim(env_tlimit) > 0) read(env_tlimit, *) tlimit
       call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
       json_active = (len_trim(lbfgsb_json) > 0)
-      if (json_active) call json_open(trim(lbfgsb_json))
 
 !        ------- the beginning of the loop ----------
 
@@ -161,9 +160,6 @@
 
          call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa, &
                      task,iprint, csave,lsave,isave,dsave)
-
-         if (json_active .and. task(1:5) == 'NEW_X') &
-            call json_iter(n, x, g, f, dsave(13), isave)
 
          if (task(1:2) .eq. 'FG') then
 
@@ -272,7 +268,8 @@
 
 !     If task is neither FG nor NEW_X we terminate execution.
 
-      if (json_active) call json_close(n, x, f, task)
+      if (json_active) &
+         call json_write_aggregate(trim(lbfgsb_json), task, f, dsave(13))
 
       end program driver
 

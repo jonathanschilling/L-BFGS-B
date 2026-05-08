@@ -6,7 +6,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # Pinned to a specific image so image upgrades don't silently flip the
+    # goldens (the algorithm's stopping point depends on FP rounding from
+    # gfortran/openblas, which differ across runner image versions).
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 

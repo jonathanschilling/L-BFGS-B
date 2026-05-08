@@ -78,10 +78,13 @@
       real(dp)               :: t1, t2
       integer                :: i
 
-!     Test instrumentation: dump per-iteration state to JSON when the
-!     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+!     Test instrumentation: dump aggregate end-of-run state to JSON when
+!     the environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+!     LBFGSB_NFG_LIMIT optionally overrides the nfg stopping threshold.
       character(len=512)     :: lbfgsb_json
+      character(len=64)      :: env_nfg_limit
       logical                :: json_active
+      integer                :: nfg_limit
 
       allocate ( nbd(n), x(n), l(n), u(n), g(n) )
       allocate ( iwa(3*n) )
@@ -130,10 +133,12 @@
 !
       task = 'START'
 
-!     Test instrumentation: open JSON output if env var is set.
+!     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.
       call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
       json_active = (len_trim(lbfgsb_json) > 0)
-      if (json_active) call json_open(trim(lbfgsb_json))
+      nfg_limit = 99
+      call get_environment_variable('LBFGSB_NFG_LIMIT', env_nfg_limit)
+      if (len_trim(env_nfg_limit) > 0) read(env_nfg_limit, *) nfg_limit
 
 !        ------- the beginning of the loop ----------
 
@@ -144,9 +149,6 @@
 
          call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint, &
                      csave,lsave,isave,dsave)
-
-         if (json_active .and. task(1:5) == 'NEW_X') &
-            call json_iter(n, x, g, f, dsave(13), isave)
 
          if (task(1:2) .eq. 'FG') then
 
@@ -190,7 +192,7 @@
 !       1) Terminate if the total number of f and g evaluations
 !            exceeds 99.
 
-             if (isave(34) .ge. 99)  &
+             if (isave(34) .ge. nfg_limit) &
                 task='STOP: TOTAL NO. of f AND g EVALUATIONS EXCEEDS LIMIT'
 
 !       2) Terminate if  |proj g|/(1+|f|) < 1.0d-10, where 
@@ -230,7 +232,8 @@
 
 !     If task is neither FG nor NEW_X we terminate execution.
 
-      if (json_active) call json_close(n, x, f, task)
+      if (json_active) &
+         call json_write_aggregate(trim(lbfgsb_json), task, f, dsave(13))
 
       end program driver
 

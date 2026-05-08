@@ -278,10 +278,9 @@ c     We start the iteration by initializing task.
 c
       task = 'START'
 
-c     Test instrumentation: open JSON output if env var is set.
+c     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.
       call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
       json_active = (len_trim(lbfgsb_json) .gt. 0)
-      if (json_active) call json_open(trim(lbfgsb_json))
 
 c        ------- the beginning of the loop ----------
 
@@ -291,9 +290,6 @@ c     This is the call to the L-BFGS-B code.
 
       call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,
      +            csave,lsave,isave,dsave)
-
-      if (json_active .and. task(1:5) .eq. 'NEW_X')
-     +   call json_iter(n, x, g, f, dsave(13), isave)
 
       if (task(1:2) .eq. 'FG') then
 c        the minimization routine has returned to request the
@@ -330,7 +326,10 @@ c           ---------- the end of the loop -------------
 
 c     If task is neither FG nor NEW_X we terminate execution.
 
-      if (json_active) call json_close(n, x, f, task)
+      if (json_active) then
+         call json_write_aggregate(trim(lbfgsb_json), task, f,
+     +                             dsave(13))
+      endif
 
       stop
 

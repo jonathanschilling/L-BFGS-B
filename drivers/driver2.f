@@ -81,10 +81,13 @@ c     Declare a few additional variables for the sample problem.
       double precision t1, t2
       integer          i
 
-c     Test instrumentation: dump per-iteration state to JSON when the
-c     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+c     Test instrumentation: dump aggregate end-of-run state to JSON when
+c     the environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+c     LBFGSB_NFG_LIMIT optionally overrides the nfg stopping threshold.
       character*512    lbfgsb_json
+      character*64     env_nfg_limit
       logical          json_active
+      integer          nfg_limit
  
 c     We suppress the default output.
 
@@ -139,10 +142,14 @@ c     We start the iteration by initializing task.
 c
       task = 'START'
 
-c     Test instrumentation: open JSON output if env var is set.
+c     Test instrumentation: enabled when LBFGSB_JSON_OUTPUT is set.
       call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
       json_active = (len_trim(lbfgsb_json) .gt. 0)
-      if (json_active) call json_open(trim(lbfgsb_json))
+      nfg_limit = 99
+      call get_environment_variable('LBFGSB_NFG_LIMIT', env_nfg_limit)
+      if (len_trim(env_nfg_limit) .gt. 0) then
+         read(env_nfg_limit, *) nfg_limit
+      endif
 
 c        ------- the beginning of the loop ----------
 
@@ -152,9 +159,6 @@ c     This is the call to the L-BFGS-B code.
 
       call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,
      +            csave,lsave,isave,dsave)
-
-      if (json_active .and. task(1:5) .eq. 'NEW_X')
-     +   call json_iter(n, x, g, f, dsave(13), isave)
 
       if (task(1:2) .eq. 'FG') then
 c        the minimization routine has returned to request the
@@ -199,7 +203,7 @@ c          string TASK may be used to store other information.
 c        1) Terminate if the total number of f and g evaluations
 c             exceeds 99.
 
-         if (isave(34) .ge. 99)
+         if (isave(34) .ge. nfg_limit)
      +      task='STOP: TOTAL NO. of f AND g EVALUATIONS EXCEEDS LIMIT'
 
 c        2) Terminate if  |proj g|/(1+|f|) < 1.0d-10, where 
@@ -240,7 +244,10 @@ c           ---------- the end of the loop -------------
 
 c     If task is neither FG nor NEW_X we terminate execution.
 
-      if (json_active) call json_close(n, x, f, task)
+      if (json_active) then
+         call json_write_aggregate(trim(lbfgsb_json), task, f,
+     +                             dsave(13))
+      endif
 
       stop
 

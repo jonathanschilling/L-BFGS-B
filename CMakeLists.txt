@@ -6,6 +6,15 @@ project(lbfgsb Fortran)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+# Force every variable to be explicitly declared. The original F77 sources
+# rely on implicit typing in places, but at least one historical bug
+# (uninitialised `one` in src/bmv.f, used as alpha in dtrsm) slipped through
+# because of it; fixing was a one-line declaration. Make new instances fail
+# at compile time. gfortran-specific.
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+   add_compile_options(-fimplicit-none)
+endif()
+
 # Optional coverage instrumentation. Enable with -DLBFGSB_COVERAGE=ON.
 # Adds gcov/gcovr-compatible flags to liblbfgsb and to test executables.
 # Used by the per-subroutine unit-test gate; see tests/unit/.

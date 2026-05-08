@@ -51,7 +51,8 @@ c
 c     ************
 
       integer          i,k,i2
-      double precision sum
+      double precision sum,one
+      parameter        (one=1.0d0)
 
       if (col .eq. 0) return
 

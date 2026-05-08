@@ -2,9 +2,9 @@
 #
 # Required cache variables:
 #   DRIVER          path to the driver executable to run
-#   EXPECTED        path to the committed reference JSON
+#   DRIVER_NAME     short name (driver1_f77, driver1_f90, ...) used by the checker
 #   WORKDIR         per-test scratch directory (created here)
-#   COMPARE_SCRIPT  path to compare_json.py
+#   CHECK_SCRIPT    path to check_output.py
 #   PYTHON          python interpreter
 
 file(MAKE_DIRECTORY ${WORKDIR})
@@ -13,13 +13,14 @@ file(REMOVE
    ${WORKDIR}/iterate.dat
 )
 
+# LBFGSB_TLIMIT and LBFGSB_NFG_LIMIT are set high so the algorithm reaches
+# the gradient-based stopping criterion (driver2/driver3 otherwise abort
+# at arbitrary eval-count or wallclock caps before convergence).
 execute_process(
    COMMAND ${CMAKE_COMMAND} -E env
               LBFGSB_JSON_OUTPUT=${WORKDIR}/output.json
               LBFGSB_TLIMIT=86400
               LBFGSB_NFG_LIMIT=100000
-              OPENBLAS_NUM_THREADS=1
-              OMP_NUM_THREADS=1
               ${DRIVER}
    WORKING_DIRECTORY ${WORKDIR}
    OUTPUT_QUIET
@@ -34,14 +35,9 @@ if(NOT EXISTS ${WORKDIR}/output.json)
 endif()
 
 execute_process(
-   COMMAND ${PYTHON} ${COMPARE_SCRIPT} ${EXPECTED} ${WORKDIR}/output.json
-   RESULT_VARIABLE cmp_rc
+   COMMAND ${PYTHON} ${CHECK_SCRIPT} ${DRIVER_NAME} ${WORKDIR}/output.json
+   RESULT_VARIABLE chk_rc
 )
-if(NOT cmp_rc EQUAL 0)
-   message(FATAL_ERROR
-      "JSON mismatch.\n"
-      "  expected: ${EXPECTED}\n"
-      "  actual:   ${WORKDIR}/output.json\n"
-      "If the algorithm change is intentional, run tests/regenerate_expected.sh and review the diff."
-   )
+if(NOT chk_rc EQUAL 0)
+   message(FATAL_ERROR "Output check failed for ${DRIVER_NAME}: ${WORKDIR}/output.json")
 endif()

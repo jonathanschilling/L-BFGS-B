@@ -1,5 +1,5 @@
-# Integration tests: run each driver with JSON instrumentation and compare
-# the output to a committed golden file using a relative-absolute tolerance.
+# Integration tests: run each driver and verify its output against
+# mathematically-derived bounds (see check_output.py).
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
@@ -17,9 +17,9 @@ foreach(drv IN LISTS LBFGSB_TEST_DRIVERS)
       NAME ${drv}
       COMMAND ${CMAKE_COMMAND}
          -DDRIVER=$<TARGET_FILE:${drv}>
-         -DEXPECTED=${CMAKE_CURRENT_SOURCE_DIR}/expected/${drv}.json
+         -DDRIVER_NAME=${drv}
          -DWORKDIR=${CMAKE_CURRENT_BINARY_DIR}/${drv}
-         -DCOMPARE_SCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/compare_json.py
+         -DCHECK_SCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/check_output.py
          -DPYTHON=${Python3_EXECUTABLE}
          -P ${CMAKE_CURRENT_SOURCE_DIR}/run_test.cmake
    )

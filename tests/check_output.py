@@ -1,29 +1,32 @@
 #!/usr/bin/env python3
-"""Check a driver's JSON output against mathematically-derived bounds.
+"""Check a driver's JSON output against bit-tight bounds.
 
-We do not record bit-level golden outputs because the L-BFGS-B
-trajectory is sensitive to FP rounding (gfortran version, BLAS
-implementation, thread count, CPU dispatch) and goldens captured on
-one machine fail on another. Instead, each driver has a small spec
-derived from its source code's stopping criteria and bound setup
-(drivers/driver*.f / .f90). The test verifies the algorithm satisfied
-its own contract:
+Each driver has a small spec (DRIVER_SPECS below) giving an upper bound
+on the converged final_f and final_projg. The bounds are tight (~5-200x
+above the values observed locally and in ubuntu:24.04 Docker after the
+bmv `one` fix made the algorithm bit-deterministic on a single host
+and within ~1 ULP across environments). They reflect each driver's
+specific stopping criterion:
 
+    * driver1 (factr=1e7): stops on f-rate-of-decrease, lands at f~1e-9
+    * driver2 (factr=0, pgtol=0, custom |projg|<1e-10): lands at f~1e-15
+    * driver3 (same custom rule, n=1000): lands at f~1e-22 with chain
+      x_{i+1}=x_i^2 squashing the tail
+
+The test verifies the algorithm satisfied its own contract:
     * final_task starts with the expected stopping reason
-    * final_f and final_projg are within the bounds implied by the
-      stopping criterion (with comfortable headroom)
+    * final_f and final_projg are below the per-driver thresholds
     * final_x is feasible (every component within its declared bounds)
 
-This catches:
+It catches:
     * algorithm fails to converge (wrong final_task, or values blow up)
     * algorithm converges to a wrong stationary point (final_f stays
       large; the unique critical point of bound-Rosenbrock is all-1's
       which gives f=0)
     * algorithm produces NaN / out-of-bounds x
-
-It does not catch subtle convergence-quality regressions (e.g. an
-extra iteration here or there). For this Fortran 77 library that's
-the right trade.
+    * any meaningful convergence-quality regression (since the bounds
+      are within 200x of observed; an extra factor of 10 in final f
+      becomes a CI failure)
 
 Usage:  check_output.py <driver_name> <output.json>
         driver_name is one of {driver1, driver2, driver3}_{f77, f90}

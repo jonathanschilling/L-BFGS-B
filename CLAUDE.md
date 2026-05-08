@@ -10,7 +10,11 @@ A repackaging of the original Fortran 77 **L-BFGS-B 3.0** code (Zhu, Byrd, Lu, N
 2. Comments were converted to Doxygen markup (`c>` / `!>` prefixes).
 3. The bundled BLAS/LINPACK was removed; the library now links against system BLAS/LAPACK. Specifically, `dtrsl` was replaced by LAPACK's `dtrsm` and `dpofa` by LAPACK's `dpotrf`. Keep this substitution in mind when comparing against any other L-BFGS-B fork.
 
-There is **no test suite**. The `drivers/*.f` and `drivers/*.f90` files are example programs (extended Rosenbrock with bounds), not tests — running them is the only smoke check available.
+There is a two-tier test suite under `tests/`:
+- **Integration tests** (`tests/check_output.py`, 6 ctest entries): run each `drivers/driver{1,2,3}_f{77,90}` and verify final f / projg / x against bit-tight bounds derived from each driver's stopping criterion (see `tests/check_output.py:DRIVER_SPECS`). Drivers emit a JSON dump when `LBFGSB_JSON_OUTPUT` is set; the checker reads that.
+- **Per-subroutine unit tests** (`tests/unit/test_<sub>.f90`, 17 ctest entries): hand-crafted test inputs for each in-scope subroutine (timer + prn{1,2,3}lb are out of scope per CLAUDE-tracked decision; everything else has its own `test_*.f90`). A coverage gate (`tests/unit/check_branch_coverage.py`) runs as the 24th ctest entry and fails if line coverage drops below 90% on the in-scope src/ files.
+
+CI runs in `.github/workflows/test.yml` — two jobs, both required: `test` (Release build, integration tests) and `unit_tests` (coverage build, full ctest + gcovr report uploaded).
 
 ## Build
 
@@ -20,9 +24,12 @@ CMake-based, requires system BLAS and LAPACK:
 mkdir build && cd build
 cmake ..
 make -j
+ctest --output-on-failure        # run the suite
 ```
 
-This produces `liblbfgsb.so` and six driver executables (`driver{1,2,3}_f{77,90}`) in `build/`. Each driver writes an `iterate.dat` file when run; these are gitignored along with `x.*` outputs.
+This produces `liblbfgsb.so` and six driver executables (`driver{1,2,3}_f{77,90}`) in `build/`. Each driver writes an `iterate.dat` file when run with `iprint > 0`, and a JSON summary when `LBFGSB_JSON_OUTPUT` is set; both are gitignored along with `x.*` outputs.
+
+For coverage builds: `cmake -DLBFGSB_COVERAGE=ON ..; make; make coverage` (requires `gcovr`).
 
 When adding a new source file: edit `src/CMakeLists.txt` to append it to `liblbfgsb_src` (the parent-scope variable pattern is intentional — `src/CMakeLists.txt` does not define a target itself).
 
@@ -47,6 +54,8 @@ One subroutine per file, with the filename matching the subroutine name. Doxygen
 
 ## Documentation
 
-Doxygen config is in `Doxyfile`. The GitHub Actions workflow `.github/workflows/doxygen.yml` runs doxygen on every push, builds the LaTeX manual, and on `master` deploys HTML + `L-BFGS-B.pdf` to the `gh-pages` branch. There is no other CI — no compile check, no driver run. Breaking the build will not be caught by CI.
+Doxygen config is in `Doxyfile`. The GitHub Actions workflow `.github/workflows/doxygen.yml` runs doxygen on every push, builds the LaTeX manual, and on `master` deploys HTML + `L-BFGS-B.pdf` to the `gh-pages` branch. The other CI workflow is `.github/workflows/test.yml` (see Build section) which catches build/test regressions.
 
 Reference PDFs (algorithm paper, ACM remark, original code listing) live in `docs/`.
+
+Caveat about Doxygen `@param` blocks: most are accurate, but the original Doxygen conversion pass left "TODO" placeholders for many parameters in `cmprlb`, `active`, `freev`, `lnsrlb`, `matupd`, `prn2lb`, `prn3lb` (75 occurrences total). Treat the source code as the source of truth for those; the algorithm paper in `docs/algorithm.pdf` is the authoritative reference for the math.

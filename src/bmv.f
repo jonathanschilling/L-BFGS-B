@@ -29,9 +29,11 @@ c> @param p On entry p is unspecified.<br/>
 c>          On exit p is the product Mv.
 c>
 c> @param info On entry info is unspecified.<br/>
-c>             On exit info = <ul><li>0       for normal return,</li>
-c>                                <li>nonzero for abnormal return when the system
-c>                                    to be solved by dtrsl is singular.</li></ul>
+c>             On exit info is always 0. (The original LINPACK dtrsl
+c>             could set info nonzero on a singular triangular system;
+c>             the LAPACK dtrsm replacement does not return such a
+c>             status, so bmv now sets info = 0 unconditionally and
+c>             callers checking "if info /= 0 ... return" hit dead code.)
       subroutine bmv(m, sy, wt, col, v, p, info)
 
       integer m, col, info

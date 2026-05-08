@@ -17,9 +17,12 @@ c>                                      <li> 3   if l(i)=u(i),</li>
 c>                                      <li> 0   otherwise.</li></ul>
 c>               In cauchy, iwhere is given finer gradations.
 c> @param iprint console output flag
-c> @param prjctd TODO
-c> @param cnstnd TODO
-c> @param boxed TODO
+c> @param prjctd On exit .true. if any input x(i) had to be clipped onto its
+c>                bound (the user supplied an infeasible starting point).
+c> @param cnstnd On exit .true. if any variable has at least one bound
+c>               (any nbd(i) /= 0); .false. for purely unconstrained problems.
+c> @param boxed On exit .true. iff every variable has both lower and upper
+c>              bounds (every nbd(i) == 2); .false. otherwise.
 c 
 c                           *  *  *
 c 

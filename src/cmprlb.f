@@ -14,16 +14,32 @@ c> @param ws part of L-BFGS matrix
 c> @param wy part of L-BFGS matrix
 c> @param sy part of L-BFGS matrix
 c> @param wt part of L-BFGS matrix
-c> @param z TODO
-c> @param r TODO
-c> @param wa TODO
-c> @param index TODO
-c> @param theta TODO
-c> @param col TODO
-c> @param head TODO
-c> @param nfree TODO
-c> @param cnstnd TODO
-c> @param info TODO
+c> @param z The generalized Cauchy point xcp computed by cauchy.
+c>          Used here as the linearisation point: r encodes -B(z-x) - g
+c>          restricted to the free variables.
+c> @param r On exit r(1:nfree) contains -theta*(z(k)-x(k)) - g(k) plus the
+c>          W*M^{-1}*W' correction, where k = index(i). Caller uses this as
+c>          the residual for the subspace minimisation problem.
+c>          When cnstnd=.false. and col>0, the shortcut path sets
+c>          r(1:n) = -g(:) without using the index array.
+c> @param wa Length-4m workspace shared with cauchy. On entry, the segment
+c>           wa(2m+1 : 2m+2col) holds W'(z-x) (filled by cauchy). On exit
+c>           wa(1 : 2col) holds M^{-1}*W'(z-x) from the bmv call.
+c> @param index Permutation of (1..n): index(1..nfree) lists the indices of
+c>              variables that are free at the GCP and are the active
+c>              optimisation variables here.
+c> @param theta Scaling factor specifying the initial Hessian B_0 = theta*I.
+c> @param col Number of stored (s,y) correction pairs (0 on the first
+c>            iteration; up to m thereafter).
+c> @param head Index in the cyclic WS/WY buffer of the oldest stored
+c>             correction. Used to walk the columns in chronological order.
+c> @param nfree Number of free variables; size of the subspace problem.
+c> @param cnstnd .true. if the problem has bounds; controls the shortcut
+c>               path described under @param r.
+c> @param info Error code from the embedded bmv call. With the current
+c>             dtrsm-based bmv this is always 0 (see bmv.f); the code path
+c>             that maps a nonzero info to -8 is dead but kept for the
+c>             event of a future BLAS substitution.
       subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, 
      +                 theta, col, head, nfree, cnstnd, info)
  

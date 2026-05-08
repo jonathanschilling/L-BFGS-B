@@ -72,10 +72,8 @@ c       solve Jp2=v2+LD^(-1)v1.
          p(i2) = v(i2) + sum
   20  continue
 c     Solve the triangular system
-      !call dtrsl(wt,m,col,p(col+1),11,info)
       call dtrsm('l','u','t','n',col,1,one,wt,m,p(col+1),col)
       info = 0
-      !if (info .ne. 0) return
 
 c       solve D^(1/2)p1=v1.
       do 30 i = 1, col
@@ -86,8 +84,6 @@ c     PART II: solve [ -D^(1/2)   D^(-1/2)*L'  ] [ p1 ] = [ p1 ]
 c                    [  0         J'           ] [ p2 ]   [ p2 ].
 
 c       solve J^Tp2=p2.
-      !call dtrsl(wt,m,col,p(col+1),01,info)
-      !if (info .ne. 0) return
       call dtrsm('l','u','n','n',col,1,one,wt,m,p(col+1),col)
       info = 0
 

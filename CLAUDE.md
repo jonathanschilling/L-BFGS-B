@@ -57,5 +57,3 @@ One subroutine per file, with the filename matching the subroutine name. Doxygen
 Doxygen config is in `Doxyfile`. The GitHub Actions workflow `.github/workflows/doxygen.yml` runs doxygen on every push, builds the LaTeX manual, and on `master` deploys HTML + `L-BFGS-B.pdf` to the `gh-pages` branch. The other CI workflow is `.github/workflows/test.yml` (see Build section) which catches build/test regressions.
 
 Reference PDFs (algorithm paper, ACM remark, original code listing) live in `docs/`.
-
-Caveat about Doxygen `@param` blocks: most are accurate, but the original Doxygen conversion pass left "TODO" placeholders for many parameters in `cmprlb`, `active`, `freev`, `lnsrlb`, `matupd`, `prn2lb`, `prn3lb` (75 occurrences total). Treat the source code as the source of truth for those; the algorithm paper in `docs/algorithm.pdf` is the authoritative reference for the math.

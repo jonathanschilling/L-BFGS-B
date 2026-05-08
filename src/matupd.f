@@ -28,10 +28,19 @@ c>
 c> @param ss On entry this stores S'S, that defines the
 c>              limited memory BFGS matrix.<br/>
 c>           On exit this array is unchanged.
-c> @param d TODO
-c> @param r TODO
-c> @param itail TODO
-c> @param iupdat TODO
+c> @param d Search direction at the current iteration. After the line
+c>           search, the new s-vector is stp*d; matupd stores it as a
+c>           column of WS (writing d directly, since the stp scaling is
+c>           folded into the stored ss diagonal entry below).
+c> @param r The accepted gradient difference y = g_{k+1} - g_k. Stored as
+c>          a column of WY.
+c> @param itail On entry the column index in WS/WY that the previous
+c>              update wrote. On exit the column index this update wrote;
+c>              advances cyclically modulo m.
+c> @param iupdat Total number of L-BFGS updates performed so far
+c>               (incremented by mainlb before each matupd call). When
+c>               iupdat <= m, col simply grows; when iupdat > m, the
+c>               history wraps and the oldest column is discarded.
 c> @param col On entry col is the actual number of variable metric
 c>               corrections stored so far.<br/>
 c>            On exit col is unchanged.
@@ -42,10 +51,16 @@ c>             On exit col is unchanged.
 c>
 c> @param theta On entry theta is the scaling factor specifying B_0 = theta I.<br/>
 c>              On exit theta is unchanged.
-c> @param rr TODO
-c> @param dr TODO
-c> @param stp TODO
-c> @param dtd TODO
+c> @param rr Squared 2-norm of r (i.e. ||y||^2 = y'y). Used to set
+c>           theta := rr/dr = y'y / (s'y), the standard initial Hessian
+c>           scaling for the next L-BFGS update.
+c> @param dr Inner product d'r = s'y / stp (the curvature condition; must
+c>           be positive for the update to be safely accepted -- mainlb
+c>           checks this and skips matupd if dr <= eps*rr).
+c> @param stp Line-search step length. Used to recover the s-vector from
+c>            d (s = stp*d) when computing ss(col,col) = stp^2 * d'd.
+c> @param dtd Squared 2-norm of d (i.e. d'd). Combined with stp to form
+c>            ss(col,col) = stp^2 * dtd = ||s||^2 for the new column.
       subroutine matupd(n, m, ws, wy, sy, ss, d, r, itail, 
      +                  iupdat, col, head, theta, rr, dr, stp, dtd)
  

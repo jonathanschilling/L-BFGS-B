@@ -202,8 +202,6 @@ c     Compute wv:=K^(-1)wv.
       m2 = 2*m
       col2 = 2*col
 
-      !call dtrsl(wn,m2,col2,wv,11,info)
-      !if (info .ne. 0) return
       call dtrsm('l','u','t','n',col2,1,one,wn,m2,wv,col2)
       info = 0
 
@@ -211,8 +209,6 @@ c     Compute wv:=K^(-1)wv.
          wv(i) = -wv(i)
   25     continue
 
-      !call dtrsl(wn,m2,col2,wv,01,info)
-      !if (info .ne. 0) return
       call dtrsm('l','u','n','n',col2,1,one,wn,m2,wv,col2)
       info = 0
 

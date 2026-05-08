@@ -30,16 +30,26 @@ c>                                summarize the iteration.
 c> 
 c> @param itfile unit number of iterate.dat file
 c>
-c> @param iter TODO
-c> @param nfgv TODO
-c> @param nact TODO
-c> @param sbgnrm TODO
-c> @param nseg TODO
-c> @param word TODO
-c> @param iword TODO
-c> @param iback TODO
-c> @param stp TODO
-c> @param xstep TODO
+c> @param iter Current outer iteration number; printed on the per-iterate
+c>              summary line.
+c> @param nfgv Cumulative number of f/g evaluations across the whole run;
+c>             logged into the iterate.dat record.
+c> @param nact Number of variables active at their bounds at the current
+c>             iterate.
+c> @param sbgnrm Infinity norm of the projected gradient at x; the natural
+c>               first-order optimality measure printed alongside f.
+c> @param nseg Number of breakpoint segments traversed by cauchy at the
+c>             current iteration; printed for diagnostic accounting.
+c> @param word On exit a 3-character status code summarising the subspace
+c>             solution: 'con' (converged), 'bnd' (hit a bound), 'TNT'
+c>             (truncated-Newton step used), or '---' otherwise. Determined
+c>             from iword.
+c> @param iword Status code from subsm: 0 = subspace minimisation
+c>              converged, 1 = stopped at a bound, 5 = truncated-Newton
+c>              step used. Maps to word.
+c> @param iback Number of backtracks the line search performed.
+c> @param stp Final step length accepted by the line search.
+c> @param xstep stp * ||d|| -- the actual length of the step in x-space.
       subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, 
      +                  sbgnrm, nseg, word, iword, iback, stp, xstep)
  

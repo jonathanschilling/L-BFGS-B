@@ -16,27 +16,54 @@ c>                          <li>3 if x(i) has only an upper bound.</li></ul>
 c>            On exit nbd is unchanged.
 c> @param x position
 c> @param f function value at x
-c> @param fold TODO
-c> @param gd TODO
-c> @param gdold TODO
-c> @param g gradient of f at x
-c> @param d TODO
-c> @param r TODO
-c> @param t TODO
-c> @param z TODO
-c> @param stp TODO
-c> @param dnorm TODO
-c> @param dtd TODO
-c> @param xstep TODO
-c> @param stpmx TODO
-c> @param iter TODO
-c> @param ifun TODO
-c> @param iback TODO
-c> @param nfgv TODO
-c> @param info TODO
-c> @param task TODO
-c> @param boxed TODO
-c> @param cnstnd TODO
+c> @param fold Function value at the start of this line search (i.e. the
+c>              accepted value from the previous iteration). Saved at entry
+c>              so the caller can restore x, g, f if the line search fails.
+c> @param gd Directional derivative g'd at the current trial step. Computed
+c>           on every entry and passed to dcsrch as its `g` argument.
+c> @param gdold Directional derivative at stp=0 (i.e. the initial g'd before
+c>              any line-search progress this iteration). Saved on the first
+c>              call and used by mainlb to test the curvature condition
+c>              after the line search returns.
+c> @param g Gradient of f at x.
+c> @param d Search direction (z - x_current). Length-n vector; the candidate
+c>          step is t + stp*d.
+c> @param r Workspace: copy of g at the start of this line search. Used
+c>          alongside fold to restore the previous iterate on abnormal
+c>          line-search termination (mainlb does the restore from r and t).
+c> @param t Workspace: copy of x at the start of this line search.
+c> @param z Pre-projected candidate (cauchy/subsm output). When stp=1
+c>          exactly, lnsrlb sets x := z directly; otherwise it computes
+c>          x := t + stp*d.
+c> @param stp Current trial step length. On the first entry of a line
+c>            search lnsrlb initialises stp; subsequent dcsrch calls
+c>            update it.
+c> @param dnorm 2-norm of d (||d||).
+c> @param dtd Squared 2-norm of d (d'd).
+c> @param xstep On exit stp * ||d||, the actual length of the step in x-space.
+c> @param stpmx Maximum allowed step. For unconstrained problems set to a
+c>              large constant (1e10); for bounded problems lnsrlb scans
+c>              the active bounds and tightens stpmx so x + stpmx*d stays
+c>              feasible.
+c> @param iter Outer iteration number from mainlb.
+c> @param ifun On exit number of f/g evaluations performed in this line
+c>             search; reset to 0 on each new line search.
+c> @param iback On exit number of "backtracks" (ifun - 1). mainlb aborts
+c>              the line search if iback >= 20.
+c> @param nfgv Cumulative count of f/g evaluations across all iterations;
+c>             incremented by 1 per evaluation requested.
+c> @param info On exit 0 on success; -4 if the projected directional
+c>             derivative gd is non-negative on the first call (no descent
+c>             possible).
+c> @param task Reverse-comm task. Initial entry: 'START'. While the line
+c>             search is running, lnsrlb returns 'FG_LNSRCH' (the user
+c>             evaluates f, g at the new x and re-enters with task starting
+c>             with 'FG_LN'). On line-search success lnsrlb returns 'NEW_X'.
+c> @param boxed .true. if every variable has both lower and upper bounds.
+c>              When true, the initial trial step is unit (stp=1) regardless
+c>              of d's magnitude.
+c> @param cnstnd .true. if the problem has at least one bound. Controls the
+c>               stpmx-from-bounds scan.
 c> @param csave working array
 c> @param isave working array
 c> @param dsave working array

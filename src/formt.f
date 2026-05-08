@@ -61,7 +61,6 @@ c        store T in the upper triangle of the array wt.
 c     Cholesky factorize T to J*J' with
 c        J' stored in the upper triangle of wt.
 
-      !call dpofa(wt,m,col,info)
       call dpotrf('U',col,wt,m,info)
       if (info .ne. 0) then
          info = -3

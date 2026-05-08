@@ -16,19 +16,34 @@ c>              On entry after the first iteration, index gives
 c>                the free variables at the previous iteration.<br/>
 c>              On exit it gives the free variables based on the determination
 c>                in cauchy using the array iwhere.
-c> @param nenter TODO
-c> @param ileave TODO
+c> @param nenter On exit nenter is the number of variables that entered the
+c>                free set this iteration (were active, now free at the GCP).
+c> @param ileave On exit indx2(ileave),...,indx2(n) list the variables that
+c>               left the free set this iteration. ileave starts at n+1 and
+c>               is decremented each time a leaving variable is recorded.
 c> @param indx2 On entry indx2 is unspecified.<br/>
 c>              On exit with iter>0, indx2 indicates which variables
 c>                 have changed status since the previous iteration.<br/>
 c>              For i= 1,...,nenter, indx2(i) have changed from bound to free.<br/>
-c>              For i= ileave+1,...,n, indx2(i) have changed from free to bound.<br/>
-c> @param iwhere TODO
-c> @param wrk TODO
-c> @param updatd TODO
-c> @param cnstnd indicating whether bounds are present
-c> @param iprint control screen output
-c> @param iter TODO
+c>              For i= ileave+1,...,n, indx2(i) have changed from free to bound.
+c> @param iwhere On entry iwhere(i) classifies each variable's bound status
+c>               (set by cauchy): <=0 means free at GCP, >0 means at-bound.
+c>               Used here to compare against the previous index/nfree to
+c>               detect leaving and entering variables.
+c> @param wrk On exit .true. if the active-set or L-BFGS bookkeeping has
+c>            changed enough that the workspace WN needs to be rebuilt
+c>            (some variable entered/left, or updatd is .true.).
+c> @param updatd On entry .true. if the L-BFGS matrix was updated in the
+c>               previous iteration. Combined with the entering/leaving
+c>               counts to set wrk.
+c> @param cnstnd Whether bounds are present (true if at least one variable
+c>               is bounded). When false, the entering/leaving counting
+c>               loop is skipped.
+c> @param iprint Console output flag (>=99 prints summary, >=100 prints
+c>               per-variable change records).
+c> @param iter Current outer iteration number. The entering/leaving
+c>             counting loop only runs when iter > 0 (the first iteration
+c>             has no "previous" set to compare against).
       subroutine freev(n, nfree, index, nenter, ileave, indx2, 
      +                 iwhere, wrk, updatd, cnstnd, iprint, iter)
 

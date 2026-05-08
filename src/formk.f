@@ -278,7 +278,6 @@ c                                    [(-L_a +R_z)L'^-1   S'AA'S*theta  ]
 
 c        first Cholesky factor (1,1) block of wn to get LL'
 c                          with L' stored in the upper triangle of wn.
-      !call dpofa(wn,m2,col,info)
       call dpotrf('U',col,wn,m2,info)
 
       if (info .ne. 0) then
@@ -287,10 +286,8 @@ c                          with L' stored in the upper triangle of wn.
       endif
 c        then form L^-1(-L_a'+R_z') in the (1,2) block.
       col2 = 2*col
+c     TODO: can combine this loop into a single dtrsm call?
       do 71 js = col+1 ,col2
-         !call dtrsl(wn,m2,col,wn(1,js),11,info)
-
-         ! TODO: can combine this loop into a single dtrsm call?
          call dtrsm('l','u','t','n',col,1,one,wn,m2,wn(1,js),col)
   71  continue
 
@@ -306,7 +303,6 @@ c        upper triangle of (2,2) block of wn.
 
 c     Cholesky factorization of (2,2) block of wn.
 
-      !call dpofa(wn(col+1,col+1),m2,col,info)
       call dpotrf('U',col,wn(col+1,col+1),m2,info)
 
       if (info .ne. 0) then

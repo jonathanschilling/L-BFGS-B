@@ -19,25 +19,40 @@ c>          On final exit f is the value of the function at x.
 c> 
 c> @param task working string indicating
 c>             the current job when entering and leaving this subroutine.
-c> @param iprint TODO
-c> @param info TODO
+c> @param iprint Console output flag; same convention as in setulb.
+c>                Negative suppresses all output. >=0 prints the per-run
+c>                summary. >=1 also writes to iterate.dat. >=100 also
+c>                prints the final x vector.
+c> @param info Termination status. 0 on normal convergence. Negative
+c>             values map to specific error messages: -1, -2 (Cholesky
+c>             not pos.def. in formk's 1st/2nd factor), -3 (formt's
+c>             Cholesky), -4 (non-descent direction caught by lnsrlb),
+c>             -5 (>10 evals in a line search), -6 (invalid nbd(k)),
+c>             -7 (l(k) > u(k)), -8 (singular triangular system), -9
+c>             (>20 evals in the last line search).
 c> @param itfile unit number of iterate.dat file
-c> @param iter TODO
-c> @param nfgv TODO
-c> @param nintol TODO
-c> @param nskip TODO
-c> @param nact TODO
-c> @param sbgnrm TODO
-c> @param time TODO
-c> @param nseg TODO
-c> @param word TODO
-c> @param iback TODO
-c> @param stp TODO
-c> @param xstep TODO
-c> @param k TODO
-c> @param cachyt TODO
-c> @param sbtime TODO
-c> @param lnscht TODO
+c> @param iter Total number of outer iterations.
+c> @param nfgv Total number of f/g evaluations across the run.
+c> @param nintol Total number of breakpoint segments traversed by cauchy.
+c> @param nskip Number of L-BFGS updates that were skipped because the
+c>              curvature condition failed (s'y too small).
+c> @param nact Number of active bounds at the final generalised Cauchy point.
+c> @param sbgnrm Final infinity norm of the projected gradient at x.
+c> @param time Total wall-clock time of the optimisation run, in seconds.
+c> @param nseg Number of breakpoint segments traversed at the LAST cauchy
+c>             call (used in the iterate.dat record on abnormal exits).
+c> @param word 3-character status code from prn2lb: 'con', 'bnd', 'TNT',
+c>             or '---' (see prn2lb.f). Logged in iterate.dat on info=-4
+c>             or info=-9 termination.
+c> @param iback Number of backtracks in the LAST line search.
+c> @param stp Final step length from the LAST line search.
+c> @param xstep stp * ||d|| from the LAST line search (i.e. the actual
+c>              step length in x-space).
+c> @param k Index of the offending parameter when info is -6 (invalid
+c>          nbd) or -7 (infeasible bound). Set by errclb.
+c> @param cachyt Cumulative wall-clock time spent in cauchy, in seconds.
+c> @param sbtime Cumulative wall-clock time spent in subsm, in seconds.
+c> @param lnscht Cumulative wall-clock time spent in lnsrlb, in seconds.
       subroutine prn3lb(n, x, f, task, iprint, info, itfile, 
      +                  iter, nfgv, nintol, nskip, nact, sbgnrm, 
      +                  time, nseg, word, iback, stp, xstep, k, 

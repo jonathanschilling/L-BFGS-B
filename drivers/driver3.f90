@@ -47,13 +47,14 @@
 !     **************
 
       program driver
+      use json_writer
 
 !     This time-controlled driver shows that it is possible to terminate
 !     a run by elapsed CPU time, and yet be able to print all desired
 !     information. This driver also illustrates the use of two
 !     stopping criteria that may be used in conjunction with a limit
-!     on execution time. The sample problem used here is the same as in 
-!     driver1 and driver2 (the extended Rosenbrock function with bounds 
+!     on execution time. The sample problem used here is the same as in
+!     driver1 and driver2 (the extended Rosenbrock function with bounds
 !     on the variables).
 
       implicit none
@@ -69,8 +70,8 @@
 
       integer,  parameter    :: n = 1000, m = 10, iprint = -1
       integer,  parameter    :: dp = kind(1.0d0)
-      real(dp), parameter    :: factr  = 0.0d0, pgtol  = 0.0d0, &
-                                tlimit = 10.0d0
+      real(dp), parameter    :: factr  = 0.0d0, pgtol  = 0.0d0
+      real(dp)               :: tlimit
 !
       character(len=60)      :: task, csave
       logical                :: lsave(4)
@@ -82,6 +83,13 @@
 !
       real(dp)               :: t1, t2, time1, time2
       integer                :: i, j
+
+!     Test instrumentation: dump per-iteration state to JSON when the
+!     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+!     LBFGSB_TLIMIT optionally overrides tlimit for reproducibility.
+      character(len=512)     :: lbfgsb_json
+      character(len=64)      :: env_tlimit
+      logical                :: json_active
 
       allocate ( nbd(n), x(n), l(n), u(n), g(n) )
       allocate ( iwa(3*n) )
@@ -128,8 +136,17 @@
              /,5x, ' (f = 0.0 at the optimal solution.)',/) 
 
 !     We start the iteration by initializing task.
- 
+
       task = 'START'
+
+!     Initialise tlimit (with optional override from LBFGSB_TLIMIT) and
+!     open JSON output if env var is set.
+      tlimit = 10.0d0
+      call get_environment_variable('LBFGSB_TLIMIT', env_tlimit)
+      if (len_trim(env_tlimit) > 0) read(env_tlimit, *) tlimit
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) > 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
 
 !        ------- the beginning of the loop ----------
 
@@ -139,12 +156,15 @@
 
       do while( task(1:2).eq.'FG'.or.task.eq.'NEW_X'.or. &
                 task.eq.'START')
-      
+
 !     This is the call to the L-BFGS-B code.
- 
+
          call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa, &
                      task,iprint, csave,lsave,isave,dsave)
- 
+
+         if (json_active .and. task(1:5) == 'NEW_X') &
+            call json_iter(n, x, g, f, dsave(13), isave)
+
          if (task(1:2) .eq. 'FG') then
 
 !        the minimization routine has returned to request the
@@ -249,8 +269,10 @@
           endif
         end if 
       end do
- 
+
 !     If task is neither FG nor NEW_X we terminate execution.
+
+      if (json_active) call json_close(n, x, f, task)
 
       end program driver
 

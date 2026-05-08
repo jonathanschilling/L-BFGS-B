@@ -46,12 +46,13 @@
 !
 !    **************
       program driver
+      use json_writer
 
 !     This driver shows how to replace the default stopping test
 !     by other termination criteria. It also illustrates how to
 !     print the values of several parameters during the course of
-!     the iteration. The sample problem used here is the same as in 
-!     DRIVER1 (the extended Rosenbrock function with bounds on the 
+!     the iteration. The sample problem used here is the same as in
+!     DRIVER1 (the extended Rosenbrock function with bounds on the
 !     variables).
 
       implicit none
@@ -76,6 +77,11 @@
 !
       real(dp)               :: t1, t2
       integer                :: i
+
+!     Test instrumentation: dump per-iteration state to JSON when the
+!     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+      character(len=512)     :: lbfgsb_json
+      logical                :: json_active
 
       allocate ( nbd(n), x(n), l(n), u(n), g(n) )
       allocate ( iwa(3*n) )
@@ -121,19 +127,27 @@
                
 
 !     We start the iteration by initializing task.
-! 
+!
       task = 'START'
 
+!     Test instrumentation: open JSON output if env var is set.
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) > 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
+
 !        ------- the beginning of the loop ----------
- 
+
       do while( task(1:2).eq.'FG'.or.task.eq.'NEW_X'.or. &
-                task.eq.'START') 
-      
+                task.eq.'START')
+
 !     This is the call to the L-BFGS-B code.
 
          call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint, &
                      csave,lsave,isave,dsave)
- 
+
+         if (json_active .and. task(1:5) == 'NEW_X') &
+            call json_iter(n, x, g, f, dsave(13), isave)
+
          if (task(1:2) .eq. 'FG') then
 
 !        the minimization routine has returned to request the
@@ -213,9 +227,11 @@
 
       end do
 !           ---------- the end of the loop -------------
- 
+
 !     If task is neither FG nor NEW_X we terminate execution.
- 
+
+      if (json_active) call json_close(n, x, f, task)
+
       end program driver
 
 !======================= The end of driver2 ============================

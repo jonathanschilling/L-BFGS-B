@@ -190,9 +190,10 @@
 !     --------------------------------------------------------------
 !    
       program driver
+      use json_writer
 !
 !     This simple driver demonstrates how to call the L-BFGS-B code to
-!       solve a sample problem (the extended Rosenbrock function 
+!       solve a sample problem (the extended Rosenbrock function
 !       subject to bounds on the variables). The dimension n of this
 !       problem is variable.
 
@@ -225,6 +226,11 @@
       real(dp)               :: t1, t2
       integer                :: i
 
+!     Test instrumentation: dump per-iteration state to JSON when the
+!     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+      character(len=512)     :: lbfgsb_json
+      logical                :: json_active
+
 !     Allocate dynamic arrays
 
       allocate ( nbd(n), x(n), l(n), u(n), g(n) )
@@ -256,20 +262,28 @@
              /,5x, ' (f = 0.0 at the optimal solution.)',/)               
 
 !     We start the iteration by initializing task.
- 
+
       task = 'START'
 
+!     Test instrumentation: open JSON output if env var is set.
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) > 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
+
 !     The beginning of the loop
- 
+
       do while(task(1:2).eq.'FG'.or.task.eq.'NEW_X'.or. &
-               task.eq.'START') 
-         
+               task.eq.'START')
+
 !     This is the call to the L-BFGS-B code.
-         
+
          call setulb ( n, m, x, l, u, nbd, f, g, factr, pgtol, &
                        wa, iwa, task, iprint,&
                        csave, lsave, isave, dsave )
-         
+
+         if (json_active .and. task(1:5) == 'NEW_X') &
+            call json_iter(n, x, g, f, dsave(13), isave)
+
          if (task(1:2) .eq. 'FG') then
 
             f=.25d0*( x(1)-1.d0 )**2
@@ -294,6 +308,7 @@
 
 !     end of loop do while
 
+      if (json_active) call json_close(n, x, f, task)
 
       end program driver
 

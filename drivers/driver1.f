@@ -194,33 +194,39 @@ c           END OF THE DESCRIPTION OF THE VARIABLES IN L-BFGS-B
 c     --------------------------------------------------------------
 
       program driver
- 
+      use json_writer
+
 c     This simple driver demonstrates how to call the L-BFGS-B code to
-c       solve a sample problem (the extended Rosenbrock function 
+c       solve a sample problem (the extended Rosenbrock function
 c       subject to bounds on the variables). The dimension n of this
 c       problem is variable.
- 
+
       integer          nmax, mmax
       parameter        (nmax=1024, mmax=17)
 c        nmax is the dimension of the largest problem to be solved.
 c        mmax is the maximum number of limited memory corrections.
- 
+
 c     Declare the variables needed by the code.
-c       A description of all these variables is given at the end of 
+c       A description of all these variables is given at the end of
 c       the driver.
- 
+
       character*60     task, csave
       logical          lsave(4)
       integer          n, m, iprint,
      +                 nbd(nmax), iwa(3*nmax), isave(44)
-      double precision f, factr, pgtol, 
-     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29), 
+      double precision f, factr, pgtol,
+     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29),
      +                 wa(2*mmax*nmax + 5*nmax + 11*mmax*mmax + 8*mmax)
 
 c     Declare a few additional variables for this sample problem.
 
       double precision t1, t2
       integer          i
+
+c     Test instrumentation: dump per-iteration state to JSON when the
+c     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+      character*512    lbfgsb_json
+      logical          json_active
  
 c     We wish to have output at every iteration.
 
@@ -269,18 +275,26 @@ c     We now define the starting point.
      +       /,5x, ' (f = 0.0 at the optimal solution.)',/)
 
 c     We start the iteration by initializing task.
-c 
+c
       task = 'START'
 
+c     Test instrumentation: open JSON output if env var is set.
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) .gt. 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
+
 c        ------- the beginning of the loop ----------
- 
+
  111  continue
-      
+
 c     This is the call to the L-BFGS-B code.
- 
+
       call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,
      +            csave,lsave,isave,dsave)
- 
+
+      if (json_active .and. task(1:5) .eq. 'NEW_X')
+     +   call json_iter(n, x, g, f, dsave(13), isave)
+
       if (task(1:2) .eq. 'FG') then
 c        the minimization routine has returned to request the
 c        function f and gradient g values at the current x.
@@ -313,11 +327,13 @@ c        the minimization routine has returned with a new iterate,
 c         and we have opted to continue the iteration.
 
 c           ---------- the end of the loop -------------
- 
+
 c     If task is neither FG nor NEW_X we terminate execution.
 
+      if (json_active) call json_close(n, x, f, task)
+
       stop
- 
+
       end
 
 c======================= The end of driver1 ============================

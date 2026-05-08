@@ -51,13 +51,14 @@ c
 c     **************
 
       program driver
- 
+      use json_writer
+
 c     This time-controlled driver shows that it is possible to terminate
 c     a run by elapsed CPU time, and yet be able to print all desired
 c     information. This driver also illustrates the use of two
 c     stopping criteria that may be used in conjunction with a limit
-c     on execution time. The sample problem used here is the same as in 
-c     driver1 and driver2 (the extended Rosenbrock function with bounds 
+c     on execution time. The sample problem used here is the same as in
+c     driver1 and driver2 (the extended Rosenbrock function with bounds
 c     on the variables).
  
       integer          nmax, mmax
@@ -71,21 +72,30 @@ c       driver1.
  
       character*60     task, csave
       logical          lsave(4)
-      integer          n, m, iprint, 
+      integer          n, m, iprint,
      +                 nbd(nmax), iwa(3*nmax), isave(44)
-      double precision f, factr, pgtol, 
-     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29), 
+      double precision f, factr, pgtol,
+     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29),
      +                 wa(2*mmax*nmax+5*nmax+11*mmax*mmax+8*mmax)
 
-c     Declare a few additional variables for the sample problem 
+c     Declare a few additional variables for the sample problem
 c       and for keeping track of time.
 
       double precision t1, t2, time1, time2, tlimit
       integer          i, j
- 
+
+c     Test instrumentation: dump per-iteration state to JSON when the
+c     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+c     LBFGSB_TLIMIT optionally overrides tlimit for reproducibility.
+      character*512    lbfgsb_json
+      character*64     env_tlimit
+      logical          json_active
+
 c     We specify a limite on the CPU time (in seconds).
 
       tlimit = 0.2
+      call get_environment_variable('LBFGSB_TLIMIT', env_tlimit)
+      if (len_trim(env_tlimit) .gt. 0) read(env_tlimit, *) tlimit
 
 c     We suppress the default output.  (The user could also elect to 
 c       use the default output by choosing iprint >= 0.)
@@ -138,22 +148,30 @@ c     We now write the heading of the output.
      +       /,5x, ' (f = 0.0 at the optimal solution.)',/) 
 
 c     We start the iteration by initializing task.
-c 
+c
       task = 'START'
+
+c     Test instrumentation: open JSON output if env var is set.
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) .gt. 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
 
 c        ------- the beginning of the loop ----------
 
 c     We begin counting the CPU time.
 
       call timer(time1)
- 
+
  111  continue
-      
+
 c     This is the call to the L-BFGS-B code.
- 
+
       call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,
      +            csave,lsave,isave,dsave)
- 
+
+      if (json_active .and. task(1:5) .eq. 'NEW_X')
+     +   call json_iter(n, x, g, f, dsave(13), isave)
+
       if (task(1:2) .eq. 'FG') then
 c        the minimization routine has returned to request the
 c        function f and gradient g values at the current x.
@@ -264,11 +282,13 @@ c          go back to the minimization routine.
       endif
 
 c           ---------- the end of the loop -------------
- 
+
 c     If task is neither FG nor NEW_X we terminate execution.
 
+      if (json_active) call json_close(n, x, f, task)
+
       stop
- 
+
       end
 
 c======================= The end of driver3 ============================

@@ -50,35 +50,41 @@ c
 c     **************
 
       program driver
- 
+      use json_writer
+
 c     This driver shows how to replace the default stopping test
 c       by other termination criteria. It also illustrates how to
 c       print the values of several parameters during the course of
-c       the iteration. The sample problem used here is the same as in 
-c       DRIVER1 (the extended Rosenbrock function with bounds on the 
+c       the iteration. The sample problem used here is the same as in
+c       DRIVER1 (the extended Rosenbrock function with bounds on the
 c       variables).
- 
+
       integer          nmax, mmax
       parameter        (nmax=1024, mmax=17)
 c        nmax is the dimension of the largest problem to be solved.
 c        mmax is the maximum number of limited memory corrections.
- 
+
 c     Declare the variables needed by the code.
-c       A description of all these variables is given at the end of 
+c       A description of all these variables is given at the end of
 c       driver1.
- 
+
       character*60     task, csave
       logical          lsave(4)
-      integer          n, m, iprint, 
+      integer          n, m, iprint,
      +                 nbd(nmax), iwa(3*nmax), isave(44)
-      double precision f, factr, pgtol, 
-     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29), 
+      double precision f, factr, pgtol,
+     +                 x(nmax), l(nmax), u(nmax), g(nmax), dsave(29),
      +                 wa(2*mmax*nmax+5*nmax+11*mmax*mmax+8*mmax)
 
 c     Declare a few additional variables for the sample problem.
 
       double precision t1, t2
       integer          i
+
+c     Test instrumentation: dump per-iteration state to JSON when the
+c     environment variable LBFGSB_JSON_OUTPUT is set. No-op otherwise.
+      character*512    lbfgsb_json
+      logical          json_active
  
 c     We suppress the default output.
 
@@ -130,18 +136,26 @@ c     We now write the heading of the output.
      +       /,5x, ' (f = 0.0 at the optimal solution.)',/) 
 
 c     We start the iteration by initializing task.
-c 
+c
       task = 'START'
 
+c     Test instrumentation: open JSON output if env var is set.
+      call get_environment_variable('LBFGSB_JSON_OUTPUT', lbfgsb_json)
+      json_active = (len_trim(lbfgsb_json) .gt. 0)
+      if (json_active) call json_open(trim(lbfgsb_json))
+
 c        ------- the beginning of the loop ----------
- 
+
  111  continue
-      
+
 c     This is the call to the L-BFGS-B code.
- 
+
       call setulb(n,m,x,l,u,nbd,f,g,factr,pgtol,wa,iwa,task,iprint,
      +            csave,lsave,isave,dsave)
- 
+
+      if (json_active .and. task(1:5) .eq. 'NEW_X')
+     +   call json_iter(n, x, g, f, dsave(13), isave)
+
       if (task(1:2) .eq. 'FG') then
 c        the minimization routine has returned to request the
 c        function f and gradient g values at the current x.
@@ -223,11 +237,13 @@ c          go back to the minimization routine.
       endif
 
 c           ---------- the end of the loop -------------
- 
+
 c     If task is neither FG nor NEW_X we terminate execution.
 
+      if (json_active) call json_close(n, x, f, task)
+
       stop
- 
+
       end
 
 c======================= The end of driver2 ============================

@@ -19,6 +19,20 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             cmake gfortran libopenblas-dev liblapack-dev python3
 
+      # Force OpenBLAS as the active BLAS/LAPACK provider. The runner image
+      # may have reference BLAS preselected via update-alternatives, which
+      # produces different FP rounding than OpenBLAS and breaks the goldens.
+      - name: Pin BLAS implementation to OpenBLAS
+        run: |
+          sudo update-alternatives --set libblas.so.3-x86_64-linux-gnu \
+            /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
+          sudo update-alternatives --set liblapack.so.3-x86_64-linux-gnu \
+            /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3
+          echo "Active BLAS:"
+          update-alternatives --display libblas.so.3-x86_64-linux-gnu | head -4
+          echo "Active LAPACK:"
+          update-alternatives --display liblapack.so.3-x86_64-linux-gnu | head -4
+
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 

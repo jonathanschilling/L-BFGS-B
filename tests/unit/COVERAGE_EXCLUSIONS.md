@@ -34,5 +34,10 @@ numerics:
 
 ## Exemptions
 
-(none yet — added in Phase F as the gate transitions from warn-only to
-fail-on-gap.)
+## src/cmprlb.f
+- line 61: `if (info .ne. 0)` after `call bmv(...)`. Unreachable in the
+  current build because `bmv.f` was migrated from LINPACK's `dtrsl`
+  (which set `info`) to LAPACK's `dtrsm` (which doesn't), and bmv now
+  always sets `info = 0` explicitly before returning. Defensive code
+  left from the migration; preserved as-is rather than removed because
+  a future BLAS swap could resurrect the failure mode.

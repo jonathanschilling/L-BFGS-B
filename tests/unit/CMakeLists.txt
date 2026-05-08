@@ -25,7 +25,7 @@ function(lbfgsb_add_unit_test sub)
    add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
-# Per-subroutine tests will be added here as they are written.
+# Per-subroutine tests, registered as ctest entries.
 # Phase B (Tier 1+2): projgr, errclb, active, freev, hpsolb, cmprlb,
 #                     bmv, formt, matupd, dcstep, formk
 # Phase C (Tier 3):   dcsrch, lnsrlb
@@ -33,6 +33,17 @@ endfunction()
 # Phase E (Tier 5):   setulb, mainlb
 #
 # Out of scope: timer, prn1lb, prn2lb, prn3lb (not core numerics).
+lbfgsb_add_unit_test(projgr)
+lbfgsb_add_unit_test(errclb)
+lbfgsb_add_unit_test(active)
+lbfgsb_add_unit_test(freev)
+lbfgsb_add_unit_test(hpsolb)
+lbfgsb_add_unit_test(cmprlb)
+lbfgsb_add_unit_test(bmv)
+lbfgsb_add_unit_test(formt)
+lbfgsb_add_unit_test(matupd)
+lbfgsb_add_unit_test(dcstep)
+lbfgsb_add_unit_test(formk)
 
 # Branch coverage gate. Wired only when LBFGSB_COVERAGE=ON; otherwise there
 # is no coverage data to check. In Phases A–E it runs in warn-only mode

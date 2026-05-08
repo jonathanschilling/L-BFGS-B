@@ -192,7 +192,7 @@ loop:
 if dtm <= 0: dtm = 0
 tsum += dtm
 xcp += tsum * d                                     # apply remaining motion to free vars
-if col > 0: c += dtm * p                            # update W'(xcp - x)
+if col > 0: c += dtm * p                            # update W^T (xcp - x)
 return
 ```
 

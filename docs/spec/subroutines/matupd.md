@@ -4,7 +4,7 @@
 
 Append the latest step pair `(s, y)` to the L-BFGS history and
 update the cached compact-representation matrices `sy`, `ss`. Also
-recompute `theta = y'y / s'y`.
+recompute `theta = y^T y / s^T y`.
 
 When the buffer is at capacity (`col = m` already), the *oldest* pair
 is dropped to make room -- the storage is cyclic, with `head`/`itail`
@@ -82,7 +82,7 @@ language provides.)
 ### Phase 3: update `theta`
 
 ```
-theta = rr / dr           # = y'y / s'y, the standard scaling for B_0
+theta = rr / dr           # = y^T y / s^T y, the standard scaling for B_0
 ```
 
 ### Phase 4: if buffer overflowed, shift `sy` and `ss`
@@ -126,7 +126,7 @@ if stp == 1.0:
     ss[col, col] = dtd                          # ||s||^2 = ||d||^2
 else:
     ss[col, col] = stp^2 * dtd                   # ||s||^2 = stp^2 * ||d||^2
-sy[col, col] = dr                               # s'y for the new pair
+sy[col, col] = dr                               # s^T y for the new pair
 ```
 
 The branch on `stp == 1.0` exact equality is intentional: it skips

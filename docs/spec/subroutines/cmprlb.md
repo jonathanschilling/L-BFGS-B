@@ -27,7 +27,7 @@ indices in the free-variable index permutation.
 | `g` | real vector, length `n` | Gradient at `x`. |
 | `ws`, `wy` | real matrices, `n * m` | L-BFGS history columns (`s`-vectors and `y`-vectors). |
 | `sy`, `wt` | real matrices, `m * m` | Compact representation: `S^TY` packed and Cholesky factor `T`. |
-| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W&#39;(z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M^{-1} W^T (z - x)`. |
+| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W^T (z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M^{-1} W^T (z - x)`. |
 | `cnstnd` | boolean | True if any variable is bounded. |
 
 ### Logical outputs
@@ -35,7 +35,7 @@ indices in the free-variable index permutation.
 | Name | Type | Description |
 |------|------|-------------|
 | `r` | real vector, length `n` | Filled in two regimes (see Algorithm): full `n`-vector when unconstrained with history, or `r[1..nfree]` for the free variables otherwise. |
-| `wa` | (in-place) | `wa[1..2col]` filled with `M^{-1} W&#39;(z - x)`. |
+| `wa` | (in-place) | `wa[1..2col]` filled with `M^{-1} W^T (z - x)`. |
 
 ### Preconditions
 
@@ -80,7 +80,7 @@ for i = 1 to nfree:
     k = index[i]
     r[i] = -theta * (z[k] - x[k]) - g[k]
 
-# 2. Solve M^{-1} v for v = W'(z - x), already in wa[2m+1..2m+2col].
+# 2. Solve M^{-1} v for v = W^T (z - x), already in wa[2m+1..2m+2col].
 #    Result placed in wa[1..2col] by bmv.
 call bmv(m, sy, wt, col, wa[2m+1..], wa[1..], info)
 # 3. Apply the W*M^{-1}*W' correction column by column.

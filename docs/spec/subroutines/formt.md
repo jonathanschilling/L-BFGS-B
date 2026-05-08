@@ -58,9 +58,9 @@ L-BFGS history.
 
 ### Phase 1: build upper triangle of `T = theta*S^TS + L*D^{-1}*L^T`
 
-The diagonal of `T` is `T[i, i] = theta * s_i^T s_i + sum_{k<i} s_i'y_k * (s_i'y_k) / s_k'y_k`.
+The diagonal of `T` is `T[i, i] = theta * s_i^T s_i + sum_{k<i} s_i^T y_k * (s_i^T y_k) / s_k^T y_k`.
 
-The upper triangle for `j >= i` is `T[i, j] = theta * s_i^T s_j + sum_{k<i} s_i'y_k * s_j'y_k / s_k'y_k`.
+The upper triangle for `j >= i` is `T[i, j] = theta * s_i^T s_j + sum_{k<i} s_i^T y_k * s_j^T y_k / s_k^T y_k`.
 
 Special case: for `i = 1`, the inner sum is empty (no `k < 1`), so the
 entire first row is just `theta * ss[1, :]`.

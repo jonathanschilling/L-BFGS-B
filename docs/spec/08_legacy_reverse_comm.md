@@ -51,13 +51,13 @@ etc.
 
 | `task` prefix | When set | Meaning |
 |---------------|----------|---------|
-| `&#39;START&#39;` | By user before first call | Initialize a new optimization. |
-| `&#39;FG&#39;` | By `setulb` on return | User must compute `f` and `g` at the current `x` and call `setulb` again. |
-| `&#39;NEW_X&#39;` | By `setulb` on return | A new iterate is available in `x`; the user may inspect, log, etc., then call `setulb` again to continue iterating. |
-| `&#39;CONV&#39;...` | By `setulb` on return | Convergence reached. Specific suffix indicates which test fired. Terminal. |
-| `&#39;ABNORMAL&#39;...` | By `setulb` on return | Line search failed or other abnormal termination. Terminal. |
-| `&#39;ERROR&#39;...` | By `setulb` on return | Input validation failed. Terminal. |
-| `&#39;STOP&#39;` | By user any time | Request immediate termination. `setulb` will tidy up and return with a terminal `task`. |
+| `START` | By user before first call | Initialize a new optimization. |
+| `FG` | By `setulb` on return | User must compute `f` and `g` at the current `x` and call `setulb` again. |
+| `NEW_X` | By `setulb` on return | A new iterate is available in `x`; the user may inspect, log, etc., then call `setulb` again to continue iterating. |
+| `CONV...` | By `setulb` on return | Convergence reached. Specific suffix indicates which test fired. Terminal. |
+| `ABNORMAL...` | By `setulb` on return | Line search failed or other abnormal termination. Terminal. |
+| `ERROR...` | By `setulb` on return | Input validation failed. Terminal. |
+| `STOP` | By user any time | Request immediate termination. `setulb` will tidy up and return with a terminal `task`. |
 
 Specific terminal task strings:
 

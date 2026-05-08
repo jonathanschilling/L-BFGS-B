@@ -4,7 +4,7 @@
 
 Compute an approximate solution of the **subspace minimization
 problem** at the generalized Cauchy point: minimize the quadratic
-model `Q(x) = r'(x - xc) + (1/2)(x - xc)^T B (x - xc)` over the free
+model `Q(x) = r^T (x - xc) + (1/2)(x - xc)^T B (x - xc)` over the free
 variables, subject to bounds.
 
 Uses the L-BFGS Hessian approximation `B = theta*I - W*M^{-1}*W^T`. The

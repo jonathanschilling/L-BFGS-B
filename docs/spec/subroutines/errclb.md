@@ -26,7 +26,7 @@ Called once at startup, before any iteration.
 
 | Name | Type | Description |
 |------|------|-------------|
-| `task` | string | Set to an `&#39;ERROR: ...&#39;` string on validation failure; **untouched** on success. |
+| `task` | string | Set to an `ERROR: ...` string on validation failure; **untouched** on success. |
 | `info` | integer | `-6` if any `nbd[i] not in {0, 1, 2, 3}`; `-7` if any `nbd[i] = 2` with `l[i] > u[i]`; **untouched** otherwise. |
 | `k` | integer | Index of the *last* offending variable (1-based); **untouched** if no array-valued error. |
 

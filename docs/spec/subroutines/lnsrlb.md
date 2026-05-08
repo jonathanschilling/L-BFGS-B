@@ -26,16 +26,16 @@ its own logic and `dcsrch`.
 | `l, u, nbd` | in | Bounds. |
 | `x, f, g` | in/out | Iterate, value, gradient. |
 | `fold` | in/out | Saved `f` at start of search (for restore). |
-| `gd, gdold` | in/out | `g&#39;d` at current trial / at `stp=0`. |
+| `gd, gdold` | in/out | `g^T d` at current trial / at `stp=0`. |
 | `d` | in | Search direction. |
 | `r, t` | in/out | Saved `g` and `x` at start of search. |
 | `z` | in | The Cauchy/subsm output point (used when `stp = 1`). |
-| `stp, dnorm, dtd, xstep` | in/out | Step length, `||d||`, `d&#39;d`, `stp * ||d||`. |
+| `stp, dnorm, dtd, xstep` | in/out | Step length, `||d||`, `d^T d`, `stp * ||d||`. |
 | `stpmx` | in/out | Maximum allowed step (computed from box geometry). |
 | `iter` | in | Outer iteration counter. |
 | `ifun, iback, nfgv` | in/out | f/g eval counters. |
 | `info` | out | `0` on success; `-4` if not a descent direction. |
-| `task` | in/out | `&#39;START&#39;` (new search), `&#39;FG_LN&#39;` (continuation), `&#39;FG_LNSRCH&#39;` (out: more f/g needed), `&#39;NEW_X&#39;` (out: search done). |
+| `task` | in/out | `START` (new search), `FG_LN` (continuation), `FG_LNSRCH` (out: more f/g needed), `NEW_X` (out: search done). |
 | `boxed, cnstnd` | in | Box-constraint flags. |
 | `csave, isave, dsave` | in/out | Inner state for `dcsrch`. |
 
@@ -46,7 +46,7 @@ if task starts with 'FG_LN':
     skip setup (continuation: jump to step 4)
 
 # Step 1: setup (first call only)
-dtd = d'd; dnorm = sqrt(dtd)
+dtd = d^T d; dnorm = sqrt(dtd)
 
 # Step 2: compute stpmx from box geometry (only if cnstnd)
 stpmx = big = 1e10
@@ -76,7 +76,7 @@ else:
 t = x; r = g; fold = f; ifun = 0; iback = 0; csave = 'START'
 
 # Step 4: enter dcsrch
-gd = g'd
+gd = g^T d
 if ifun == 0:
     gdold = gd
     if gd >= 0:                                # not a descent direction
@@ -143,7 +143,7 @@ else:
 | 3 | `data/lnsrlb_case_3.json` | `cnstnd = true`, `iter > 0`, `d < 0` lower-bound: `stpmx = (l-x)/d` |
 | 4 | `data/lnsrlb_case_4.json` | `cnstnd = true`, `iter > 0`, `d > 0` upper-bound: `stpmx = (u-x)/d` |
 | 5 | `data/lnsrlb_case_5.json` | `gd >= 0` ascent direction: `info = -4` |
-| 6 | `data/lnsrlb_case_6.json` | Continuation path: `task = &#39;FG_LN&#39;` skips setup |
+| 6 | `data/lnsrlb_case_6.json` | Continuation path: `task = FG_LN` skips setup |
 | 7 | `data/lnsrlb_case_7.json` | Variable already at lower bound: `a2 = 0 -> stpmx = 0` |
 | 8 | `data/lnsrlb_case_8.json` | Variable already at upper bound: `a2 = 0 -> stpmx = 0` |
 

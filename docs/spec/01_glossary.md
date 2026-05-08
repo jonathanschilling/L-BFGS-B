@@ -138,7 +138,7 @@ callback-based interface have no analogue.
 
 | F77 | Type | Description |
 |-----|------|-------------|
-| `task` | `character(60)` | Reverse-comm state: `&#39;START&#39;`, `&#39;FG&#39;`, `&#39;NEW_X&#39;`, `&#39;CONV...&#39;`, `&#39;ABNORMAL&#39;`, `&#39;ERROR&#39;`, `&#39;STOP&#39;`. |
+| `task` | `character(60)` | Reverse-comm state: `START`, `FG`, `NEW_X`, `CONV...`, `ABNORMAL`, `ERROR`, `STOP`. |
 | `csave` | `character(60)` | Inner reverse-comm state for `dcsrch` line search. |
 | `lsave[1:4]` | `logical(4)` | `prjctd`, `cnstnd`, `boxed`, `updatd` flags preserved across calls. |
 | `isave[1:44]` | `integer(44)` | Saved integer state (workspace offsets, iter counters, indices). |
@@ -157,7 +157,7 @@ The F77 `task` string on exit:
 | `CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH` | Function decrease below `factr * eps`. |
 | `ABNORMAL TERMINATION IN LNSRLB` | Line search failed (more than `maxls` evaluations, or step too small/large). |
 | `ERROR: ...` | Input validation failed (see `errclb.md`). |
-| `STOP: ...` | User-requested halt via `task = &#39;STOP&#39;`. |
+| `STOP: ...` | User-requested halt via `task = STOP`. |
 
 Ports may use enum values, exceptions, or other idiomatic mechanisms;
 the strings above are the F77 representation.

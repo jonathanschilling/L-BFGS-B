@@ -119,7 +119,7 @@ would be catastrophic. Each is guarded:
 | `cauchy`: `dt = -fp / fpp` | check `fpp > eps` (else use earlier breakpoint) | Algorithm exits the breakpoint loop. |
 | `formt`: Cholesky pivot `T[i,i]^2 > 0` | LAPACK `dpotrf` returns `info > 0` | Caller (`mainlb`) signals refresh; L-BFGS history discarded. |
 | `bmv`: `1 / sqrt(sy[i,i])` | precondition: `sy[i,i] > 0` enforced by `matupd` | If precondition violated, behavior undefined. |
-| `matupd`: `s&#39;y` curvature test | `s&#39;y > eps * ||y||^2` (refresh threshold) | New pair rejected; `updatd = false`. |
+| `matupd`: `s^T y` curvature test | `s^T y > eps * ||y||^2` (refresh threshold) | New pair rejected; `updatd = false`. |
 
 ### Overflow / underflow
 
@@ -246,7 +246,7 @@ machine precision of the running platform.
 | Where | Form | Purpose |
 |-------|------|---------|
 | `cauchy.f:423` | `max(epsmch * f2_org, f2)` | Lower bound on segment curvature to prevent `0/0` in `dtm = -f1/f2`. |
-| `mainlb.f:566` | `dr <= epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s&#39;y`. |
+| `mainlb.f:566` | `dr <= epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s^T y`. |
 | `formt.f`, `formk.f` | LAPACK `dpotrf` failure | Cholesky pivot non-positivity -> caller refreshes L-BFGS history. |
 
 ### Constants from earlier suspicion that DO NOT exist

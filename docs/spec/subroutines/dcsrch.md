@@ -7,13 +7,13 @@ descent direction that satisfies both the **sufficient decrease**
 condition
 
 ```
-phi(stp) <= phi(0) + ftol * stp * phi'(0)
+phi(stp) <= phi(0) + ftol * stp * (dphi/dstp)(0)
 ```
 
 and the **curvature** condition
 
 ```
-|phi'(stp)| <= gtol * |phi'(0)|
+|dphi/dstp| <= gtol * |(dphi/dstp)(0)|
 ```
 
 (strong Wolfe conditions). Internally, the algorithm maintains an
@@ -21,7 +21,7 @@ interval `[stx, sty]` that contains a minimizer, and uses `dcstep`
 to compute each next trial step.
 
 The F77 implementation uses **reverse-communication**: the caller
-supplies `phi(stp_trial)` and `phi'(stp_trial)` between calls. Ports
+supplies `phi(stp_trial)` and `(dphi/dstp)(stp_trial)` between calls. Ports
 targeting modern languages can wrap this in a callback style:
 
 ```
@@ -43,9 +43,9 @@ The two styles are equivalent; this spec describes both.
 
 | Name | Type | Description |
 |------|------|-------------|
-| `f` (in/out) | real | On `&#39;START&#39;`: `phi(0)`. On subsequent: `phi(stp_trial)`. On exit: `phi(stp_final)`. |
-| `g` (in/out) | real | On `&#39;START&#39;`: `phi&#39;(0)` (must be `< 0`). On subsequent: `phi&#39;(stp_trial)`. On exit: `phi&#39;(stp_final)`. |
-| `stp` (in/out) | real | On `&#39;START&#39;`: initial guess. On subsequent: trial step from previous call. On exit: next trial / final step. |
+| `f` (in/out) | real | On `START`: `phi(0)`. On subsequent: `phi(stp_trial)`. On exit: `phi(stp_final)`. |
+| `g` (in/out) | real | On `START`: `(dphi/dstp)(0)` (must be `< 0`). On subsequent: `(dphi/dstp)(stp_trial)`. On exit: `(dphi/dstp)(stp_final)`. |
+| `stp` (in/out) | real | On `START`: initial guess. On subsequent: trial step from previous call. On exit: next trial / final step. |
 | `ftol`, `gtol`, `xtol` | real, >= 0 | Tolerances. |
 | `stpmin`, `stpmax` | real, `0 <= stpmin <= stpmax` | Step bounds. |
 | `task` (in/out) | string | Reverse-comm state code. |
@@ -55,9 +55,9 @@ The two styles are equivalent; this spec describes both.
 
 ```
 result dcsrch(
-    phi: function(stp) -> (f, g),       # phi(stp), phi'(stp)
+    phi: function(stp) -> (f, g),       # phi(stp), dphi/dstp
     f0: real,                            # phi(0) = caller-supplied
-    g0: real,                            # phi'(0), must be < 0
+    g0: real,                            # (dphi/dstp)(0), must be < 0
     stp_initial: real,                   # first trial step
     ftol, gtol, xtol: real >= 0,
     stpmin, stpmax: real,
@@ -80,25 +80,25 @@ result {
 
 | F77 `task` prefix | callback `status` | Meaning |
 |-------------------|-------------------|---------|
-| `&#39;START&#39;` | (input only) | First call. |
-| `&#39;FG&#39;` | (internal) | Reverse-comm: caller must compute `f` and `g`. |
-| `&#39;CONV&#39;` | `CONV` | Both Wolfe conditions met. |
-| `&#39;WARN: ROUNDING ERRORS PREVENT PROGRESS&#39;` | `WARN_ROUNDING` | Bracket too tight to advance. |
-| `&#39;WARN: XTOL TEST SATISFIED&#39;` | `WARN_XTOL` | `(stmax - stmin) <= xtol * stmax`. |
-| `&#39;WARN: STP = STPMAX&#39;` | `WARN_STPMAX` | Step at upper bound, function still decreasing. |
-| `&#39;WARN: STP = STPMIN&#39;` | `WARN_STPMIN` | Step at lower bound, no improvement. |
-| `&#39;ERROR: STP .LT. STPMIN&#39;` | `ERROR_STP_LT_STPMIN` | Initial `stp` below `stpmin`. |
-| `&#39;ERROR: STP .GT. STPMAX&#39;` | `ERROR_STP_GT_STPMAX` | Initial `stp` above `stpmax`. |
-| `&#39;ERROR: INITIAL G .GE. ZERO&#39;` | `ERROR_G_NONNEG` | Initial gradient not in descent direction. |
-| `&#39;ERROR: FTOL .LT. ZERO&#39;` | `ERROR_FTOL_NEG` | Negative `ftol`. |
-| `&#39;ERROR: GTOL .LT. ZERO&#39;` | `ERROR_GTOL_NEG` | Negative `gtol`. |
-| `&#39;ERROR: XTOL .LT. ZERO&#39;` | `ERROR_XTOL_NEG` | Negative `xtol`. |
-| `&#39;ERROR: STPMIN .LT. ZERO&#39;` | `ERROR_STPMIN_NEG` | Negative `stpmin`. |
-| `&#39;ERROR: STPMAX .LT. STPMIN&#39;` | `ERROR_STPMAX_LT_STPMIN` | Inverted step bounds. |
+| `START` | (input only) | First call. |
+| `FG` | (internal) | Reverse-comm: caller must compute `f` and `g`. |
+| `CONV` | `CONV` | Both Wolfe conditions met. |
+| `WARN: ROUNDING ERRORS PREVENT PROGRESS` | `WARN_ROUNDING` | Bracket too tight to advance. |
+| `WARN: XTOL TEST SATISFIED` | `WARN_XTOL` | `(stmax - stmin) <= xtol * stmax`. |
+| `WARN: STP = STPMAX` | `WARN_STPMAX` | Step at upper bound, function still decreasing. |
+| `WARN: STP = STPMIN` | `WARN_STPMIN` | Step at lower bound, no improvement. |
+| `ERROR: STP .LT. STPMIN` | `ERROR_STP_LT_STPMIN` | Initial `stp` below `stpmin`. |
+| `ERROR: STP .GT. STPMAX` | `ERROR_STP_GT_STPMAX` | Initial `stp` above `stpmax`. |
+| `ERROR: INITIAL G .GE. ZERO` | `ERROR_G_NONNEG` | Initial gradient not in descent direction. |
+| `ERROR: FTOL .LT. ZERO` | `ERROR_FTOL_NEG` | Negative `ftol`. |
+| `ERROR: GTOL .LT. ZERO` | `ERROR_GTOL_NEG` | Negative `gtol`. |
+| `ERROR: XTOL .LT. ZERO` | `ERROR_XTOL_NEG` | Negative `xtol`. |
+| `ERROR: STPMIN .LT. ZERO` | `ERROR_STPMIN_NEG` | Negative `stpmin`. |
+| `ERROR: STPMAX .LT. STPMIN` | `ERROR_STPMAX_LT_STPMIN` | Inverted step bounds. |
 
 ### Preconditions
 
-- On `'START'`: `f = phi(0)`, `g = phi'(0) < 0`, `stp` in
+- On `'START'`: `f = phi(0)`, `g = (dphi/dstp)(0) < 0`, `stp` in
   `[stpmin, stpmax]`.
 - The phi function (or the caller-supplied trial f, g) must be the
   derivative-and-value of a 1D function along the search direction.
@@ -106,15 +106,15 @@ result {
 ### Postconditions
 
 - `stp` is the trial step (`task = 'FG'`) or final step (`task = 'CONV'/'WARN'`).
-- `f` and `g` reflect `phi(stp)` and `phi'(stp)`.
+- `f` and `g` reflect `phi(stp)` and `dphi/dstp`.
 
 ## Algorithm
 
 The algorithm has two stages:
 
-- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol * stp * phi'(0)`
+- **Stage 1**: search uses a "modified function" `psi(stp) = phi(stp) - phi(0) - ftol * stp * (dphi/dstp)(0)`
   -- a curve translated so the sufficient-decrease line is the
-  zero-axis. Once `psi(stp) <= 0` and `phi'(stp) >= 0`, switch to
+  zero-axis. Once `psi(stp) <= 0` and `dphi/dstp >= 0`, switch to
   stage 2.
 - **Stage 2**: search uses the original `phi` directly.
 

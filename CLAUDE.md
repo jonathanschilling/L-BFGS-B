@@ -80,20 +80,30 @@ The conversion script that originally cleaned the repo is logged in commit histo
 
 ### Doxygen-table apostrophe quirk
 
-Doxygen's markdown-in-tables parser misinterprets a backtick-delimited span containing a raw apostrophe as a smart-quote pair: the opening backtick becomes `&lsquo;`, the first apostrophe becomes `&rsquo;`, and the closing backtick opens an unclosed `<code>` block that swallows subsequent table rows and headings. This collapsed the "Vectors (current state)" heading into the previous table at `md_docs_spec_01_glossary.html`.
+Doxygen's markdown-in-tables parser misinterprets a backtick-delimited span containing a raw apostrophe as a smart-quote pair, which collapses subsequent table rows and headings into the broken cell (this hit `md_docs_spec_01_glossary.html`'s "Vectors (current state)" heading).
 
-The bug only fires **inside markdown table cells** (`| ... |` lines). Inline backticks in regular paragraphs and fenced code blocks (` ``` `) render correctly with raw apostrophes.
+The bug only fires **inside markdown table cells**; inline backticks in regular paragraphs and fenced code blocks (` ``` `) render fine with raw apostrophes.
 
-Two complementary rules for the spec docs:
+The fix is to **avoid apostrophes inside table-cell backticks** by replacing the math notation that uses them with apostrophe-free equivalents. Conventions for the spec docs:
 
-1. **Use `^T` for matrix transpose**, not `'`. Standard math notation, more readable, and avoids the bug entirely. Examples: write `s_i^T y_j`, `S_k^T Y_k`, `theta * S^T S + L * D^{-1} * L^T`. Don't write `s_i' y_j`.
+| Was | Now | Reason |
+|-----|-----|--------|
+| `S'S`, `s_i' y_j`, `W'd` (transpose) | `S^T S`, `s_i^T y_j`, `W^T d` | `'` is ambiguous (transpose vs derivative); `^T` is unambiguous and standard. |
+| `phi'(0)`, `phi'(stp)` (derivative) | `(dphi/dstp)(0)`, `(dphi/dstp)(stp)` | Leibniz notation. Bare `dphi/dstp` for the derivative function. |
+| `f'` (bare slope) | `df/dstp` | Same Leibniz convention. |
+| `` `'CONV'` ``, `` `'FG'` `` (F77 task strings inside backticks) | `` `CONV` ``, `` `FG` `` | The backticks already mark them as code; the apostrophes are quoting markers that add no information. |
 
-2. **Inside table-cell inline backticks only**, escape any remaining apostrophes (derivatives like `` `phi&#39;(t)` ``, F77 string args like `` `'l'` ``, paired task names like `` `'CONV'` ``) with the HTML entity `&#39;`. Doxygen renders `&#39;` as a literal `'` so the visible HTML is unchanged.
+F77 task-string apostrophes that appear in **prose** (outside backticks or outside table cells) are left as-is, e.g. `task .eq. 'FG'`, since they accurately reflect F77 source syntax and don't trigger the bug.
 
-Pre-flight check before committing:
+`&#39;` HTML entities should NOT appear in the spec source. If the pre-flight finds any, replace with the proper notation above.
+
+Pre-flight checks before committing:
 
 ```bash
-# Find inline backtick spans on table rows that still contain a raw apostrophe.
+# (1) No HTML-entity apostrophes anywhere in the spec.
+grep -rn "&#39;" docs/spec/ && echo "FAIL: replace &#39; with proper notation"
+
+# (2) No raw apostrophes inside backtick spans on markdown table rows.
 python3 -c "
 import re, glob, sys
 INLINE = re.compile(r'\`([^\`\n]+)\`')
@@ -110,8 +120,6 @@ for p in glob.glob('docs/spec/**/*.md', recursive=True):
 sys.exit(1 if bad else 0)
 "
 ```
-
-If anything is reported, hand-fix by either (a) replacing transpose `'` with `^T` (preferred), or (b) escaping the apostrophe with `&#39;` if it's a derivative or string literal.
 
 ## Portability specification pack
 

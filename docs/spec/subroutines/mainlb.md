@@ -225,7 +225,7 @@ The 7 F77 test cases:
 |---|---|
 | `case_invalid_input_returns_error` | `n = 0` -> `INFO_INPUT_ERROR_*`. |
 | `case_pgtol_convergence` | Quadratic, `pgtol = 1e-3` -> converges via projected gradient. |
-| `case_user_signals_stop` | User sets `task = &#39;STOP&#39;` mid-iteration. |
+| `case_user_signals_stop` | User sets `task = STOP` mid-iteration. |
 | `case_factr_convergence` | Slow `pgtol`; `factr` fires first. |
 | `case_immediate_pgtol_convergence` | `x0` already at minimum. |
 | `case_user_stop_cpu_restores_iterate` | User stop after a partial iteration restores last iterate. |

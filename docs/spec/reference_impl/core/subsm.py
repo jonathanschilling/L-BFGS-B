@@ -30,15 +30,19 @@ def subsm(
     wv: np.ndarray,
     wn: np.ndarray,
     iprint: int = -1,
-) -> tuple[int, int]:
-    """Compute the subspace minimizer; return (iword, info).
+) -> int:
+    """Compute the subspace minimizer; return ``iword``.
 
     Mutates x (overwrites with new iterate), d (Newton direction), xp (saved x),
     wv (workspace).
+
+    The F77 routine used to take an ``info`` output parameter for an
+    "ill-conditioned K" status. Since K's conditioning is checked in
+    ``formk`` / ``formt`` and the two ``dtrsm`` calls cannot fail on a
+    non-singular factor, the parameter has been removed.
     """
-    info = 0
     if nsub <= 0:
-        return 0, info
+        return 0
 
     col2 = 2 * col
 
@@ -102,7 +106,7 @@ def subsm(
 
     # Phase 3: if no bound hit, done.
     if iword == 0:
-        return iword, info
+        return iword
 
     # Phase 4: directional-derivative check (Morales/Nocedal 2011).
     dd_p = 0.0
@@ -113,7 +117,7 @@ def subsm(
         x[:] = xp
         # (Diagnostic; reference impl does not print.)
     else:
-        return iword, info
+        return iword
 
     # Phase 5: backtracking with safeguarded step.
     alpha = 1.0
@@ -153,4 +157,4 @@ def subsm(
         k = ind[i - 1] - 1
         x[k] = x[k] + alpha * d[i - 1]
 
-    return iword, info
+    return iword

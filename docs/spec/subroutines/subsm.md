@@ -43,7 +43,6 @@ algorithm).
 | `xp` (out) | real vector, length `n` | Saved copy of `xc` for backtracking restore. |
 | `wv` (out) | real vector, length `2m` | Workspace: `K⁻¹·W'·Z·d`. |
 | `iword` | integer | `0` if minimizer is in the box; `1` if some bound was encountered. |
-| `info` | integer | Always `0` in the LAPACK build (see `bmv.md` for the dead-info-branch note). |
 
 ### Preconditions
 
@@ -57,6 +56,13 @@ algorithm).
 
 - `x` is the (possibly safeguarded) subspace minimizer, feasible.
 - `iword = 1` if any bound was hit during the projection.
+
+## Historical note
+
+The F77 routine used to take an `info` output parameter for an
+"ill-conditioned K" status. Since K's conditioning is checked in
+`formk` / `formt` and the two `dtrsm` calls cannot fail on a
+non-singular factor, the parameter was always 0 and has been removed.
 
 ## Algorithm
 

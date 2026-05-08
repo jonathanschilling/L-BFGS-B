@@ -117,15 +117,17 @@ c>               <li>iprint>100  print details of every iteration including x an
 c>               When iprint > 0, the file iterate.dat will be created to
 c>                                summarize the iteration.
 c>
-c> @param info On entry info is unspecified.<br/>
-c>             On exit info =<ul><li>0       for normal return,</li>
-c>                               <li>nonzero for abnormal return
-c>                                        when the matrix K is ill-conditioned.</li></ul>
+c>
+c> Historical note: this routine used to take an `info` output parameter
+c> for an "ill-conditioned K" status. Since K's conditioning is checked
+c> in `formt`/`formk` (which fail loudly with their own `info`) and the
+c> two `dtrsm` calls inside `subsm` cannot fail on a non-singular factor,
+c> the parameter was always 0 on exit and has been removed.
       subroutine subsm ( n, m, nsub, ind, l, u, nbd, x, d, xp, ws, wy,
      +                   theta, xx, gg,
-     +                   col, head, iword, wv, wn, iprint, info )
+     +                   col, head, iword, wv, wn, iprint )
       implicit none
-      integer          n, m, nsub, col, head, iword, iprint, info,
+      integer          n, m, nsub, col, head, iword, iprint,
      +                 ind(nsub), nbd(n)
       double precision theta,
      +                 l(n), u(n), x(n), d(n), xp(n), xx(n), gg(n),
@@ -203,14 +205,12 @@ c     Compute wv:=K^(-1)wv.
       col2 = 2*col
 
       call dtrsm('l','u','t','n',col2,1,one,wn,m2,wv,col2)
-      info = 0
 
       do 25 i = 1, col
          wv(i) = -wv(i)
   25     continue
 
       call dtrsm('l','u','n','n',col2,1,one,wn,m2,wv,col2)
-      info = 0
 
 c     Compute d = (1/theta)d + (1/theta**2)Z'W wv.
 

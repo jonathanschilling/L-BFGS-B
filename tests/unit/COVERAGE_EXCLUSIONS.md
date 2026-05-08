@@ -34,14 +34,6 @@ numerics:
 
 ## Exemptions
 
-## src/cmprlb.f
-- line 61-63: `if (info .ne. 0)` after `call bmv(...)`. Unreachable in the
-  current build because `bmv.f` was migrated from LINPACK's `dtrsl`
-  (which set `info`) to LAPACK's `dtrsm` (which doesn't), and bmv now
-  always sets `info = 0` explicitly before returning. Defensive code
-  left from the migration; preserved as-is rather than removed because
-  a future BLAS swap could resurrect the failure mode.
-
 ## src/formk.f
 - line 313-314: `info = -2; return` after the second dpotrf on the (2,2)
   block. The (2,2) block is `theta*S'AA'S + (L^-1*(-La'+Rz'))'(L^-1*(-La'+Rz'))`,
@@ -75,12 +67,10 @@ into two buckets:
 `src/mainlb.f` (~76% line coverage). The bulk of the gap is internal
 "refresh-the-lbfgs-memory" blocks fired by:
 
-- cauchy returning info != 0 (singular triangular system)        — L375-384
-- subsm returning info != 0                                      — L423-432
-- iback >= 20 in lnsrlb, restart lbfgs                           — L449-458
-- abnormal-termination-in-lnsrch                                  — L483-497
-- formt non-PD Cholesky                                           — L598-605
-- skip-the-l-bfgs-update (s'y < eps*||y||^2 curvature condition)  — L500-511
+- iback >= 20 in lnsrlb, restart lbfgs
+- abnormal-termination-in-lnsrch
+- formt non-PD Cholesky
+- skip-the-l-bfgs-update (s'y < eps*||y||^2 curvature condition)
 
 Each is a defensive recovery path the algorithm uses when its compact
 representation degrades. They are genuinely unreachable from
@@ -89,3 +79,8 @@ constructing pathological L-BFGS state to trigger. The driver-level
 integration tests cover the well-conditioned trajectories, and these
 internal recovery paths are the one place where a port could legitimately
 diverge in implementation detail without affecting correctness.
+
+(Two earlier entries — "cauchy returning info != 0" and "subsm
+returning info != 0" — were removed when the dead `info` parameters
+in `bmv` / `cmprlb` / `cauchy` / `subsm` were dropped after the
+LINPACK→LAPACK migration left them unreachable.)

@@ -37,7 +37,6 @@ goes through `bmv`.
 | Name | Type | Description |
 |------|------|-------------|
 | `p` | real vector, length `2 col` | Result `p = M⁻¹ v`, same block layout as `v`. |
-| `info` | integer | Always `0` in the current LAPACK-based implementation. The original LINPACK version could set it non-zero on a singular triangular system; documented for backward compatibility. |
 
 ### Preconditions
 
@@ -50,6 +49,14 @@ goes through `bmv`.
 
 - `p` satisfies `M p = v` to within numerical precision.
 - `v`, `sy`, `wt` are unchanged.
+
+## Historical note
+
+The F77 routine used to take an `info` output parameter for the
+LINPACK `dtrsl` triangular-solve return status. Since LAPACK's
+`dtrsm` cannot fail on a non-singular factor (and `formt` ensures
+`wt` is non-singular), the parameter was always 0 and has been
+removed.
 
 ## Algorithm
 
@@ -143,10 +150,10 @@ The "no-transpose upper" triangular solve is the F77 call
 
 ```
 input:  m, col, sy, wt, v
-output: p (length 2*col), info
+output: p (length 2*col)
 
 if col == 0:
-    return    # info unchanged; p untouched
+    return    # p untouched
 
 # Part I
 p[col+1] = v[col+1]
@@ -169,7 +176,6 @@ for i = 1 to col:
         s += sy[k, i] * p[col+k] / sy[i, i]
     p[i] = p[i] + s
 
-info = 0
 ```
 
 ### Magic constants

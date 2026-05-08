@@ -48,7 +48,6 @@ piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
 | `c` | real vector, length `2col` | `W' (xcp - x)`. |
 | `wbp`, `v` | real vectors, length `2m` | Workspace. |
 | `nseg` | integer | Number of piecewise-quadratic segments traversed. |
-| `info` | integer | `0` success; nonzero if `bmv` reports singularity. |
 
 ### Preconditions
 
@@ -64,6 +63,12 @@ piecewise-linear segment is the GCP. (See Byrd/Lu/Nocedal/Zhu 1995
   `iwhere = 1` (lower) or `iwhere = 2` (upper); free movers get
   `iwhere = 0`; free non-movers (zero gradient component) get
   `iwhere = -3`.
+
+## Historical note
+
+The F77 routine used to take an `info` output parameter to forward
+errors from the embedded `bmv` calls. Since `bmv` cannot fail under
+LAPACK `dtrsm`, the parameter was always 0 and has been removed.
 
 ## Algorithm
 
@@ -208,7 +213,6 @@ return
   with no bound along `d` and nonzero `d`). When `bnded = false` and
   all breakpoints are exhausted, the GCP lies along the unbounded
   ray; `dtm = -f1/f2` proceeds normally.
-- `bmv` failure (`info ≠ 0`) propagates up; caller refreshes L-BFGS.
 
 ### Order-of-operations dependencies
 

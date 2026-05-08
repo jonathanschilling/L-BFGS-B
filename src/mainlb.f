@@ -369,21 +369,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       call cauchy(n,x,l,u,nbd,g,indx2,iwhere,t,d,z,
      +            m,wy,ws,sy,wt,theta,col,head,
      +            wa(1),wa(2*m+1),wa(4*m+1),wa(6*m+1),nseg,
-     +            iprint, sbgnrm, info, epsmch)
-      if (info .ne. 0) then 
-c         singular triangular system detected; refresh the lbfgs memory.
-         if(iprint .ge. 1) write (6, 1005)
-         info   = 0
-         col    = 0
-         head   = 1
-         theta  = one
-         iupdat = 0
-         updatd = .false.
-         call timer(cpu2) 
-         cachyt = cachyt + cpu2 - cpu1
-         goto 222
-      endif
-      call timer(cpu2) 
+     +            iprint, sbgnrm, epsmch)
+      call timer(cpu2)
       cachyt = cachyt + cpu2 - cpu1
       nintol = nintol + nseg
 
@@ -435,31 +422,15 @@ c          refresh the lbfgs memory and restart the iteration.
 c        compute r=-Z'B(xcp-xk)-Z'g (using wa(2m+1)=W'(xcp-x)
 c                                                   from 'cauchy').
       call cmprlb(n,m,x,g,ws,wy,sy,wt,z,r,wa,index,
-     +           theta,col,head,nfree,cnstnd,info)
-      if (info .ne. 0) goto 444
+     +           theta,col,head,nfree,cnstnd)
 
-c-jlm-jn   call the direct method. 
+c-jlm-jn   call the direct method.
 
       call subsm( n, m, nfree, index, l, u, nbd, z, r, xp, ws, wy,
-     +           theta, x, g, col, head, iword, wa, wn, iprint, info)
- 444  continue
-      if (info .ne. 0) then 
-c          singular triangular system detected;
-c          refresh the lbfgs memory and restart the iteration.
-         if(iprint .ge. 1) write (6, 1005)
-         info   = 0
-         col    = 0
-         head   = 1
-         theta  = one
-         iupdat = 0
-         updatd = .false.
-         call timer(cpu2) 
-         sbtime = sbtime + cpu2 - cpu1 
-         goto 222
-      endif
- 
-      call timer(cpu2) 
-      sbtime = sbtime + cpu2 - cpu1 
+     +           theta, x, g, col, head, iword, wa, wn, iprint)
+
+      call timer(cpu2)
+      sbtime = sbtime + cpu2 - cpu1
  555  continue
  
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -673,10 +644,7 @@ c     Save local variables.
  1003 format (2(1x,i4),5x,'-',5x,'-',3x,'-',5x,'-',5x,'-',8x,'-',3x,
      +        1p,2(1x,d10.3))
  1004 format ('  ys=',1p,e10.3,'  -gs=',1p,e10.3,' BFGS update SKIPPED')
- 1005 format (/, 
-     +' Singular triangular system detected;',/,
-     +'   refresh the lbfgs memory and restart the iteration.')
- 1006 format (/, 
+ 1006 format (/,
      +' Nonpositive definiteness in Cholesky factorization in formk;',/,
      +'   refresh the lbfgs memory and restart the iteration.')
  1007 format (/, 

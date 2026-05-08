@@ -23,7 +23,7 @@ contains
    subroutine case_subgnorm_zero()
       ! sbgnrm <= 0 -> early return: xcp = x.
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -40,20 +40,19 @@ contains
       theta = 1.0_dp
       sbgnrm = 0.0_dp
       epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       call assert_close_real(xcp(1),  1.5_dp, where="case_subgnorm_zero xcp(1)")
       call assert_close_real(xcp(2), -2.5_dp, where="case_subgnorm_zero xcp(2)")
-      call assert_eq_int(info, 0, where="case_subgnorm_zero info")
    end subroutine case_subgnorm_zero
 
    subroutine case_all_fixed_early_return()
       ! All variables marked fixed (iwhere=3): d stays 0, nbreak=0,
       ! nfree=n+1 -> the second early-return path fires.
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -70,14 +69,13 @@ contains
       theta = 1.0_dp
       sbgnrm = 1.0_dp
       epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       ! xcp should equal x (no movement; all fixed).
       call assert_close_real(xcp(1), 1.0_dp, where="case_all_fixed_early xcp(1)")
       call assert_close_real(xcp(2), 1.0_dp, where="case_all_fixed_early xcp(2)")
-      call assert_eq_int(info, 0, where="case_all_fixed_early info")
    end subroutine case_all_fixed_early_return
 
    subroutine case_unbounded_no_breakpoints()
@@ -85,7 +83,7 @@ contains
       ! After the per-i loop we have d = -g. col=0, so f1=-||g||^2, f2=-theta*f1=theta*||g||^2.
       ! dtm = 1/theta. nbreak=0 -> goto 888. xcp = x + dtm*d = x - g/theta.
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -102,14 +100,13 @@ contains
       theta = 1.0_dp
       sbgnrm = sqrt(5.0_dp)
       epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       ! Expected: xcp = -g/theta = (-1, -2).
       call assert_close_real(xcp(1), -1.0_dp, where="case_unbounded xcp(1)")
       call assert_close_real(xcp(2), -2.0_dp, where="case_unbounded xcp(2)")
-      call assert_eq_int(info, 0, where="case_unbounded info")
    end subroutine case_unbounded_no_breakpoints
 
    subroutine case_one_breakpoint_col_zero()
@@ -128,7 +125,7 @@ contains
       !   xcp(1) = u(1) = 1. nleft=0 and nbreak=n -> dtm=dt, goto 999.
       ! Final xcp = (1, 1) (the upper-corner of the box).
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -145,22 +142,21 @@ contains
       theta = 1.0_dp
       sbgnrm = 2.0_dp
       epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       call assert_close_real(xcp(1), 1.0_dp, where="case_one_break xcp(1)")
       call assert_close_real(xcp(2), 1.0_dp, where="case_one_break xcp(2)")
       call assert_eq_int(iwhere(1), 2, where="case_one_break iwhere(1)")
       call assert_eq_int(iwhere(2), 2, where="case_one_break iwhere(2)")
-      call assert_eq_int(info, 0, where="case_one_break info")
    end subroutine case_one_breakpoint_col_zero
 
    subroutine case_with_history_col_one()
       ! Exercises the col>0 branch (bmv invocation, p/c updates).
       ! Use the same n=2 problem as above with one stored (s, y) pair.
       integer, parameter :: n = 2, m = 1, col = 1
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,col), ws(n,col), sy(m,m), wt(m,m)
       real(dp) :: p(2*col), c(2*col), wbp(2*col), v(2*col)
@@ -180,13 +176,12 @@ contains
       theta = 1.0_dp
       sbgnrm = 2.0_dp
       epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       ! Don't predict xcp exactly (depends on bmv-driven curvature info);
       ! instead verify info=0 and xcp is feasible.
-      call assert_eq_int(info, 0, where="case_with_history info")
       call assert_true(xcp(1) >= l(1) .and. xcp(1) <= u(1), &
                        "case_with_history xcp(1) feasible")
       call assert_true(xcp(2) >= l(2) .and. xcp(2) <= u(2), &
@@ -198,7 +193,7 @@ contains
       ! variable should be marked iwhere = 2 (at upper, no descent).
       ! Hits L222 branch.
       integer, parameter :: n = 1, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -212,10 +207,10 @@ contains
       wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
       p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
       theta = 1.0_dp; sbgnrm = 1.0_dp; epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
+                  v, nseg, -1, sbgnrm, epsmch)
       call assert_eq_int(iwhere(1), 2, where="case_var_at_upper_pos_neggi iwhere")
       ! With iwhere=2, d(1)=0; xcp=x=1.0.
       call assert_close_real(xcp(1), 1.0_dp, where="case_var_at_upper_pos_neggi xcp")
@@ -227,7 +222,7 @@ contains
       ! and bnded=false (var 1 has |neggi|>0). Hits the post-loop
       ! "else dtm = -f1/f2" branch (L432-434).
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -241,11 +236,10 @@ contains
       wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
       p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
       theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
-      call assert_eq_int(info, 0, where="case_mixed info")
+                  v, nseg, -1, sbgnrm, epsmch)
       ! Final var 2 should be at upper bound; var 1 in interior somewhere.
       call assert_close_real(xcp(2), 1.0_dp, where="case_mixed xcp(2)=u")
    end subroutine case_mixed_bounded_unbounded
@@ -256,7 +250,7 @@ contains
       ! bnded=true (no unbounded var sets bnded=false). Hits the
       ! "else if (bnded)" branch setting f1=f2=dtm=0 (L428-431).
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -270,11 +264,10 @@ contains
       wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
       p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
       theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, -1, sbgnrm, info, epsmch)
-      call assert_eq_int(info, 0, where="case_all_bounded info")
+                  v, nseg, -1, sbgnrm, epsmch)
       call assert_close_real(xcp(1), 0.5_dp, where="case_all_bounded xcp(1)")
       call assert_close_real(xcp(2), 1.0_dp, where="case_all_bounded xcp(2)")
    end subroutine case_all_bounded_with_fixed_var
@@ -285,7 +278,7 @@ contains
       ! breakpoint-walkthrough setup but redirects unit 6 verbosity to
       ! force coverage of those branches.
       integer, parameter :: n = 2, m = 1, col = 0
-      integer  :: nbd(n), iorder(n), iwhere(n), nseg, info, head
+      integer  :: nbd(n), iorder(n), iwhere(n), nseg, head
       real(dp) :: x(n), l(n), u(n), g(n), t(n), d(n), xcp(n)
       real(dp) :: wy(n,1), ws(n,1), sy(m,m), wt(m,m)
       real(dp) :: p(2), c(2), wbp(2), v(2)
@@ -300,11 +293,10 @@ contains
       wy = 0.0_dp; ws = 0.0_dp; sy = 0.0_dp; wt = 0.0_dp
       p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
       theta = 1.0_dp; sbgnrm = 2.0_dp; epsmch = 2.22e-16_dp
-      info = 0; head = 1; nseg = 0
+      head = 1; nseg = 0
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, 100, sbgnrm, info, epsmch)
-      call assert_eq_int(info, 0, where="case_iprint_100 info")
+                  v, nseg, 100, sbgnrm, epsmch)
    end subroutine case_iprint_100_diagnostic
 
 end program test_cauchy

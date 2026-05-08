@@ -36,17 +36,18 @@ c>             correction. Used to walk the columns in chronological order.
 c> @param nfree Number of free variables; size of the subspace problem.
 c> @param cnstnd .true. if the problem has bounds; controls the shortcut
 c>               path described under @param r.
-c> @param info Error code from the embedded bmv call. With the current
-c>             dtrsm-based bmv this is always 0 (see bmv.f); the code path
-c>             that maps a nonzero info to -8 is dead but kept for the
-c>             event of a future BLAS substitution.
-      subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, 
-     +                 theta, col, head, nfree, cnstnd, info)
- 
+c>
+c> Historical note: this routine used to take an `info` output parameter
+c> to forward errors from the embedded `bmv` call. Since `bmv` cannot
+c> fail under LAPACK `dtrsm`, the parameter was always 0 on exit and
+c> has been removed.
+      subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index,
+     +                 theta, col, head, nfree, cnstnd)
+
       logical          cnstnd
-      integer          n, m, col, head, nfree, info, index(n)
-      double precision theta, 
-     +                 x(n), g(n), z(n), r(n), wa(4*m), 
+      integer          n, m, col, head, nfree, index(n)
+      double precision theta,
+     +                 x(n), g(n), z(n), r(n), wa(4*m),
      +                 ws(n, m), wy(n, m), sy(m, m), wt(m, m)
 c
 c                           *  *  *
@@ -73,12 +74,8 @@ c     ************
             k = index(i)
             r(i) = -theta*(z(k) - x(k)) - g(k)
   30     continue
-         call bmv(m,sy,wt,col,wa(2*m+1),wa(1),info)
-         if (info .ne. 0) then
-            info = -8
-            return
-         endif
-         pointr = head 
+         call bmv(m,sy,wt,col,wa(2*m+1),wa(1))
+         pointr = head
          do 34 j = 1, col
             a1 = wa(j)
             a2 = theta*wa(col + j)

@@ -35,7 +35,6 @@ indices in the free-variable index permutation.
 | Name | Type | Description |
 |------|------|-------------|
 | `r` | real vector, length `n` | Filled in two regimes (see Algorithm): full `n`-vector when unconstrained with history, or `r[1..nfree]` for the free variables otherwise. |
-| `info` | integer | `0` on success; `-8` if the embedded `bmv` Cholesky-solve fails. **With the LAPACK-based `bmv` in this codebase, `info` is always `0`.** Documented for completeness. |
 | `wa` | (in-place) | `wa[1..2col]` filled with `M⁻¹ W'(z - x)`. |
 
 ### Preconditions
@@ -50,7 +49,12 @@ indices in the free-variable index permutation.
 
 - `r` filled per the algorithm.
 - `wa[1..2col]` filled.
-- `info` set.
+
+## Historical note
+
+The F77 routine used to take an `info` output parameter to forward
+errors from the embedded `bmv` call. Since `bmv` cannot fail under
+LAPACK `dtrsm`, the parameter was always 0 and has been removed.
 
 ## Algorithm
 
@@ -79,10 +83,6 @@ for i = 1 to nfree:
 # 2. Solve M^{-1} v for v = W'(z - x), already in wa[2m+1..2m+2col].
 #    Result placed in wa[1..2col] by bmv.
 call bmv(m, sy, wt, col, wa[2m+1..], wa[1..], info)
-if info != 0:
-    info = -8
-    return
-
 # 3. Apply the W*M^{-1}*W' correction column by column.
 pointr = head
 for j = 1 to col:
@@ -99,7 +99,7 @@ for j = 1 to col:
 ```
 input:  n, m, col, head, nfree, index, theta, x, g, z, ws, wy, sy, wt,
         wa (in/out), cnstnd
-output: r, info, wa[1..2col] mutated
+output: r, wa[1..2col] mutated
 
 if not cnstnd and col > 0:
     for i = 1 to n:
@@ -116,11 +116,7 @@ for i = 1 to nfree:
     k = index[i]
     r[i] = -theta * (z[k] - x[k]) - g[k]
 
-call bmv(m, sy, wt, col, wa[2m+1 ..], wa[1 ..], info)
-if info != 0:
-    info = -8
-    return
-
+call bmv(m, sy, wt, col, wa[2m+1 ..], wa[1 ..])
 pointr = head
 for j = 1 to col:
     a1 = wa[j]
@@ -137,18 +133,8 @@ None.
 
 ### Numerical safeguards
 
-The dead `info != 0` branch is preserved for forward compatibility:
-the original LINPACK `dtrsl` could return non-zero `info` on a
-near-singular triangular factor; the LAPACK `dtrsm` replacement does
-not. Ports may either:
-
-- Match the F77 source by including the dead branch (it always
-  short-circuits to `info = 0` from `bmv`).
-- Inline the `bmv` call without the check, since `info` is always
-  `0`.
-
-For `--strict` conformance, either is acceptable: the observable
-outputs (`r`, `wa[1..2col]`) are identical.
+None. `bmv` cannot fail under the LAPACK `dtrsm` build, so the F77
+routine no longer signals an error path.
 
 ### Order-of-operations dependencies
 

@@ -28,15 +28,14 @@ c>
 c> @param p On entry p is unspecified.<br/>
 c>          On exit p is the product Mv.
 c>
-c> @param info On entry info is unspecified.<br/>
-c>             On exit info is always 0. (The original LINPACK dtrsl
-c>             could set info nonzero on a singular triangular system;
-c>             the LAPACK dtrsm replacement does not return such a
-c>             status, so bmv now sets info = 0 unconditionally and
-c>             callers checking "if info /= 0 ... return" hit dead code.)
-      subroutine bmv(m, sy, wt, col, v, p, info)
+c> Historical note: this routine used to take an `info` output parameter
+c> for the LINPACK `dtrsl` triangular-solve return status. Since LAPACK's
+c> `dtrsm` replacement cannot fail on a non-singular triangular factor
+c> (and `formt` ensures `wt` is non-singular), the parameter was always
+c> 0 on exit and has been removed.
+      subroutine bmv(m, sy, wt, col, v, p)
 
-      integer m, col, info
+      integer m, col
       double precision sy(m, m), wt(m, m), v(2*col), p(2*col)
 
 c
@@ -73,7 +72,6 @@ c       solve Jp2=v2+LD^(-1)v1.
   20  continue
 c     Solve the triangular system
       call dtrsm('l','u','t','n',col,1,one,wt,m,p(col+1),col)
-      info = 0
 
 c       solve D^(1/2)p1=v1.
       do 30 i = 1, col
@@ -85,7 +83,6 @@ c                    [  0         J'           ] [ p2 ]   [ p2 ].
 
 c       solve J^Tp2=p2.
       call dtrsm('l','u','n','n',col,1,one,wt,m,p(col+1),col)
-      info = 0
 
 c       compute p1=-D^(-1/2)(p1-D^(-1/2)L'p2)
 c                 =-D^(-1/2)p1+D^(-1)L'p2.

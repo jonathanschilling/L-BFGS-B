@@ -122,16 +122,17 @@ c>
 c> @param sbgnrm On entry sbgnrm is the norm of the projected gradient at x.<br/>
 c>               On exit sbgnrm is unchanged.
 c>
-c> @param info On entry info is 0.
-c>             On exit info =<ul><li>0       for normal return,</li>
-c>                               <li>= nonzero for abnormal return when the the system
-c>                                     used in routine bmv is singular.</li></ul>
 c> @param epsmch machine precision epsilon
-      subroutine cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp, 
-     +                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp, 
-     +                  v, nseg, iprint, sbgnrm, info, epsmch)
+c>
+c> Historical note: this routine used to take an `info` output parameter
+c> to forward errors from the embedded `bmv` calls. Since `bmv` cannot
+c> fail under LAPACK `dtrsm`, the parameter was always 0 on exit and
+c> has been removed.
+      subroutine cauchy(n, x, l, u, nbd, g, iorder, iwhere, t, d, xcp,
+     +                  m, wy, ws, sy, wt, theta, col, head, p, c, wbp,
+     +                  v, nseg, iprint, sbgnrm, epsmch)
       implicit none
-      integer          n, m, head, col, nseg, iprint, info, 
+      integer          n, m, head, col, nseg, iprint,
      +                 nbd(n), iorder(n), iwhere(n)
       double precision theta, epsmch,
      +                 x(n), l(n), u(n), g(n), t(n), d(n), xcp(n),
@@ -294,8 +295,7 @@ c     Initialize derivative f2.
       f2 =  -theta*f1 
       f2_org  =  f2
       if (col .gt. 0) then
-         call bmv(m,sy,wt,col,p,v,info)
-         if (info .ne. 0) return
+         call bmv(m,sy,wt,col,p,v)
          f2 = f2 - ddot(col2,v,1,p,1)
       endif
       dtm = -f1/f2
@@ -406,8 +406,7 @@ c           the row of W corresponding to the breakpoint encountered.
   70     continue 
  
 c           compute (wbp)Mc, (wbp)Mp, and (wbp)M(wbp)'.
-         call bmv(m,sy,wt,col,wbp,v,info)
-         if (info .ne. 0) return
+         call bmv(m,sy,wt,col,wbp,v)
          wmc = ddot(col2,c,1,v,1)
          wmp = ddot(col2,p,1,v,1) 
          wmw = ddot(col2,wbp,1,v,1)

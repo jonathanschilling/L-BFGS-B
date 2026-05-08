@@ -29,21 +29,18 @@ def cmprlb(
     head: int,
     nfree: int,
     cnstnd: bool,
-) -> int:
+) -> None:
     """Compute reduced gradient r at the Cauchy point.
 
-    Returns
-    -------
-    info : int
-        0 on success. With the LAPACK-based bmv this is always 0.
+    The F77 routine used to take an ``info`` output for forwarding bmv
+    failures. Since LAPACK ``dtrsm`` cannot fail on a non-singular
+    factor, that signaling is no longer needed.
     """
-    info = 0
-
     # Path A: unconstrained with history -> r = -g.
     if (not cnstnd) and col > 0:
         for i in range(n):
             r[i] = -g[i]
-        return info
+        return
 
     # Path B: constrained or col == 0.
     for i in range(nfree):
@@ -55,9 +52,7 @@ def cmprlb(
     if col > 0:
         v_in = wa[2 * m : 2 * m + 2 * col].copy()       # wa(2m+1..2m+2col)
         p_out = np.empty(2 * col, dtype=np.float64)
-        info_bmv = bmv(m, sy, wt, col, v_in, p_out)
-        if info_bmv != 0:
-            return -8                                    # dead branch under LAPACK bmv
+        bmv(m, sy, wt, col, v_in, p_out)
         wa[: 2 * col] = p_out
 
         pointr = head
@@ -68,5 +63,3 @@ def cmprlb(
                 k = index[i] - 1
                 r[i] += wy[k, pointr - 1] * a1 + ws[k, pointr - 1] * a2
             pointr = (pointr % m) + 1
-
-    return info

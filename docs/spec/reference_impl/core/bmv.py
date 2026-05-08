@@ -18,7 +18,7 @@ def bmv(
     col: int,
     v: np.ndarray,
     p: np.ndarray,
-) -> int:
+) -> None:
     """Compute ``p = M^{-1} v`` using the compact L-BFGS factorization.
 
     Parameters
@@ -36,13 +36,15 @@ def bmv(
     p : (2*col,) float64
         Output (overwritten). On col==0, untouched.
 
-    Returns
-    -------
-    info : int
-        Always 0 in this implementation (matches LAPACK-based F77).
+    Notes
+    -----
+    The F77 routine used to take an ``info`` output parameter for the
+    LINPACK ``dtrsl`` triangular-solve return status. Since LAPACK
+    ``dtrsm`` cannot fail on a non-singular factor, the parameter is
+    not present in this version.
     """
     if col == 0:
-        return 0
+        return
 
     # Part I: solve [D^{1/2} 0; -L D^{-1/2}  J] [p1; p2] = [v1; v2]
     # Step 1: build (v2 + L D^{-1} v1) into p[col+1..2col]  (1-based).
@@ -78,5 +80,3 @@ def bmv(
         for k in range(i + 1, col + 1):
             s += sy[k - 1, i - 1] * p[col + k - 1] / sy[i - 1, i - 1]
         p[i - 1] = p[i - 1] + s
-
-    return 0

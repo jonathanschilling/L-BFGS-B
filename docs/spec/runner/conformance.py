@@ -236,7 +236,7 @@ def _cmprlb(inp: dict) -> dict:
     from core.cmprlb import cmprlb
     n, m = inp["n"], inp["m"]
     r = np.array(inp["r_in"], dtype=np.float64).copy()
-    info = cmprlb(
+    cmprlb(
         n, m,
         np.array(inp["x"], dtype=np.float64),
         np.array(inp["g"], dtype=np.float64),
@@ -250,14 +250,14 @@ def _cmprlb(inp: dict) -> dict:
         np.array(inp["index"], dtype=np.int32),
         inp["theta"], inp["col"], inp["head"], inp["nfree"], inp["cnstnd"],
     )
-    return {"r": r.tolist(), "info": info}
+    return {"r": r.tolist()}
 
 
 @handler("bmv")
 def _bmv(inp: dict) -> dict:
     from core.bmv import bmv
     p = np.array(inp["p_in"], dtype=np.float64).copy()
-    info = bmv(
+    bmv(
         inp["m"],
         np.array(inp["sy"], dtype=np.float64),
         np.array(inp["wt"], dtype=np.float64),
@@ -265,7 +265,7 @@ def _bmv(inp: dict) -> dict:
         np.array(inp["v"], dtype=np.float64),
         p,
     )
-    return {"p": p.tolist(), "info": info}
+    return {"p": p.tolist()}
 
 
 @handler("formt")
@@ -406,7 +406,7 @@ def _cauchy(inp: dict) -> dict:
     c = np.zeros(max(2, 2 * col))
     wbp = np.zeros(max(2, 2 * col))
     v = np.zeros(max(2, 2 * col))
-    info, nseg = cauchy(
+    nseg = cauchy(
         n, x,
         np.array(inp["l"], dtype=np.float64),
         np.array(inp["u"], dtype=np.float64),
@@ -416,7 +416,7 @@ def _cauchy(inp: dict) -> dict:
         m, wy, ws, sy, wt, inp["theta"], col, inp["head"],
         p, c, wbp, v, inp["sbgnrm"], inp["epsmch"], inp["iprint"],
     )
-    return {"xcp": xcp.tolist(), "iwhere": iwhere.tolist(), "info": info, "nseg": nseg}
+    return {"xcp": xcp.tolist(), "iwhere": iwhere.tolist(), "nseg": nseg}
 
 
 @handler("subsm")
@@ -432,7 +432,7 @@ def _subsm(inp: dict) -> dict:
     wy = np.array(inp["wy"], dtype=np.float64).reshape(n, m)
     wn = np.array(inp["wn_in"], dtype=np.float64).reshape(2 * m, 2 * m).copy()
     wv = np.zeros(2 * m)
-    iword, info = subsm(
+    iword = subsm(
         n, m, nsub, ind,
         np.array(inp["l"], dtype=np.float64),
         np.array(inp["u"], dtype=np.float64),
@@ -442,7 +442,7 @@ def _subsm(inp: dict) -> dict:
         np.array(inp["gg"], dtype=np.float64),
         inp["col"], inp["head"], wv, wn,
     )
-    return {"x": x.tolist(), "iword": iword, "info": info}
+    return {"x": x.tolist(), "iword": iword}
 
 
 # ---------------------------------------------------------------------------

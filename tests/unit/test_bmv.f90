@@ -15,15 +15,13 @@ contains
       ! for not relying on its contents; here we just verify no crash).
       ! Allocate sy/wt with m=1 to give addressable storage.
       integer, parameter :: m = 1
-      integer  :: col, info
+      integer  :: col
       real(dp) :: sy(m,m), wt(m,m), v(2), p(2)
       sy(1,1) = -1.0_dp; wt(1,1) = -1.0_dp
       v = (/ 7.0_dp, 11.0_dp /)
       p = -999.0_dp
-      col = 0; info = -42
-      call bmv(m, sy, wt, col, v, p, info)
-      ! info is unspecified after early return; bmv doesn't reset it before
-      ! `return` on col=0. The caller (cmprlb) doesn't read it in that path.
+      col = 0
+      call bmv(m, sy, wt, col, v, p)
    end subroutine case_col_zero
 
    subroutine case_col_one_diagonal()
@@ -34,17 +32,16 @@ contains
       ! With sy(1,1)=1, theta*s's=1 -> M = [[-1, 0], [0, 1]],  M^{-1} same.
       ! For v=(3, 2): p = M^{-1} v = (-3, 2).
       integer, parameter :: m = 1
-      integer  :: col, info
+      integer  :: col
       real(dp) :: sy(m,m), wt(m,m), v(2), p(2)
       sy(1,1) = 1.0_dp
       wt(1,1) = 1.0_dp
       v = (/ 3.0_dp, 2.0_dp /)
       p = -999.0_dp
-      col = 1; info = -42
-      call bmv(m, sy, wt, col, v, p, info)
+      col = 1
+      call bmv(m, sy, wt, col, v, p)
       call assert_close_real(p(1), -3.0_dp, where="case_col_one_diagonal p(1)")
       call assert_close_real(p(2),  2.0_dp, where="case_col_one_diagonal p(2)")
-      call assert_eq_int(info, 0, where="case_col_one_diagonal info")
    end subroutine case_col_one_diagonal
 
    subroutine case_col_two_with_L()
@@ -72,7 +69,7 @@ contains
       !          = (-1/7, -1/2)
       ! Expected p = (-1/7, -1/2, 1/2, 2/7).
       integer, parameter :: m = 2
-      integer  :: col, info
+      integer  :: col
       real(dp) :: sy(m,m), wt(m,m), v(4), p(4)
       sy = 0.0_dp
       sy(1,1) = 1.0_dp; sy(2,2) = 2.0_dp; sy(2,1) = 3.0_dp
@@ -81,13 +78,12 @@ contains
       wt(2,2) = sqrt(14.0_dp)
       v = (/ 1.0_dp, 1.0_dp, 1.0_dp, 1.0_dp /)
       p = -999.0_dp
-      col = 2; info = -42
-      call bmv(m, sy, wt, col, v, p, info)
+      col = 2
+      call bmv(m, sy, wt, col, v, p)
       call assert_close_real(p(1), -1.0_dp/7.0_dp,  where="case_col_two p(1)")
       call assert_close_real(p(2), -1.0_dp/2.0_dp,  where="case_col_two p(2)")
       call assert_close_real(p(3),  1.0_dp/2.0_dp,  where="case_col_two p(3)")
       call assert_close_real(p(4),  2.0_dp/7.0_dp,  where="case_col_two p(4)")
-      call assert_eq_int(info, 0, where="case_col_two info")
    end subroutine case_col_two_with_L
 
 end program test_bmv

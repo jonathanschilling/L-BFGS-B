@@ -42,22 +42,22 @@ def cauchy(
     sbgnrm: float,
     epsmch: float,
     iprint: int = -1,
-) -> tuple[int, int]:
+) -> int:
     """Compute the Generalized Cauchy Point.
 
     Returns
     -------
-    info : int
-        0 success; nonzero if bmv reports singularity.
     nseg : int
         Number of piecewise-quadratic segments traversed.
-    """
-    info = 0
 
+    The F77 routine used to take an ``info`` output to forward bmv
+    failures. Since LAPACK ``dtrsm`` cannot fail on a non-singular
+    factor, that signaling is no longer needed.
+    """
     # Early return for zero projected gradient.
     if sbgnrm <= 0.0:
         xcp[:] = x
-        return info, 0
+        return 0
 
     bnded = True
     nfree = n + 1
@@ -140,7 +140,7 @@ def cauchy(
 
     # Trivial case: no breakpoints and all variables effectively fixed.
     if nbreak == 0 and nfree == n + 1:
-        return info, 0
+        return 0
 
     # Phase 2: compute initial f2 and dtm.
     for j in range(col2):
@@ -149,9 +149,7 @@ def cauchy(
     f2 = -theta * f1
     f2_org = f2
     if col > 0:
-        info = bmv(m, sy, wt, col, p[:col2].copy(), v[:col2])
-        if info != 0:
-            return info, 0
+        bmv(m, sy, wt, col, p[:col2].copy(), v[:col2])
         f2 = f2 - float(np.dot(v[:col2], p[:col2]))
     dtm = -f1 / f2 if f2 != 0.0 else 0.0
     tsum = 0.0
@@ -226,9 +224,7 @@ def cauchy(
                     wbp[col + j - 1] = theta * ws[ibp - 1, pointr - 1]
                     pointr = (pointr % m) + 1
                 # v = M^{-1} wbp
-                info = bmv(m, sy, wt, col, wbp[:col2].copy(), v[:col2])
-                if info != 0:
-                    return info, nseg
+                bmv(m, sy, wt, col, wbp[:col2].copy(), v[:col2])
                 wmc = float(np.dot(c[:col2], v[:col2]))
                 wmp = float(np.dot(p[:col2], v[:col2]))
                 wmw = float(np.dot(wbp[:col2], v[:col2]))
@@ -270,4 +266,4 @@ def cauchy(
         for j in range(col2):
             c[j] += dtm * p[j]
 
-    return info, nseg
+    return nseg

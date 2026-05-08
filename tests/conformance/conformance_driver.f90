@@ -224,7 +224,7 @@ contains
    subroutine run_bmv(s, ou)
       type(kv_store), intent(in) :: s
       integer,        intent(in) :: ou
-      integer  :: m, col, info, rows, cols, vlen
+      integer  :: m, col, rows, cols, vlen
       real(dp), allocatable :: sy(:,:), wt(:,:), vv(:), p(:)
 
       call get_int(s, 'm', m)
@@ -233,14 +233,10 @@ contains
       call get_real_mat(s, 'wt', wt, rows, cols)
       call get_real_vec(s, 'v', vv, vlen)
       call get_real_vec(s, 'p_in', p, vlen)
-      ! bmv only sets info on the col>0 path; init to 0 so the col=0
-      ! early-return produces a defined output.
-      info = 0
 
-      call bmv(m, sy, wt, col, vv, p, info)
+      call bmv(m, sy, wt, col, vv, p)
 
       call write_real_vec(ou, 'p', p)
-      call write_int(ou, 'info', info)
    end subroutine run_bmv
 
    ! ===================================================================
@@ -372,7 +368,7 @@ contains
    subroutine run_cmprlb(s, ou)
       type(kv_store), intent(in) :: s
       integer,        intent(in) :: ou
-      integer  :: n, m, col, head, nfree, info, rows, cols, nlen
+      integer  :: n, m, col, head, nfree, rows, cols, nlen
       logical  :: cnstnd
       real(dp) :: theta
       integer,  allocatable :: idx(:)
@@ -393,17 +389,11 @@ contains
       call get_real_mat(s, 'wy', wy, rows, cols)
       call get_real_mat(s, 'sy', sy, rows, cols)
       call get_real_mat(s, 'wt', wt, rows, cols)
-      ! cmprlb only sets info inside the bmv-calling path; init to 0
-      ! so the unconstrained-shortcut and col=0 paths produce a
-      ! defined output (matches the F77 unit test which sets info=0
-      ! on entry).
-      info = 0
 
       call cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, idx, &
-                  theta, col, head, nfree, cnstnd, info)
+                  theta, col, head, nfree, cnstnd)
 
       call write_real_vec(ou, 'r', r)
-      call write_int(ou, 'info', info)
    end subroutine run_cmprlb
 
    ! ===================================================================
@@ -488,7 +478,7 @@ contains
    subroutine run_cauchy(s, ou)
       type(kv_store), intent(in) :: s
       integer,        intent(in) :: ou
-      integer  :: n, m, col, head, iprint, info, nseg, rows, cols, nlen
+      integer  :: n, m, col, head, iprint, nseg, rows, cols, nlen
       real(dp) :: theta, sbgnrm, epsmch
       integer,  allocatable :: nbd(:), iwhere(:), iorder(:)
       real(dp), allocatable :: x(:), l(:), u(:), g(:), tt(:), d(:), xcp(:)
@@ -517,15 +507,14 @@ contains
       col_max = max(2, 2*col)
       allocate(p(col_max), c(col_max), wbp(col_max), v(col_max))
       p = 0.0_dp; c = 0.0_dp; wbp = 0.0_dp; v = 0.0_dp
-      info = 0; nseg = 0
+      nseg = 0
 
       call cauchy(n, x, l, u, nbd, g, iorder, iwhere, tt, d, xcp, &
                   m, wy, ws, sy, wt, theta, col, head, p, c, wbp, &
-                  v, nseg, iprint, sbgnrm, info, epsmch)
+                  v, nseg, iprint, sbgnrm, epsmch)
 
       call write_real_vec(ou, 'xcp', xcp)
       call write_int_vec(ou, 'iwhere', iwhere)
-      call write_int(ou, 'info', info)
       call write_int(ou, 'nseg', nseg)
    end subroutine run_cauchy
 
@@ -535,7 +524,7 @@ contains
    subroutine run_subsm(s, ou)
       type(kv_store), intent(in) :: s
       integer,        intent(in) :: ou
-      integer  :: n, m, nsub, col, head, iword, info, iprint
+      integer  :: n, m, nsub, col, head, iword, iprint
       integer  :: rows, cols, nlen
       real(dp) :: theta
       integer,  allocatable :: ind(:), nbd(:)
@@ -558,18 +547,17 @@ contains
 
       allocate(xp(n)); xp = -42.0_dp
       allocate(wv(2*m)); wv = 0.0_dp
-      iprint = -1; info = 0
+      iprint = -1
       ! F77 subsm.f returns immediately without setting iword when
       ! nsub<=0; we initialise iword = 0 so the early-return path
       ! produces iword=0 (matching the Python ref and JSON expected).
       iword = 0
 
       call subsm(n, m, nsub, ind, l, u, nbd, x, d, xp, ws, wy, &
-                 theta, xx, gg, col, head, iword, wv, wn, iprint, info)
+                 theta, xx, gg, col, head, iword, wv, wn, iprint)
 
       call write_real_vec(ou, 'x', x)
       call write_int(ou, 'iword', iword)
-      call write_int(ou, 'info', info)
    end subroutine run_subsm
 
 end program conformance_driver

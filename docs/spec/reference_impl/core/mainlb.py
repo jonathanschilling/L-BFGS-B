@@ -149,16 +149,12 @@ def minimize(
         x_prev = x.copy()
         g_old = g.copy()
 
-        # Cauchy point.
-        info_c, nseg = cauchy(
+        # Cauchy point. (No info return: bmv cannot fail under LAPACK.)
+        nseg = cauchy(
             n, x, l, u, nbd, g, iorder, iwhere, t, d_dir, xc,
             m, wy, ws, sy, wt, theta, col, head,
             p, c, wbp, v, sbgnrm, eps, iprint,
         )
-        if info_c != 0:
-            # bmv failure -> refresh.
-            col = 0; theta = 1.0; iupdat = 0; updatd = False
-            continue
 
         # Free / active partition + change detection.
         fr = freev(n, nfree_prev, index, indx2, iwhere,
@@ -172,11 +168,8 @@ def minimize(
         # cmprlb expects wa[2m+1..2m+2col] to hold W'(z-x); cauchy filled c with that.
         wa_for_cmprlb = wa.copy()
         wa_for_cmprlb[2 * m : 2 * m + 2 * col] = c[: 2 * col]
-        info_cm = cmprlb(n, m, x_prev, g, ws, wy, sy, wt, xc, r, wa_for_cmprlb,
-                         index, theta, col, head, nfree, cnstnd)
-        if info_cm != 0:
-            col = 0; theta = 1.0; iupdat = 0; updatd = False
-            continue
+        cmprlb(n, m, x_prev, g, ws, wy, sy, wt, xc, r, wa_for_cmprlb,
+               index, theta, col, head, nfree, cnstnd)
 
         # Subspace minimization (only if there are free variables).
         x_subsm = xc.copy()
@@ -189,9 +182,9 @@ def minimize(
                     col = 0; theta = 1.0; iupdat = 0; updatd = False
                     continue
             d_sub = r[:nfree].copy()
-            iword, info_sm = subsm_call(n, m, nfree, index, l, u, nbd,
-                                        x_subsm, d_sub, xp, ws, wy,
-                                        theta, x_prev, g, col, head, wn, iprint)
+            iword = subsm_call(n, m, nfree, index, l, u, nbd,
+                               x_subsm, d_sub, xp, ws, wy,
+                               theta, x_prev, g, col, head, wn, iprint)
 
         # Projected line search.
         d = x_subsm - x_prev

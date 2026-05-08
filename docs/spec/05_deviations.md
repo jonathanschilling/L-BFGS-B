@@ -12,7 +12,38 @@ A port that wants to reproduce the F77 reference's numerical behavior
 the conformance suite (in `--strict` mode against the reference BLAS)
 will fail.
 
-## Confirmed deviations
+## Confirmed deviations from upstream L-BFGS-B 3.0
+
+This fork (jonathanschilling/L-BFGS-B) drops four `info` output
+parameters from internal helper routines (`bmv`, `cmprlb`, `cauchy`,
+`subsm`) that were left dead by the LINPACK→LAPACK migration. Upstream
+3.0 still has them. The signatures of these four routines therefore
+differ from any other L-BFGS-B fork that retains the LINPACK-era
+parameters:
+
+```
+upstream:  call bmv(m, sy, wt, col, v, p, info)
+this fork: call bmv(m, sy, wt, col, v, p)
+
+upstream:  call cmprlb(..., cnstnd, info)
+this fork: call cmprlb(..., cnstnd)
+
+upstream:  call cauchy(..., sbgnrm, info, epsmch)
+this fork: call cauchy(..., sbgnrm, epsmch)
+
+upstream:  call subsm(..., wn, iprint, info)
+this fork: call subsm(..., wn, iprint)
+```
+
+The `info` outputs were always `0` once `dtrsl` was replaced by
+`dtrsm` (which cannot fail on a non-singular factor — guaranteed by
+`formt` / `formk` Cholesky checks). The dead-branch handling in
+`mainlb` was removed at the same time.
+
+`formt` and `formk` retain their `info` outputs because they perform
+real Cholesky factorisations (`dpotrf`) that can legitimately fail.
+
+## Confirmed deviations from the published algorithm
 
 ### 1. `ftol = 1.0e-3` (More-Thuente sufficient-decrease)
 

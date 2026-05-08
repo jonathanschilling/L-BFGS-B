@@ -26,8 +26,8 @@ indices in the free-variable index permutation.
 | `x`, `z` | real vectors, length `n` | Current iterate and Cauchy point. |
 | `g` | real vector, length `n` | Gradient at `x`. |
 | `ws`, `wy` | real matrices, `n * m` | L-BFGS history columns (`s`-vectors and `y`-vectors). |
-| `sy`, `wt` | real matrices, `m * m` | Compact representation: `S'Y` packed and Cholesky factor `T`. |
-| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W'(z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M^{-1} W' (z - x)`. |
+| `sy`, `wt` | real matrices, `m * m` | Compact representation: `S&#39;Y` packed and Cholesky factor `T`. |
+| `wa` | real vector, length `4m` | **In/out**: on entry, `wa[2m+1..2m+2col]` holds `W&#39;(z - x)` (filled by `cauchy`); on exit, `wa[1..2col]` holds `M^{-1} W&#39; (z - x)`. |
 | `cnstnd` | boolean | True if any variable is bounded. |
 
 ### Logical outputs
@@ -35,12 +35,12 @@ indices in the free-variable index permutation.
 | Name | Type | Description |
 |------|------|-------------|
 | `r` | real vector, length `n` | Filled in two regimes (see Algorithm): full `n`-vector when unconstrained with history, or `r[1..nfree]` for the free variables otherwise. |
-| `wa` | (in-place) | `wa[1..2col]` filled with `M^{-1} W'(z - x)`. |
+| `wa` | (in-place) | `wa[1..2col]` filled with `M^{-1} W&#39;(z - x)`. |
 
 ### Preconditions
 
-- `wa[2m+1..2m+2col]` contains `W' (z - x)` on entry. The first `col`
-  entries are `Y' (z - x)`; the next `col` are `theta * S' (z - x)`.
+- `wa[2m+1..2m+2col]` contains `W&#39; (z - x)` on entry. The first `col`
+  entries are `Y&#39; (z - x)`; the next `col` are `theta * S&#39; (z - x)`.
   Caller (`cauchy`) sets these.
 - `index[1..nfree]` are the indices of variables free at the Cauchy
   point.

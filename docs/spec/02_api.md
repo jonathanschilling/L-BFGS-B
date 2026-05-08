@@ -210,7 +210,7 @@ termination with `info = INFO_ABNORMAL_LNSRLB`.
 
 Some ports may want to allow the user to interrupt the optimization
 between iterations (e.g., timeout, external signal). The F77 `setulb`
-exposes this via `task = 'STOP'` mid-iteration.
+exposes this via `task = &#39;STOP&#39;` mid-iteration.
 
 For a callback-based port, the recommended idiom is an optional
 `should_stop: function(state) -> boolean` callback invoked at each
@@ -231,8 +231,8 @@ For readers comparing to the F77 source:
 |----------------|----------------|
 | `n`, `m`, `x0`, `l`, `u`, `nbd` | Same names. |
 | `factr`, `pgtol`, `iprint` | Same names. |
-| `f_eval`, `g_eval` | Caller computes `f`, `g` between `setulb` calls when `task = 'FG'`. |
-| `max_iter`, `max_fg` | F77 has no caps in `setulb` itself; the drivers loop and break on `task != 'FG' && task != 'NEW_X'`. |
+| `f_eval`, `g_eval` | Caller computes `f`, `g` between `setulb` calls when `task = &#39;FG&#39;`. |
+| `max_iter`, `max_fg` | F77 has no caps in `setulb` itself; the drivers loop and break on `task != &#39;FG&#39; && task != &#39;NEW_X&#39;`. |
 | Result `x`, `f`, `g`, `info` | F77 leaves these in-place in the user's arrays. |
 | Result `n_iter`, `n_fg` | F77 stores in `isave(30)`, `isave(34)`. |
 | Result `message` | F77 returns in `task`. |

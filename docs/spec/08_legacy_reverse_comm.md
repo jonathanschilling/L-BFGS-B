@@ -46,18 +46,18 @@ appendix only if:
 
 `task` is a `character*60` buffer. The first 1-8 non-space characters
 are the state code; the rest is human-readable description. Test
-state with prefix matching: `task(1:2) == 'FG'`, `task(1:5) == 'NEW_X'`,
+state with prefix matching: `task(1:2) == &#39;FG&#39;`, `task(1:5) == &#39;NEW_X&#39;`,
 etc.
 
 | `task` prefix | When set | Meaning |
 |---------------|----------|---------|
-| `'START'` | By user before first call | Initialize a new optimization. |
-| `'FG'` | By `setulb` on return | User must compute `f` and `g` at the current `x` and call `setulb` again. |
-| `'NEW_X'` | By `setulb` on return | A new iterate is available in `x`; the user may inspect, log, etc., then call `setulb` again to continue iterating. |
-| `'CONV'...` | By `setulb` on return | Convergence reached. Specific suffix indicates which test fired. Terminal. |
-| `'ABNORMAL'...` | By `setulb` on return | Line search failed or other abnormal termination. Terminal. |
-| `'ERROR'...` | By `setulb` on return | Input validation failed. Terminal. |
-| `'STOP'` | By user any time | Request immediate termination. `setulb` will tidy up and return with a terminal `task`. |
+| `&#39;START&#39;` | By user before first call | Initialize a new optimization. |
+| `&#39;FG&#39;` | By `setulb` on return | User must compute `f` and `g` at the current `x` and call `setulb` again. |
+| `&#39;NEW_X&#39;` | By `setulb` on return | A new iterate is available in `x`; the user may inspect, log, etc., then call `setulb` again to continue iterating. |
+| `&#39;CONV&#39;...` | By `setulb` on return | Convergence reached. Specific suffix indicates which test fired. Terminal. |
+| `&#39;ABNORMAL&#39;...` | By `setulb` on return | Line search failed or other abnormal termination. Terminal. |
+| `&#39;ERROR&#39;...` | By `setulb` on return | Input validation failed. Terminal. |
+| `&#39;STOP&#39;` | By user any time | Request immediate termination. `setulb` will tidy up and return with a terminal `task`. |
 
 Specific terminal task strings:
 
@@ -127,11 +127,11 @@ allocated internally. Sizes:
 | `dsave` | `real(8)` | `29` | Saved real state across calls. |
 
 The user must not modify any of these between calls except `f` and
-`g` when `task = 'FG'`, and `task` itself for `'START'` or `'STOP'`.
+`g` when `task = &#39;FG&#39;`, and `task` itself for `&#39;START&#39;` or `&#39;STOP&#39;`.
 
 ## `wa` partitioning
 
-Set during the `'START'` call by `setulb`; remains stable across all
+Set during the `&#39;START&#39;` call by `setulb`; remains stable across all
 subsequent calls. The first 16 slots of `isave` hold the offsets:
 
 | `isave[k]` | Stores | Logical object | F77 name |
@@ -141,8 +141,8 @@ subsequent calls. The first 16 slots of `isave` hold the offsets:
 | `3` | `4*m^2` | (size constant) | -- |
 | `4` | offset | `S` matrix (history of `s`-vectors) | `ws` |
 | `5` | offset | `Y` matrix (history of `y`-vectors) | `wy` |
-| `6` | offset | `sy` (`S'Y` packed: `D` + `L`) | `sy` |
-| `7` | offset | `ss` (`S'S` upper triangle) | `ss` |
+| `6` | offset | `sy` (`S&#39;Y` packed: `D` + `L`) | `sy` |
+| `7` | offset | `ss` (`S&#39;S` upper triangle) | `ss` |
 | `8` | offset | `T` (Cholesky factor) | `wt` |
 | `9` | offset | `K` (`2m * 2m` reduced Hessian) | `wn` |
 | `10` | offset | `K_chol` (Cholesky of `K`) | `snd` |
@@ -167,7 +167,7 @@ Set deterministically by `setulb`'s call to `mainlb`:
 
 ## `lsave` semantics
 
-Available on exit with `task = 'NEW_X'`:
+Available on exit with `task = &#39;NEW_X&#39;`:
 
 | `lsave[k]` | Meaning |
 |-----------|---------|
@@ -180,7 +180,7 @@ Available on exit with `task = 'NEW_X'`:
 
 Beyond the workspace offsets in `1..16`, `isave` carries diagnostic
 counters and saved internal state. The slots documented for users
-(available on exit with `task = 'NEW_X'`):
+(available on exit with `task = &#39;NEW_X&#39;`):
 
 | `isave[k]` | Meaning |
 |-----------|---------|
@@ -198,12 +198,12 @@ counters and saved internal state. The slots documented for users
 | `41` | Number of variables that *entered* the active set this iteration. |
 
 Slots 17-21, 23-25, 27-29, 32, 35, 42-44 are private to `mainlb` and
-its callees (saving control-flow state for resume-after-`'FG'`); the
+its callees (saving control-flow state for resume-after-`&#39;FG&#39;`); the
 user must not read or modify them.
 
 ## `dsave` saved state
 
-Available on exit with `task = 'NEW_X'`:
+Available on exit with `task = &#39;NEW_X&#39;`:
 
 | `dsave[k]` | Meaning |
 |-----------|---------|
@@ -229,16 +229,16 @@ Slots 6, 10, 17-29 are private to internal routines.
 Holds the inner reverse-comm state for the More-Thuente line search
 (`dcsrch`). The user must not modify it. When the line search needs
 another `f`/`g` evaluation, the outer state machine in `mainlb` sets
-`task = 'FG'` and the user provides values; `dcsrch` resumes from the
+`task = &#39;FG&#39;` and the user provides values; `dcsrch` resumes from the
 state captured in `csave`.
 
 ## Implementation notes for ports
 
 A port that exposes this protocol must:
 
-1. **On `task = 'START'`**: validate inputs (per `errclb.md`), partition
+1. **On `task = &#39;START&#39;`**: validate inputs (per `errclb.md`), partition
    `wa`/`iwa` (or whatever storage equivalent the port uses), do the
-   initial projection, and yield with `task = 'FG'` requesting the
+   initial projection, and yield with `task = &#39;FG&#39;` requesting the
    first `f`/`g`.
 2. **On subsequent calls**: dispatch on the previous `task` value (or
    on a hidden program-counter saved in `isave`) to resume the
@@ -248,9 +248,9 @@ A port that exposes this protocol must:
 3. **Preserve all working state** in `isave`/`dsave`/`lsave`/`csave`
    between calls. The user is allowed to inspect the documented
    slots; the port must not move them.
-4. **On `task = 'STOP'`**: the user can set this any time. The port
+4. **On `task = &#39;STOP&#39;`**: the user can set this any time. The port
    tidies up (no work in progress to abort cleanly) and returns with
-   `task = 'STOP: <reason>'` as a terminal state.
+   `task = &#39;STOP: <reason>&#39;` as a terminal state.
 
 ## Mapping back to the callback interface
 
@@ -261,7 +261,7 @@ A port that already implements the canonical callback API in
    coroutine / thread** that yields when the callback is invoked.
 2. The shim's `setulb`-equivalent function calls `resume()` on the
    coroutine; when the coroutine yields with the trial `x`, the shim
-   sets `task = 'FG'` and returns to the user.
+   sets `task = &#39;FG&#39;` and returns to the user.
 3. On the next call, the shim writes the user-supplied `f` and `g`
    into the coroutine's communication slot and `resume()`s again.
 

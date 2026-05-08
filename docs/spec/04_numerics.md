@@ -119,7 +119,7 @@ would be catastrophic. Each is guarded:
 | `cauchy`: `dt = -fp / fpp` | check `fpp > eps` (else use earlier breakpoint) | Algorithm exits the breakpoint loop. |
 | `formt`: Cholesky pivot `T[i,i]^2 > 0` | LAPACK `dpotrf` returns `info > 0` | Caller (`mainlb`) signals refresh; L-BFGS history discarded. |
 | `bmv`: `1 / sqrt(sy[i,i])` | precondition: `sy[i,i] > 0` enforced by `matupd` | If precondition violated, behavior undefined. |
-| `matupd`: `s'y` curvature test | `s'y > eps * ||y||^2` (refresh threshold) | New pair rejected; `updatd = false`. |
+| `matupd`: `s&#39;y` curvature test | `s&#39;y > eps * ||y||^2` (refresh threshold) | New pair rejected; `updatd = false`. |
 
 ### Overflow / underflow
 
@@ -145,7 +145,7 @@ The algorithm calls these BLAS-level-1 and LAPACK routines:
 | `dcopy` | many | Copy a vector. |
 | `daxpy` | many | `y <- alpha*x + y`. |
 | `dscal` | many | `y <- alpha*y`. |
-| `ddot` | many | `x' y`. |
+| `ddot` | many | `x&#39; y`. |
 | `dnrm2` | line search, gradients | `||x||_2`. |
 | `dgemv` | `formk`, `subsm`, `cauchy` | `y <- alpha*A*x + beta*y`. |
 | `dtrsm` | `bmv`, `subsm` | Triangular solve `A x = b`. |
@@ -246,7 +246,7 @@ machine precision of the running platform.
 | Where | Form | Purpose |
 |-------|------|---------|
 | `cauchy.f:423` | `max(epsmch * f2_org, f2)` | Lower bound on segment curvature to prevent `0/0` in `dtm = -f1/f2`. |
-| `mainlb.f:566` | `dr <= epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s'y`. |
+| `mainlb.f:566` | `dr <= epsmch * ddum` | L-BFGS curvature-condition gate; rejects `(s, y)` pairs with too-small `s&#39;y`. |
 | `formt.f`, `formk.f` | LAPACK `dpotrf` failure | Cholesky pivot non-positivity -> caller refreshes L-BFGS history. |
 
 ### Constants from earlier suspicion that DO NOT exist

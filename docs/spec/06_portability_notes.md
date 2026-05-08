@@ -55,8 +55,8 @@ for diagnostic output), the spec calls it out.
 
 F77 strings are fixed-length character arrays. `character*60 task`
 declares a 60-character buffer; assignments shorter than 60 characters
-are **right-padded with spaces**. Comparisons (`task .eq. 'FG'`) match
-on the full padded buffer, so `'FG' || 58 spaces == 'FG'` (with
+are **right-padded with spaces**. Comparisons (`task .eq. &#39;FG&#39;`) match
+on the full padded buffer, so `&#39;FG&#39; || 58 spaces == &#39;FG&#39;` (with
 `||` denoting concatenation).
 
 The L-BFGS-B convention: the first 1-8 non-space characters are the
@@ -69,7 +69,7 @@ state code; the remainder is human-readable diagnostic text:
 ```
 
 In F77 callers, the convention is to test only a prefix:
-`task(1:2) .eq. 'FG'`, `task(1:5) .eq. 'NEW_X'`, etc.
+`task(1:2) .eq. &#39;FG&#39;`, `task(1:5) .eq. &#39;NEW_X&#39;`, etc.
 
 **For ports**:
 - Use the language's native string type. Right-padding is a F77

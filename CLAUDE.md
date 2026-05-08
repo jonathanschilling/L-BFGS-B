@@ -78,6 +78,32 @@ grep -rP '[^\x00-\x7F]' src/ drivers/ tests/ docs/ CLAUDE.md README.md Doxyfile
 
 The conversion script that originally cleaned the repo is logged in commit history; replicate it if a future reintroduction happens.
 
+### Doxygen-table apostrophe quirk
+
+In addition to the ASCII rule, **inside inline backtick spans `` `...` ``, write apostrophes as the HTML entity `&#39;`**. Doxygen's markdown-in-tables parser misinterprets backtick-delimited content containing apostrophes as a smart-quote pair, which collapses subsequent table rows and section headings into the broken cell. The rendered glossary page lost its "Vectors (current state)" heading this way (see issue diagnosis at gh-pages run that hit `md_docs_spec_01_glossary.html`).
+
+The escape applies only inside inline `` `code` ``; multi-line fenced code blocks (` ``` `) render correctly without escaping. The escape is invisible in the rendered HTML (Doxygen prints `&#39;` as a literal apostrophe).
+
+When adding new spec docs that include math notation with apostrophes (transpose `s'y`, derivative `phi'(t)`, F77 string args `'l'`, task names `'CONV'`, etc.) inside backticks, replace each `'` with `&#39;`. A pre-flight check:
+
+```bash
+# Find any inline backtick spans that still contain a raw apostrophe.
+grep -rEn "\`[^\`]*'[^\`]*\`" docs/spec/*.md docs/spec/subroutines/*.md
+```
+
+If anything is reported, run this fix script (or hand-edit):
+
+```python
+import re, glob
+INLINE = re.compile(r'`([^`\n]+)`')
+for path in glob.glob('docs/spec/**/*.md', recursive=True):
+    with open(path) as f: text = f.read()
+    new = INLINE.sub(lambda m: '`' + m.group(1).replace("'", "&#39;") + '`'
+                                if "'" in m.group(1) else m.group(0), text)
+    if new != text:
+        with open(path, 'w') as f: f.write(new)
+```
+
 ## Portability specification pack
 
 `docs/spec/` is a language-neutral specification of the L-BFGS-B algorithm intended to support porting to other languages (C, C++, Java, Rust, ...). Layout:

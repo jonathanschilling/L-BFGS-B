@@ -58,7 +58,7 @@ dropped first.
 | `col` | integer, `0 <= col <= m` | Current pair count. |
 | `S` | real matrix, `n * col` | Columns are `s_i = x_{k_i+1} - x_{k_i}` in insertion order. |
 | `Y` | real matrix, `n * col` | Columns are `y_i = g_{k_i+1} - g_{k_i}` in insertion order. |
-| `theta` | real, `> 0` | Hessian scaling (`y_k' y_k / s_k' y_k` after each update; initialized to `1`). |
+| `theta` | real, `> 0` | Hessian scaling (`y_k&#39; y_k / s_k&#39; y_k` after each update; initialized to `1`). |
 
 Ports may store `S` and `Y` as column-major matrices, row-major
 matrices, lists of vectors, or any other structure. The F77 source uses
@@ -75,9 +75,9 @@ cached, they must be updated when `(S, Y, theta)` changes.
 
 | Object | Type | Defined as |
 |--------|------|------------|
-| `sy` | real matrix, `col * col` | `sy[i,j] = s_i' * y_j`. The diagonal is `D = diag(s_i' y_i)`. The strict lower triangle is `L_{i,j} = s_i' y_j` for `i > j`. The strict upper triangle is unused (in the F77 packing). |
-| `ss` | real matrix, `col * col` | `ss[i,j] = s_i' * s_j`. Symmetric; the F77 source stores only the upper triangle. |
-| `T` | real matrix, `col * col`, upper-triangular | Cholesky factor: `T' T = theta * S'S + L * D^{-1} * L'` (the Cholesky factor of the middle matrix `M_inv`'s lower-right block). Computed by `formt` from `sy`, `ss`, `theta`. |
+| `sy` | real matrix, `col * col` | `sy[i,j] = s_i&#39; * y_j`. The diagonal is `D = diag(s_i&#39; y_i)`. The strict lower triangle is `L_{i,j} = s_i&#39; y_j` for `i > j`. The strict upper triangle is unused (in the F77 packing). |
+| `ss` | real matrix, `col * col` | `ss[i,j] = s_i&#39; * s_j`. Symmetric; the F77 source stores only the upper triangle. |
+| `T` | real matrix, `col * col`, upper-triangular | Cholesky factor: `T&#39; T = theta * S&#39;S + L * D^{-1} * L&#39;` (the Cholesky factor of the middle matrix `M_inv`'s lower-right block). Computed by `formt` from `sy`, `ss`, `theta`. |
 
 ### Bound state
 
@@ -106,7 +106,7 @@ loop.
 | Object | Type | Description |
 |--------|------|-------------|
 | `xc` | real vector, length `n` | Generalized Cauchy point. Computed by `cauchy`. |
-| `c` | real vector, length `2 col` | `c = W' (xc - x)`; built by `cauchy`, used by `subsm`. |
+| `c` | real vector, length `2 col` | `c = W&#39; (xc - x)`; built by `cauchy`, used by `subsm`. |
 
 ### Active set after Cauchy
 
@@ -158,7 +158,7 @@ Before the first iteration:
    `<= pgtol`, return with `info = INFO_CONVERGED_PGTOL` immediately.
 
 The legacy reverse-comm version splits steps 1-4 into the `START` task
-and yields after step 5 with `task = 'FG'`; ports using callbacks
+and yields after step 5 with `task = &#39;FG&#39;`; ports using callbacks
 collapse this into straight code.
 
 ## Per-iteration update
@@ -167,10 +167,10 @@ After computing the next iterate `x_new` with function `f_new` and
 gradient `g_new`:
 
 1. **Check curvature**: compute `s = x_new - x` and `y = g_new - g`. If
-   `s' y / |s' s| > eps * ||y||^2` (a refresh threshold; see `mainlb.md`
+   `s&#39; y / |s&#39; s| > eps * ||y||^2` (a refresh threshold; see `mainlb.md`
    for the exact formula), accept the pair.
 2. **If accepted**: append `(s, y)` to `S`, `Y`. If `col = m` already,
-   drop the oldest column first. Update `theta = (y' y) / (s' y)`.
+   drop the oldest column first. Update `theta = (y&#39; y) / (s&#39; y)`.
    Update cached `sy`, `ss`. Recompute `T = formt(sy, ss, theta)`. Set
    `updatd = true`.
 3. **If rejected** (curvature too small or `formt` Cholesky failed):

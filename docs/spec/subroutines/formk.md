@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Form the **`LEL'`-factorization** of the `2col * 2col` indefinite
+Form the **`LEL&#39;`-factorization** of the `2col * 2col` indefinite
 matrix `K` used in subspace minimization (`subsm`):
 
 ```
@@ -11,8 +11,8 @@ K = [-D - Y'ZZ'Y/theta     L_a' - R_z'  ]
 ```
 
 where `Z` is the projection onto free variables, `A` onto active,
-`L_a` is the strict-lower triangle of `S'AA'Y`, and `R_z` is the
-upper triangle of `S'ZZ'Y`. (See `code.pdf` sec.4 and Byrd/Lu/Nocedal/Zhu
+`L_a` is the strict-lower triangle of `S&#39;AA&#39;Y`, and `R_z` is the
+upper triangle of `S&#39;ZZ&#39;Y`. (See `code.pdf` sec.4 and Byrd/Lu/Nocedal/Zhu
 1995 sec.5.)
 
 The factorization is incrementally maintained across iterations via
@@ -43,7 +43,7 @@ or `info = -2` (second block).
 
 | Name | Type | Description |
 |------|------|-------------|
-| `wn` | real matrix, `2m * 2m` | Upper triangle holds the `LEL'` factorization. |
+| `wn` | real matrix, `2m * 2m` | Upper triangle holds the `LEL&#39;` factorization. |
 | `wn1` (in/out) | real matrix, `2m * 2m` | Lower triangle of the auxiliary inner-product matrix (carried across iterations). |
 | `info` | integer | `0` success; `-1` first Cholesky failed; `-2` second Cholesky failed. |
 
@@ -56,7 +56,7 @@ or `info = -2` (second block).
 
 ### Postconditions
 
-- On success: `wn[1..2col, 1..2col]` upper triangle is the `LEL'`
+- On success: `wn[1..2col, 1..2col]` upper triangle is the `LEL&#39;`
   factorization (Cholesky factor of (1,1), then triangular-solve
   block, then Cholesky of (2,2)).
 - On failure: `wn` contents through the failed step are
@@ -127,8 +127,8 @@ else:
 ### Phase 2: modify `wn1` for active-set changes
 
 Variables that *entered* the free set add to the (1,1) block (their
-`Y'ZZ'Y` contribution wasn't in there before) and subtract from the
-(2,2) block (their `S'AA'S` contribution was). Variables that *left*
+`Y&#39;ZZ&#39;Y` contribution wasn't in there before) and subtract from the
+(2,2) block (their `S&#39;AA&#39;S` contribution was). Variables that *left*
 have the opposite.
 
 ```

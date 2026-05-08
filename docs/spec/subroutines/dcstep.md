@@ -25,12 +25,12 @@ All scalar (real or boolean), all in/out except where noted:
 | Name | Type | Description |
 |------|------|-------------|
 | `stx` (in/out) | real | Best step so far (lowest `f`). Updated on success. |
-| `fx`, `dx` (in/out) | real | `f` and `f'` at `stx`. Updated alongside `stx`. |
+| `fx`, `dx` (in/out) | real | `f` and `f&#39;` at `stx`. Updated alongside `stx`. |
 | `sty` (in/out) | real | Other bracket endpoint. May be updated. |
-| `fy`, `dy` (in/out) | real | `f` and `f'` at `sty`. Updated alongside `sty`. |
+| `fy`, `dy` (in/out) | real | `f` and `f&#39;` at `sty`. Updated alongside `sty`. |
 | `stp` (in/out) | real | Latest trial step (in); next trial step (out). Always clamped to `[stpmin, stpmax]`. |
 | `fp` (in) | real | `f` at the input `stp`. |
-| `dp` (in) | real | `f'` at the input `stp`. |
+| `dp` (in) | real | `f&#39;` at the input `stp`. |
 | `brackt` (in/out) | boolean | True if a bracket has been established; the routine may set it true. |
 | `stpmin`, `stpmax` (in) | real | Step-length bounds (clamps the new `stp`). |
 
@@ -68,12 +68,12 @@ into one of four cases:
   The minimum is bracketed by `[stx, stp]` (different bracket from
   case 1). Compute cubic and secant; pick whichever is farther from
   `stp`. **Set `brackt = true`.**
-- **Case 3 -- Lower `f`, same sign, magnitude of `f'` decreases**:
+- **Case 3 -- Lower `f`, same sign, magnitude of `f&#39;` decreases**:
   `fp <= fx and sgnd >= 0 and |dp| < |dx|`. Cubic step is computed
   only if the cubic tends to Inf in the search direction or its
   minimum lies beyond `stp`. Otherwise the cubic is set to the secant.
   Bracket-aware safeguarding clamps the result.
-- **Case 4 -- Lower `f`, same sign, magnitude of `f'` does not decrease**:
+- **Case 4 -- Lower `f`, same sign, magnitude of `f&#39;` does not decrease**:
   `fp <= fx and sgnd >= 0 and |dp| >= |dx|`. If bracketed, cubic step
   using `sty` data instead of `stx`. Else: clamp to `stpmin` or
   `stpmax` depending on the side of the trial.

@@ -3,7 +3,7 @@
 ## Purpose
 
 Compute the **Generalized Cauchy Point** (GCP): the first local
-minimizer of the quadratic model `Q(x + s) = g'*s + (1/2)*s'*B*s`
+minimizer of the quadratic model `Q(x + s) = g&#39;*s + (1/2)*s&#39;*B*s`
 along the projected steepest-descent path `P(x - t*g, l, u)` for
 `t >= 0`.
 
@@ -44,8 +44,8 @@ sec.4 for the derivation.)
 | `iwhere` (in/out) | integer vector | Refined: see `01_glossary.md`. |
 | `iorder` | integer vector, length `n` | Permutation of variables: free, bound-encountered, bound-not-encountered. |
 | `t` | real vector, length `n` | Workspace: breakpoints (used for `hpsolb`). |
-| `p` | real vector, length `2col` | `W' d`. |
-| `c` | real vector, length `2col` | `W' (xcp - x)`. |
+| `p` | real vector, length `2col` | `W&#39; d`. |
+| `c` | real vector, length `2col` | `W&#39; (xcp - x)`. |
 | `wbp`, `v` | real vectors, length `2m` | Workspace. |
 | `nseg` | integer | Number of piecewise-quadratic segments traversed. |
 

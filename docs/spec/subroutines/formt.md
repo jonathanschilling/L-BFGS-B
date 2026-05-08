@@ -10,7 +10,7 @@ T = theta * S'S + L * D^{-1} * L'
 
 (in the notation of the compact L-BFGS representation; see
 `01_glossary.md`), then Cholesky-factorize it in place to produce the
-upper-triangular factor `T_chol` such that `T_chol' * T_chol = T`.
+upper-triangular factor `T_chol` such that `T_chol&#39; * T_chol = T`.
 
 The factor is stored in the upper triangle of `wt`, replacing the
 unfactored matrix. It is consumed by `bmv` for the inverse-middle-
@@ -31,13 +31,13 @@ L-BFGS history.
 | `col` | integer, `0 <= col <= m` | Active size. |
 | `theta` | positive real | Hessian scaling. |
 | `sy` | real matrix, `m * m` | Holds `D` on the diagonal and `L` (strict lower); see `01_glossary.md`. |
-| `ss` | real matrix, `m * m` | Holds `S'S` upper triangle (symmetric). |
+| `ss` | real matrix, `m * m` | Holds `S&#39;S` upper triangle (symmetric). |
 
 ### Logical outputs
 
 | Name | Type | Description |
 |------|------|-------------|
-| `wt` | real matrix, `m * m` | Output: upper triangle holds the Cholesky factor `T_chol` of `theta*S'S + L*D^{-1}*L'`. The strict lower triangle is unspecified. |
+| `wt` | real matrix, `m * m` | Output: upper triangle holds the Cholesky factor `T_chol` of `theta*S&#39;S + L*D^{-1}*L&#39;`. The strict lower triangle is unspecified. |
 | `info` | integer | `0` on success; `-3` if the Cholesky factorization fails (matrix not positive-definite). |
 
 ### Preconditions
@@ -45,22 +45,22 @@ L-BFGS history.
 - `sy[i, i] > 0` for `i = 1, ..., col` (positive curvature; ensured
   by `matupd`).
 - `theta > 0`.
-- `ss` upper triangle holds `s_i' s_j` for `j >= i`.
+- `ss` upper triangle holds `s_i&#39; s_j` for `j >= i`.
 
 ### Postconditions
 
 - On success (`info = 0`): `wt` upper triangle holds `T_chol` such
-  that `T_chol' * T_chol` reproduces the original `theta*S'S + L*D^{-1}*L'`.
+  that `T_chol&#39; * T_chol` reproduces the original `theta*S&#39;S + L*D^{-1}*L&#39;`.
 - On failure (`info = -3`): `wt` contents are *implementation-defined*.
   Caller must not use them.
 
 ## Algorithm
 
-### Phase 1: build upper triangle of `T = theta*S'S + L*D^{-1}*L'`
+### Phase 1: build upper triangle of `T = theta*S&#39;S + L*D^{-1}*L&#39;`
 
-The diagonal of `T` is `T[i, i] = theta * s_i' s_i + sum_{k<i} s_i'y_k * (s_i'y_k) / s_k'y_k`.
+The diagonal of `T` is `T[i, i] = theta * s_i&#39; s_i + sum_{k<i} s_i&#39;y_k * (s_i&#39;y_k) / s_k&#39;y_k`.
 
-The upper triangle for `j >= i` is `T[i, j] = theta * s_i' s_j + sum_{k<i} s_i'y_k * s_j'y_k / s_k'y_k`.
+The upper triangle for `j >= i` is `T[i, j] = theta * s_i&#39; s_j + sum_{k<i} s_i&#39;y_k * s_j&#39;y_k / s_k&#39;y_k`.
 
 Special case: for `i = 1`, the inner sum is empty (no `k < 1`), so the
 entire first row is just `theta * ss[1, :]`.
@@ -96,7 +96,7 @@ else:
     info = 0
 ```
 
-LAPACK's `dpotrf` with `'U'` consumes the upper triangle of the input
+LAPACK's `dpotrf` with `&#39;U&#39;` consumes the upper triangle of the input
 and writes the upper triangular Cholesky factor in place. On failure
 (non-positive-definite or numerical breakdown), `dpotrf` returns
 `info > 0`; `formt` overrides this with `info = -3`.

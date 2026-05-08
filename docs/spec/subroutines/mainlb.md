@@ -202,7 +202,7 @@ respective spec files.
 
 The F77 implementation interleaves the loop with the user-level
 `f_eval`/`g_eval` calls via reverse-comm. Each spot where the
-callback would be invoked above corresponds to a `task = 'FG'` return
+callback would be invoked above corresponds to a `task = &#39;FG&#39;` return
 in F77. The user supplies `f`/`g`, then re-enters; `mainlb` resumes
 from the saved program-counter (encoded in `isave`).
 
@@ -213,7 +213,7 @@ The Python reference impl uses callback form.
 
 The unit test `test_mainlb.f90` exercises **integration-style** flows
 (driving full optimizations on small quadratics, with stopping
-criteria triggered on `pgtol`, `factr`, user `'STOP'`, etc.). These
+criteria triggered on `pgtol`, `factr`, user `&#39;STOP&#39;`, etc.). These
 do not lend themselves to single-call JSON test vectors; they are
 covered by the **conformance runner** (Phase C) in
 `docs/spec/runner/conformance.py`, which drives the Python ref impl
@@ -225,7 +225,7 @@ The 7 F77 test cases:
 |---|---|
 | `case_invalid_input_returns_error` | `n = 0` -> `INFO_INPUT_ERROR_*`. |
 | `case_pgtol_convergence` | Quadratic, `pgtol = 1e-3` -> converges via projected gradient. |
-| `case_user_signals_stop` | User sets `task = 'STOP'` mid-iteration. |
+| `case_user_signals_stop` | User sets `task = &#39;STOP&#39;` mid-iteration. |
 | `case_factr_convergence` | Slow `pgtol`; `factr` fires first. |
 | `case_immediate_pgtol_convergence` | `x0` already at minimum. |
 | `case_user_stop_cpu_restores_iterate` | User stop after a partial iteration restores last iterate. |

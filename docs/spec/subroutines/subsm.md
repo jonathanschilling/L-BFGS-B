@@ -4,10 +4,10 @@
 
 Compute an approximate solution of the **subspace minimization
 problem** at the generalized Cauchy point: minimize the quadratic
-model `Q(x) = r'(x - xc) + (1/2)(x - xc)' B (x - xc)` over the free
+model `Q(x) = r&#39;(x - xc) + (1/2)(x - xc)&#39; B (x - xc)` over the free
 variables, subject to bounds.
 
-Uses the L-BFGS Hessian approximation `B = theta*I - W*M^{-1}*W'`. The
+Uses the L-BFGS Hessian approximation `B = theta*I - W*M^{-1}*W&#39;`. The
 Newton direction in the free subspace is computed via the **K**-matrix
 factorization (`formk` output). Then the iterate is moved along this
 direction, **projected onto the box**.
@@ -41,7 +41,7 @@ algorithm).
 | `x` (in/out) | real vector, length `n` | On entry: Cauchy point `xc`. On exit: subspace minimizer. |
 | `d` (in/out) | real vector, length `nsub` | On entry: reduced gradient. On exit: Newton direction (then scaled). |
 | `xp` (out) | real vector, length `n` | Saved copy of `xc` for backtracking restore. |
-| `wv` (out) | real vector, length `2m` | Workspace: `K^{-1}*W'*Z*d`. |
+| `wv` (out) | real vector, length `2m` | Workspace: `K^{-1}*W&#39;*Z*d`. |
 | `iword` | integer | `0` if minimizer is in the box; `1` if some bound was encountered. |
 
 ### Preconditions

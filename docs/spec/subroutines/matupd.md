@@ -4,7 +4,7 @@
 
 Append the latest step pair `(s, y)` to the L-BFGS history and
 update the cached compact-representation matrices `sy`, `ss`. Also
-recompute `theta = y'y / s'y`.
+recompute `theta = y&#39;y / s&#39;y`.
 
 When the buffer is at capacity (`col = m` already), the *oldest* pair
 is dropped to make room -- the storage is cyclic, with `head`/`itail`
@@ -25,11 +25,11 @@ indices marking the oldest and newest columns of `S` / `Y`.
 | `d` | real vector, length `n` | Search direction (the new `s`-vector is `stp * d`; F77 stores `d` directly and folds `stp` into `ss[col, col]`). |
 | `r` | real vector, length `n` | The new `y`-vector `g_new - g`. |
 | `stp` | positive real | Line-search step length used to compute the new `s = stp * d`. |
-| `dr` | real | Curvature `d' r = s' y / stp` (caller validated `dr > 0`). |
-| `rr` | nonneg real | `||r||^2 = y' y`. |
-| `dtd` | nonneg real | `||d||^2 = d' d`. |
+| `dr` | real | Curvature `d&#39; r = s&#39; y / stp` (caller validated `dr > 0`). |
+| `rr` | nonneg real | `||r||^2 = y&#39; y`. |
+| `dtd` | nonneg real | `||d||^2 = d&#39; d`. |
 | `ws`, `wy` (in/out) | real matrices `n * m` | History columns. The column at `itail` is overwritten. |
-| `sy`, `ss` (in/out) | real matrices `m * m` | Cached `S'Y` / `S'S` (lower / upper packing -- see `01_glossary.md`). |
+| `sy`, `ss` (in/out) | real matrices `m * m` | Cached `S&#39;Y` / `S&#39;S` (lower / upper packing -- see `01_glossary.md`). |
 | `theta` (out) | real | Reset to `rr / dr`. |
 
 ### Logical outputs
@@ -40,9 +40,9 @@ separate return value.
 ### Preconditions
 
 - `dr > 0`. The caller (`mainlb`) checks the curvature condition
-  `s' y > eps * ||y||^2` *before* calling `matupd`; `dr` here is
-  `s' y / stp`, and the caller's check ensures the corresponding
-  `s' y` is positive.
+  `s&#39; y > eps * ||y||^2` *before* calling `matupd`; `dr` here is
+  `s&#39; y / stp`, and the caller's check ensures the corresponding
+  `s&#39; y` is positive.
 - `(s = stp * d, y = r)` are the step and gradient-difference at the
   iteration that just completed.
 
@@ -146,7 +146,7 @@ The exact-equality test `stp == 1.0`. Documented above.
 
 ### Numerical safeguards
 
-- Caller checks `s' y > eps * ||y||^2` and skips `matupd` if violated;
+- Caller checks `s&#39; y > eps * ||y||^2` and skips `matupd` if violated;
   `matupd` itself does not validate.
 - `dr` should be positive on entry (otherwise `theta = rr/dr` is
   garbage). The unit tests use `dr > 0`.

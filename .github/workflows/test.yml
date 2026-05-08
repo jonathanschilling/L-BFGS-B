@@ -61,3 +61,60 @@ jobs:
           name: coverage-html
           path: build/coverage/html/
           if-no-files-found: ignore
+
+  spec_conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3 python3-pip
+          pip install --user numpy scipy
+
+      - name: Run conformance suite (tolerance mode)
+        run: python3 docs/spec/runner/conformance.py --tolerance
+
+      - name: Spec-drift check (test cases vs JSON test vectors)
+        run: |
+          # Each tests/unit/test_<sub>.f90 case_* block should have a JSON
+          # test vector under docs/spec/data/<sub>_case_*.json. Out-of-scope
+          # subroutines (timer, prn*lb) and integration-level mainlb cases
+          # are exempted; see docs/spec/07_conformance.md.
+          python3 - <<'PY'
+          import os
+          import re
+          import sys
+          import glob
+
+          # Subroutines that are out of scope for the spec pack.
+          SKIP = {"timer", "prn1lb", "prn2lb", "prn3lb", "assert"}
+          # setulb is captured in 08_legacy_reverse_comm.md, not in subroutines/.
+          # mainlb / dcsrch / lnsrlb have integration- or trajectory-level
+          # cases not yet encoded as single-call JSON; see 07_conformance.md.
+          # matupd splits one F77 walkthrough block into multiple JSON cases,
+          # one per logical operation.
+          DEFERRED = {"mainlb", "dcsrch", "lnsrlb", "setulb", "matupd"}
+
+          drift = []
+          for test_path in sorted(glob.glob("tests/unit/test_*.f90")):
+              sub = re.search(r"test_(\w+)\.f90$", test_path).group(1)
+              if sub in SKIP or sub in DEFERRED:
+                  continue
+              with open(test_path) as f:
+                  text = f.read()
+              # Count subroutine case_* AND case[0-9]_* declarations
+              # (the dcstep test uses "case1_foo", "case2_bar" naming).
+              cases = re.findall(r"^\s*subroutine\s+case[\w]*", text, re.M)
+              n_cases = len(cases)
+              n_jsons = len(glob.glob(f"docs/spec/data/{sub}_case_*.json"))
+              if n_cases != n_jsons:
+                  drift.append(f"  {sub}: {n_cases} F77 case_* blocks, {n_jsons} JSON files")
+          if drift:
+              print("Spec drift detected:")
+              for d in drift:
+                  print(d)
+              sys.exit(1)
+          print("Spec drift check: OK (F77 case_* blocks match JSON file counts)")
+          PY

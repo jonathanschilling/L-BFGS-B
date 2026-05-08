@@ -57,3 +57,17 @@ One subroutine per file, with the filename matching the subroutine name. Doxygen
 Doxygen config is in `Doxyfile`. The GitHub Actions workflow `.github/workflows/doxygen.yml` runs doxygen on every push, builds the LaTeX manual, and on `master` deploys HTML + `L-BFGS-B.pdf` to the `gh-pages` branch. The other CI workflow is `.github/workflows/test.yml` (see Build section) which catches build/test regressions.
 
 Reference PDFs (algorithm paper, ACM remark, original code listing) live in `docs/`.
+
+## Portability specification pack
+
+`docs/spec/` is a language-neutral specification of the L-BFGS-B algorithm intended to support porting to other languages (C, C++, Java, Rust, ...). Layout:
+
+- `docs/spec/00_overview.md` … `08_legacy_reverse_comm.md`: foundation documents (algorithm overview, glossary, abstract callback-based API, logical state model, numerical conventions, deviations, conformance criteria, F77→other-language gotchas, optional reverse-comm appendix).
+- `docs/spec/subroutines/<name>.md`: 16 per-subroutine spec files (one per in-scope `src/*.f` minus `setulb`/`timer`/`prn*lb`).
+- `docs/spec/data/<sub>_case_*.json`: ~110 language-neutral JSON test vectors mirroring the F77 unit-test cases.
+- `docs/spec/reference_impl/core/<name>.py`: Python+NumPy reference implementation, one module per in-scope subroutine. The public entry point is `core.mainlb.minimize` (callback-based).
+- `docs/spec/runner/conformance.py`: validation runner with `--strict` and `--tolerance` modes.
+
+**When changing `src/`**, also review the matching `docs/spec/subroutines/<name>.md` and `docs/spec/reference_impl/core/<name>.py`. Run `python3 docs/spec/runner/conformance.py --tolerance` to verify the JSON vectors still hold; bit-equality requires the same BLAS/LAPACK pin (see `docs/spec/04_numerics.md`).
+
+**When changing `tests/unit/test_<name>.f90`**: update `docs/spec/data/<name>_case_*.json` to match (one JSON file per `case_*` block) and re-run the conformance runner.

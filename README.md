@@ -60,6 +60,26 @@ see [Henao's Master's thesis](https://cs.nyu.edu/overton/mstheses/henao/msthesis
   To be precise, the calls to LINPACK's `dtrsl` were replace with calls to LAPACK's `dtrsm`
   and the calls to LINPACK's `dpofa` were replaces with calls to LAPACK's `dpotrf`.
 
+## Porting to another language
+
+A language-neutral specification of the algorithm — sufficient to
+implement L-BFGS-B in any language with a BLAS/LAPACK binding, without
+reading the Fortran source — lives in [`docs/spec/`](docs/spec/).
+Start with [`docs/spec/README.md`](docs/spec/README.md).
+
+The pack includes:
+- 9 foundation documents (algorithm overview, glossary, abstract
+  callback-based API, logical state model, numerical conventions,
+  deviations from the published papers, conformance criteria, F77 →
+  other-language gotchas, and an optional appendix on the F77
+  reverse-communication interface for ABI compatibility).
+- One per-subroutine spec for each in-scope numerical routine.
+- ~110 JSON test vectors mirroring the F77 unit-test cases.
+- A Python+NumPy reference implementation (`docs/spec/reference_impl/`).
+- A conformance test runner (`docs/spec/runner/conformance.py`)
+  with strict (bit-exact) and tolerance (per-subroutine numerical)
+  modes.
+
 ## Building
 
 A CMake setup is provided for L-BFGS-B in this repository.

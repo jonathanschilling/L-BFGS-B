@@ -1,0 +1,76 @@
+{
+  "name": "cauchy_case_9",
+  "description": "iprint=100: same as case_4 but exercises diagnostic prints in F77.",
+  "inputs": {
+    "n": 2,
+    "m": 1,
+    "col": 0,
+    "head": 1,
+    "theta": 1.0,
+    "sbgnrm": 2.0,
+    "epsmch": 2.22e-16,
+    "iprint": 100,
+    "x": [
+      0.5,
+      0.5
+    ],
+    "l": [
+      0.0,
+      0.0
+    ],
+    "u": [
+      1.0,
+      1.0
+    ],
+    "nbd": [
+      2,
+      2
+    ],
+    "g": [
+      -1.0,
+      -2.0
+    ],
+    "iwhere_in": [
+      0,
+      0
+    ],
+    "ws": [
+      [
+        0.0
+      ],
+      [
+        0.0
+      ]
+    ],
+    "wy": [
+      [
+        0.0
+      ],
+      [
+        0.0
+      ]
+    ],
+    "sy": [
+      [
+        0.0
+      ]
+    ],
+    "wt": [
+      [
+        0.0
+      ]
+    ]
+  },
+  "expected": {
+    "xcp": [
+      1.0,
+      1.0
+    ],
+    "iwhere": [
+      2,
+      2
+    ],
+    "info": 0,
+    "nseg": 2
+  }
+}

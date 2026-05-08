@@ -328,7 +328,7 @@ c     If task is neither FG nor NEW_X we terminate execution.
 
       if (json_active) then
          call json_write_aggregate(trim(lbfgsb_json), task, f,
-     +                             dsave(13))
+     +                             dsave(13), n, x)
       endif
 
       stop

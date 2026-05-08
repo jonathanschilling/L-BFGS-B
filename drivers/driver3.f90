@@ -269,7 +269,7 @@
 !     If task is neither FG nor NEW_X we terminate execution.
 
       if (json_active) &
-         call json_write_aggregate(trim(lbfgsb_json), task, f, dsave(13))
+         call json_write_aggregate(trim(lbfgsb_json), task, f, dsave(13), n, x)
 
       end program driver
 

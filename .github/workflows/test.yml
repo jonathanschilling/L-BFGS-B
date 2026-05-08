@@ -25,3 +25,39 @@ jobs:
       - name: Run integration tests
         working-directory: build
         run: ctest --output-on-failure
+
+  unit_tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake gfortran libopenblas-dev liblapack-dev python3 python3-pip
+
+      - name: Install gcovr
+        run: pip install --user gcovr
+
+      - name: Configure (coverage build)
+        run: cmake -S . -B build -DLBFGSB_COVERAGE=ON
+
+      - name: Build
+        run: cmake --build build -j
+
+      - name: Run all tests (integration + unit + gate)
+        working-directory: build
+        run: ctest --output-on-failure
+
+      - name: Generate coverage report
+        working-directory: build
+        run: cmake --build . --target coverage
+
+      - name: Upload coverage HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: build/coverage/html/
+          if-no-files-found: ignore

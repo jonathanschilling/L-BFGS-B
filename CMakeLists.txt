@@ -6,6 +6,18 @@ project(lbfgsb Fortran)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+# Optional coverage instrumentation. Enable with -DLBFGSB_COVERAGE=ON.
+# Adds gcov/gcovr-compatible flags to liblbfgsb and to test executables.
+# Used by the per-subroutine unit-test gate; see tests/unit/.
+option(LBFGSB_COVERAGE "Build with code-coverage instrumentation (--coverage)" OFF)
+if(LBFGSB_COVERAGE)
+   if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+      message(WARNING "LBFGSB_COVERAGE has only been validated with gfortran; gcov output for ${CMAKE_Fortran_COMPILER_ID} may be incomplete.")
+   endif()
+   add_compile_options(--coverage -O0 -g)
+   add_link_options(--coverage)
+endif()
+
 # shared library for L-BFGS-B
 set(liblbfgsb_src "")
 add_subdirectory (src)
@@ -45,6 +57,30 @@ target_link_libraries(driver2_f90 PRIVATE lbfgsb json_writer)
 target_link_libraries(driver3_f77 PRIVATE lbfgsb json_writer)
 target_link_libraries(driver3_f90 PRIVATE lbfgsb json_writer)
 
-# integration tests
+# integration tests + per-subroutine unit tests
 enable_testing()
 add_subdirectory(tests)
+add_subdirectory(tests/unit)
+
+# Coverage report target. Requires LBFGSB_COVERAGE=ON and gcovr installed.
+# Usage: `cmake --build . --target coverage` after tests have been built.
+if(LBFGSB_COVERAGE)
+   find_program(GCOVR_EXECUTABLE gcovr)
+   if(GCOVR_EXECUTABLE)
+      add_custom_target(coverage
+         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage/html
+         COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+         COMMAND ${GCOVR_EXECUTABLE}
+            --root ${CMAKE_SOURCE_DIR}
+            --filter ${CMAKE_SOURCE_DIR}/src/
+            --html-details ${CMAKE_BINARY_DIR}/coverage/html/index.html
+            --json ${CMAKE_BINARY_DIR}/coverage/coverage.json
+            --print-summary
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMENT "Running tests and generating coverage report"
+         VERBATIM
+      )
+   else()
+      message(WARNING "gcovr not found in PATH; 'coverage' target unavailable. Install with: pip install --user gcovr")
+   endif()
+endif()

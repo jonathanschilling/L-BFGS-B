@@ -135,6 +135,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>convert parts of the documentation into a format understandable to <a href="https://www.doxygen.nl/index.html">doxygen</a> and</li>
 <li>replace the included BLAS/LINPACK routines with calls to user-provided BLAS/LAPACK routines. To be precise, the calls to LINPACK's <code>dtrsl</code> were replace with calls to LAPACK's <code>dtrsm</code> and the calls to LINPACK's <code>dpofa</code> were replaces with calls to LAPACK's <code>dpotrf</code>.</li>
 </ul>
+<h1>Porting to another language</h1>
+<p>A language-neutral specification of the algorithm &ndash; sufficient to implement L-BFGS-B in any language with a BLAS/LAPACK binding, without reading the Fortran source &ndash; lives in <a href="docs/spec/"><code>docs/spec/</code></a>. Start with <a class="el" href="/github/workspace/docs/spec/README.md#md_docs_spec_README">`docs/spec/README.md`</a>.</p>
+<p>The pack includes:</p><ul>
+<li>9 foundation documents (algorithm overview, glossary, abstract callback-based API, logical state model, numerical conventions, deviations from the published papers, conformance criteria, F77 -&gt; other-language gotchas, and an optional appendix on the F77 reverse-communication interface for ABI compatibility).</li>
+<li>One per-subroutine spec for each in-scope numerical routine.</li>
+<li>~110 JSON test vectors mirroring the F77 unit-test cases.</li>
+<li>A Python+NumPy reference implementation (<code>docs/spec/reference_impl/</code>).</li>
+<li>A conformance test runner (<code>docs/spec/runner/conformance.py</code>) with strict (bit-exact) and tolerance (per-subroutine numerical) modes.</li>
+</ul>
 <h1>Building</h1>
 <p>A CMake setup is provided for L-BFGS-B in this repository. External modules for <code>BLAS</code> and <code>LAPACK</code> have to be installed on your system. Then, building the shared library <code>liblbfgsb.so</code> and the examples <code>driver*.f</code> and <code>driver*.f90</code> works as follows:</p>
 <div class="fragment"><div class="line">&gt; mkdir build</div>

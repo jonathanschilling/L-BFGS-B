@@ -94,13 +94,13 @@ $(document).ready(function(){initNavTree('cmprlb_8f.html',''); initResizable(); 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:aeca70b38353e4c44297fef717a66def4"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">cmprlb</a> (n, m, x, g, ws, wy, sy, wt, z, r, wa, index, theta, col, head, nfree, cnstnd, info)</td></tr>
-<tr class="memdesc:aeca70b38353e4c44297fef717a66def4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This subroutine computes r=-Z'B(xcp-xk)-Z'g by using wa(2m+1)=W'(xcp-x) from subroutine cauchy.  <a href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">More...</a><br /></td></tr>
-<tr class="separator:aeca70b38353e4c44297fef717a66def4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15ce5a0e43fe065477c5e824d3ac8d27"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">cmprlb</a> (n, m, x, g, ws, wy, sy, wt, z, r, wa, index, theta, col, head, nfree, cnstnd)</td></tr>
+<tr class="memdesc:a15ce5a0e43fe065477c5e824d3ac8d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">This subroutine computes r=-Z'B(xcp-xk)-Z'g by using wa(2m+1)=W'(xcp-x) from subroutine cauchy.  <a href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">More...</a><br /></td></tr>
+<tr class="separator:a15ce5a0e43fe065477c5e824d3ac8d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a id="aeca70b38353e4c44297fef717a66def4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeca70b38353e4c44297fef717a66def4">&#9670;&nbsp;</a></span>cmprlb()</h2>
+<a id="a15ce5a0e43fe065477c5e824d3ac8d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15ce5a0e43fe065477c5e824d3ac8d27">&#9670;&nbsp;</a></span>cmprlb()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -205,13 +205,7 @@ Functions/Subroutines</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">logical&#160;</td>
-          <td class="paramname"><em>cnstnd</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">integer&#160;</td>
-          <td class="paramname"><em>info</em>&#160;</td>
+          <td class="paramname"><em>cnstnd</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -240,27 +234,26 @@ Functions/Subroutines</h2></td></tr>
     <tr><td class="paramname">head</td><td>Index in the cyclic WS/WY buffer of the oldest stored correction. Used to walk the columns in chronological order. </td></tr>
     <tr><td class="paramname">nfree</td><td>Number of free variables; size of the subspace problem. </td></tr>
     <tr><td class="paramname">cnstnd</td><td>.true. if the problem has bounds; controls the shortcut path described under</td></tr>
-    <tr><td class="paramname">r.</td><td></td></tr>
-    <tr><td class="paramname">info</td><td>Error code from the embedded bmv call. With the current dtrsm-based bmv this is always 0 (see <a class="el" href="bmv_8f.html">bmv.f</a>); the code path that maps a nonzero info to -8 is dead but kept for the event of a future BLAS substitution. </td></tr>
+    <tr><td class="paramname">r.</td><td>Historical note: this routine used to take an <code>info</code> output parameter to forward errors from the embedded <code>bmv</code> call. Since <code>bmv</code> cannot fail under LAPACK <code>dtrsm</code>, the parameter was always 0 on exit and has been removed. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmprlb_8f_source.html#l00043">43</a> of file <a class="el" href="cmprlb_8f_source.html">cmprlb.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmprlb_8f_source.html#l00044">44</a> of file <a class="el" href="cmprlb_8f_source.html">cmprlb.f</a>.</p>
 
-<p class="reference">References <a class="el" href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">bmv()</a>.</p>
+<p class="reference">References <a class="el" href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b">bmv()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09">mainlb()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="cmprlb_8f_aeca70b38353e4c44297fef717a66def4_cgraph.svg" width="167" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="cmprlb_8f_a15ce5a0e43fe065477c5e824d3ac8d27_cgraph.svg" width="167" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="cmprlb_8f_aeca70b38353e4c44297fef717a66def4_icgraph.svg" width="286" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="cmprlb_8f_a15ce5a0e43fe065477c5e824d3ac8d27_icgraph.svg" width="286" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

@@ -94,13 +94,13 @@ $(document).ready(function(){initNavTree('bmv_8f.html',''); initResizable(); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:a3b7cf8256f5c958dd10a7f72db1a0f14"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">bmv</a> (m, sy, wt, col, v, p, info)</td></tr>
-<tr class="memdesc:a3b7cf8256f5c958dd10a7f72db1a0f14"><td class="mdescLeft">&#160;</td><td class="mdescRight">This subroutine computes the product of the 2m x 2m middle matrix in the compact L-BFGS formula of B and a 2m vector v.  <a href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">More...</a><br /></td></tr>
-<tr class="separator:a3b7cf8256f5c958dd10a7f72db1a0f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a47c87ab649f4b6bb2921478fe767b"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b">bmv</a> (m, sy, wt, col, v, p)</td></tr>
+<tr class="memdesc:a13a47c87ab649f4b6bb2921478fe767b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This subroutine computes the product of the 2m x 2m middle matrix in the compact L-BFGS formula of B and a 2m vector v.  <a href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b">More...</a><br /></td></tr>
+<tr class="separator:a13a47c87ab649f4b6bb2921478fe767b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a id="a3b7cf8256f5c958dd10a7f72db1a0f14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b7cf8256f5c958dd10a7f72db1a0f14">&#9670;&nbsp;</a></span>bmv()</h2>
+<a id="a13a47c87ab649f4b6bb2921478fe767b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13a47c87ab649f4b6bb2921478fe767b">&#9670;&nbsp;</a></span>bmv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -139,13 +139,7 @@ Functions/Subroutines</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double precision, dimension(2*col)&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">integer&#160;</td>
-          <td class="paramname"><em>info</em>&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -169,19 +163,18 @@ Functions/Subroutines</h2></td></tr>
  On exit v is unchanged.</td></tr>
     <tr><td class="paramname">p</td><td>On entry p is unspecified.<br  />
  On exit p is the product Mv.</td></tr>
-    <tr><td class="paramname">info</td><td>On entry info is unspecified.<br  />
- On exit info is always 0. (The original LINPACK dtrsl could set info nonzero on a singular triangular system; the LAPACK dtrsm replacement does not return such a status, so bmv now sets info = 0 unconditionally and callers checking "if info /= 0 ... return" hit dead code.) </td></tr>
   </table>
   </dd>
 </dl>
+<p>Historical note: this routine used to take an <code>info</code> output parameter for the LINPACK <code>dtrsl</code> triangular-solve return status. Since LAPACK's <code>dtrsm</code> replacement cannot fail on a non-singular triangular factor (and <code>formt</code> ensures <code>wt</code> is non-singular), the parameter was always 0 on exit and has been removed. </p>
 
-<p class="definition">Definition at line <a class="el" href="bmv_8f_source.html#l00037">37</a> of file <a class="el" href="bmv_8f_source.html">bmv.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bmv_8f_source.html#l00036">36</a> of file <a class="el" href="bmv_8f_source.html">bmv.f</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be">cauchy()</a>, and <a class="el" href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">cmprlb()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cauchy_8f.html#a67373bf35b22e75c6525fc7b12cdeafb">cauchy()</a>, and <a class="el" href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">cmprlb()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="bmv_8f_a3b7cf8256f5c958dd10a7f72db1a0f14_icgraph.svg" width="382" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="bmv_8f_a13a47c87ab649f4b6bb2921478fe767b_icgraph.svg" width="382" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" target="_top" xlink:title="Compute the Generalized Cauchy Point along the projected gradient direction.">
+<g id="a_node2"><a xlink:href="cauchy_8f.html#a67373bf35b22e75c6525fc7b12cdeafb" target="_top" xlink:title="Compute the Generalized Cauchy Point along the projected gradient direction.">
 <polygon fill="none" stroke="black" points="160,-0.5 160,-19.5 207,-19.5 207,-0.5 160,-0.5"/>
 <text text-anchor="middle" x="183.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">cauchy</text>
 </a>

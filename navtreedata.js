@@ -25,6 +25,15 @@
 var NAVTREE =
 [
   [ "L-BFGS-B", "index.html", [
+    [ "Algorithm overview", "md_docs_spec_00_overview.html", null ],
+    [ "Glossary: notation across paper, code, and spec", "md_docs_spec_01_glossary.html", null ],
+    [ "Algorithm interface", "md_docs_spec_02_api.html", null ],
+    [ "Logical state model", "md_docs_spec_03_state.html", null ],
+    [ "Numerical considerations", "md_docs_spec_04_numerics.html", null ],
+    [ "Deviations from the published algorithm", "md_docs_spec_05_deviations.html", null ],
+    [ "Porting from Fortran 77: practical gotchas", "md_docs_spec_06_portability_notes.html", null ],
+    [ "Conformance criteria", "md_docs_spec_07_conformance.html", null ],
+    [ "Appendix: F77 reverse-communication interface", "md_docs_spec_08_legacy_reverse_comm.html", null ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [

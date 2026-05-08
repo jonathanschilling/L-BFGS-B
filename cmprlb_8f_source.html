@@ -125,65 +125,62 @@ $(document).ready(function(){initNavTree('cmprlb_8f_source.html',''); initResiza
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt; @param nfree Number of free variables; size of the subspace problem.</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt; @param cnstnd .true. if the problem has bounds; controls the shortcut</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt;               path described under @param r.</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt; @param info Error code from the embedded bmv call. With the current</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt;             dtrsm-based bmv this is always 0 (see bmv.f); the code path</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt;             that maps a nonzero info to -8 is dead but kept for the</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt;             event of a future BLAS substitution.</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">   43</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">cmprlb</a>(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;     +                 theta, col, head, nfree, cnstnd, info)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="keywordtype">logical</span>          cnstnd</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordtype">integer</span>          n, m, col, head, nfree, info, index(n)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keywordtype">double precision</span> theta, </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;     +                 x(n), g(n), z(n), r(n), wa(4*m), </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;     +                 ws(n, m), wy(n, m), sy(m, m), wt(m, m)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">c                           *  *  *</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c     Written by</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt; Historical note: this routine used to take an `info` output parameter</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt; to forward errors from the embedded `bmv` call. Since `bmv` cannot</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt; fail under LAPACK `dtrsm`, the parameter was always 0 on exit and</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c&gt; has been removed.</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">   44</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">cmprlb</a>(n, m, x, g, ws, wy, sy, wt, z, r, wa, index,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;     +                 theta, col, head, nfree, cnstnd)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordtype">logical</span>          cnstnd</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keywordtype">integer</span>          n, m, col, head, nfree, index(n)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordtype">double precision</span> theta,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;     +                 x(n), g(n), z(n), r(n), wa(4*m),</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;     +                 ws(n, m), wy(n, m), sy(m, m), wt(m, m)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">c                           *  *  *</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c     Written by</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c     ************</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="keywordtype">integer</span>          i,j,k,pointr</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keywordtype">double precision</span> a1,a2</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">if</span> (.not. cnstnd .and. col .gt. 0) <span class="keywordflow">then</span> </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;         <span class="keywordflow">do</span> 26 i = 1, n</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            r(i) = -g(i)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  26     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         <span class="keywordflow">do</span> 30 i = 1, nfree</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            k = index(i)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            r(i) = -theta*(z(k) - x(k)) - g(k)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  30     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;         <span class="keyword">call </span><a class="code" href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">bmv</a>(m,sy,wt,col,wa(2*m+1),wa(1),info)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         <span class="keywordflow">if</span> (info .ne. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            info = -8</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordflow">         endif</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         pointr = head </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;         <span class="keywordflow">do</span> 34 j = 1, col</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            a1 = wa(j)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            a2 = theta*wa(col + j)</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keywordflow">do</span> 32 i = 1, nfree</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;               k = index(i)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;               r(i) = r(i) + wy(k,pointr)*a1 + ws(k,pointr)*a2</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  32        <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            pointr = mod(pointr,m) + 1</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  34     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="keyword">end</span></div>
-<div class="ttc" id="abmv_8f_html_a3b7cf8256f5c958dd10a7f72db1a0f14"><div class="ttname"><a href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">bmv</a></div><div class="ttdeci">subroutine bmv(m, sy, wt, col, v, p, info)</div><div class="ttdoc">This subroutine computes the product of the 2m x 2m middle matrix in the compact L-BFGS formula of B ...</div><div class="ttdef"><b>Definition:</b> <a href="bmv_8f_source.html#l00037">bmv.f:38</a></div></div>
-<div class="ttc" id="acmprlb_8f_html_aeca70b38353e4c44297fef717a66def4"><div class="ttname"><a href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4">cmprlb</a></div><div class="ttdeci">subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, theta, col, head, nfree, cnstnd, info)</div><div class="ttdoc">This subroutine computes r=-Z'B(xcp-xk)-Z'g by using wa(2m+1)=W'(xcp-x) from subroutine cauchy.</div><div class="ttdef"><b>Definition:</b> <a href="cmprlb_8f_source.html#l00043">cmprlb.f:45</a></div></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">c     ************</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keywordtype">integer</span>          i,j,k,pointr</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordtype">double precision</span> a1,a2</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keywordflow">if</span> (.not. cnstnd .and. col .gt. 0) <span class="keywordflow">then</span> </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;         <span class="keywordflow">do</span> 26 i = 1, n</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            r(i) = -g(i)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  26     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;         <span class="keywordflow">do</span> 30 i = 1, nfree</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            k = index(i)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            r(i) = -theta*(z(k) - x(k)) - g(k)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  30     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         <span class="keyword">call </span><a class="code" href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b">bmv</a>(m,sy,wt,col,wa(2*m+1),wa(1))</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         pointr = head</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         <span class="keywordflow">do</span> 34 j = 1, col</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            a1 = wa(j)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            a2 = theta*wa(col + j)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keywordflow">do</span> 32 i = 1, nfree</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;               k = index(i)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;               r(i) = r(i) + wy(k,pointr)*a1 + ws(k,pointr)*a2</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  32        <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            pointr = mod(pointr,m) + 1</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  34     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <span class="keyword">end</span></div>
+<div class="ttc" id="abmv_8f_html_a13a47c87ab649f4b6bb2921478fe767b"><div class="ttname"><a href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b">bmv</a></div><div class="ttdeci">subroutine bmv(m, sy, wt, col, v, p)</div><div class="ttdoc">This subroutine computes the product of the 2m x 2m middle matrix in the compact L-BFGS formula of B ...</div><div class="ttdef"><b>Definition:</b> <a href="bmv_8f_source.html#l00036">bmv.f:37</a></div></div>
+<div class="ttc" id="acmprlb_8f_html_a15ce5a0e43fe065477c5e824d3ac8d27"><div class="ttname"><a href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27">cmprlb</a></div><div class="ttdeci">subroutine cmprlb(n, m, x, g, ws, wy, sy, wt, z, r, wa, index, theta, col, head, nfree, cnstnd)</div><div class="ttdoc">This subroutine computes r=-Z'B(xcp-xk)-Z'g by using wa(2m+1)=W'(xcp-x) from subroutine cauchy.</div><div class="ttdef"><b>Definition:</b> <a href="cmprlb_8f_source.html#l00044">cmprlb.f:46</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

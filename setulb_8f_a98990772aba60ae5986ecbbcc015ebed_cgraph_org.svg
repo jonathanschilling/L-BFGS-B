@@ -50,7 +50,7 @@
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be" target="_top" xlink:title="Compute the Generalized Cauchy Point along the projected gradient direction.">
+<g id="a_node4"><a xlink:href="cauchy_8f.html#a67373bf35b22e75c6525fc7b12cdeafb" target="_top" xlink:title="Compute the Generalized Cauchy Point along the projected gradient direction.">
 <polygon fill="none" stroke="black" points="161,-456.5 161,-475.5 208,-475.5 208,-456.5 161,-456.5"/>
 <text text-anchor="middle" x="184.5" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">cauchy</text>
 </a>
@@ -65,7 +65,7 @@
 <!-- Node7 -->
 <g id="node7" class="node">
 <title>Node7</title>
-<g id="a_node7"><a xlink:href="cmprlb_8f.html#aeca70b38353e4c44297fef717a66def4" target="_top" xlink:title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy.">
+<g id="a_node7"><a xlink:href="cmprlb_8f.html#a15ce5a0e43fe065477c5e824d3ac8d27" target="_top" xlink:title="This subroutine computes r=&#45;Z&#39;B(xcp&#45;xk)&#45;Z&#39;g by using wa(2m+1)=W&#39;(xcp&#45;x) from subroutine cauchy.">
 <polygon fill="none" stroke="black" points="161.5,-494.5 161.5,-513.5 207.5,-513.5 207.5,-494.5 161.5,-494.5"/>
 <text text-anchor="middle" x="184.5" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">cmprlb</text>
 </a>
@@ -230,7 +230,7 @@
 <!-- Node20 -->
 <g id="node20" class="node">
 <title>Node20</title>
-<g id="a_node20"><a xlink:href="subsm_8f.html#a885224f17c93707dec22de0a51a4081d" target="_top" xlink:title="Performs the subspace minimization.">
+<g id="a_node20"><a xlink:href="subsm_8f.html#a12ea60a99018c04b53b62d4660145d2a" target="_top" xlink:title="Performs the subspace minimization.">
 <polygon fill="none" stroke="black" points="161.5,-38.5 161.5,-57.5 207.5,-57.5 207.5,-38.5 161.5,-38.5"/>
 <text text-anchor="middle" x="184.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">subsm</text>
 </a>
@@ -260,7 +260,7 @@
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
-<g id="a_node5"><a xlink:href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" target="_top" xlink:title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ...">
+<g id="a_node5"><a xlink:href="bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b" target="_top" xlink:title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ...">
 <polygon fill="none" stroke="black" points="250.5,-494.5 250.5,-513.5 285.5,-513.5 285.5,-494.5 250.5,-494.5"/>
 <text text-anchor="middle" x="268" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">bmv</text>
 </a>

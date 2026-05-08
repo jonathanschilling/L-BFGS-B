@@ -1,4 +1,4 @@
 var cauchy_8f =
 [
-    [ "cauchy", "cauchy_8f.html#ade50ac4208f509bdc3d04a325285a8be", null ]
+    [ "cauchy", "cauchy_8f.html#a67373bf35b22e75c6525fc7b12cdeafb", null ]
 ];

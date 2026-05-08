@@ -1,5 +1,5 @@
 <map id="cauchy" name="cauchy">
 <area shape="rect" id="node1" title="Compute the Generalized Cauchy Point along the projected gradient direction." alt="" coords="5,31,68,57"/>
-<area shape="rect" id="node2" href="$bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="123,5,169,32"/>
+<area shape="rect" id="node2" href="$bmv_8f.html#a13a47c87ab649f4b6bb2921478fe767b" title="This subroutine computes the product of the 2m x 2m middle matrix in the compact L&#45;BFGS formula of B ..." alt="" coords="123,5,169,32"/>
 <area shape="rect" id="node3" href="$hpsolb_8f.html#a94349c617519970019d2f15efcb1df41" title="This subroutine sorts out the least element of t, and puts the remaining elements of t in a heap." alt="" coords="116,56,176,83"/>
 </map>

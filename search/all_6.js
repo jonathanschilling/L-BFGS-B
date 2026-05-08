@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['hpsolb_20',['hpsolb',['../hpsolb_8f.html#a94349c617519970019d2f15efcb1df41',1,'hpsolb.f']]],
-  ['hpsolb_2ef_21',['hpsolb.f',['../hpsolb_8f.html',1,'']]]
+  ['glossary_3a_20notation_20across_20paper_2c_20code_2c_20and_20spec_25',['Glossary: notation across paper, code, and spec',['../md_docs_spec_01_glossary.html',1,'']]]
 ];

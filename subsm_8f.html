@@ -94,13 +94,13 @@ $(document).ready(function(){initNavTree('subsm_8f.html',''); initResizable(); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:a885224f17c93707dec22de0a51a4081d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subsm_8f.html#a885224f17c93707dec22de0a51a4081d">subsm</a> (n, m, nsub, ind, l, u, nbd, x, d, xp, ws, wy, theta, xx, gg, col, head, iword, wv, wn, iprint, info)</td></tr>
-<tr class="memdesc:a885224f17c93707dec22de0a51a4081d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the subspace minimization.  <a href="subsm_8f.html#a885224f17c93707dec22de0a51a4081d">More...</a><br /></td></tr>
-<tr class="separator:a885224f17c93707dec22de0a51a4081d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ea60a99018c04b53b62d4660145d2a"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subsm_8f.html#a12ea60a99018c04b53b62d4660145d2a">subsm</a> (n, m, nsub, ind, l, u, nbd, x, d, xp, ws, wy, theta, xx, gg, col, head, iword, wv, wn, iprint)</td></tr>
+<tr class="memdesc:a12ea60a99018c04b53b62d4660145d2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the subspace minimization.  <a href="subsm_8f.html#a12ea60a99018c04b53b62d4660145d2a">More...</a><br /></td></tr>
+<tr class="separator:a12ea60a99018c04b53b62d4660145d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a id="a885224f17c93707dec22de0a51a4081d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a885224f17c93707dec22de0a51a4081d">&#9670;&nbsp;</a></span>subsm()</h2>
+<a id="a12ea60a99018c04b53b62d4660145d2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12ea60a99018c04b53b62d4660145d2a">&#9670;&nbsp;</a></span>subsm()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,13 +229,7 @@ Functions/Subroutines</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">integer&#160;</td>
-          <td class="paramname"><em>iprint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">integer&#160;</td>
-          <td class="paramname"><em>info</em>&#160;</td>
+          <td class="paramname"><em>iprint</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -326,25 +320,18 @@ iprint=100 print also the changes of active set and final x; </li>
 iprint&gt;100 print details of every iteration including x and g;</li>
 </ul>
 When iprint &gt; 0, the file iterate.dat will be created to summarize the iteration.</td></tr>
-    <tr><td class="paramname">info</td><td>On entry info is unspecified.<br  />
- On exit info =<ul>
-<li>
-0 for normal return, </li>
-<li>
-nonzero for abnormal return when the matrix K is ill-conditioned.</li>
-</ul>
-</td></tr>
   </table>
   </dd>
 </dl>
+<p>Historical note: this routine used to take an <code>info</code> output parameter for an "ill-conditioned K" status. Since K's conditioning is checked in <code>formt</code>/<code>formk</code> (which fail loudly with their own <code>info</code>) and the two <code>dtrsm</code> calls inside <code>subsm</code> cannot fail on a non-singular factor, the parameter was always 0 on exit and has been removed. </p>
 
-<p class="definition">Definition at line <a class="el" href="subsm_8f_source.html#l00124">124</a> of file <a class="el" href="subsm_8f_source.html">subsm.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subsm_8f_source.html#l00126">126</a> of file <a class="el" href="subsm_8f_source.html">subsm.f</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09">mainlb()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="subsm_8f_a885224f17c93707dec22de0a51a4081d_icgraph.svg" width="286" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="subsm_8f_a12ea60a99018c04b53b62d4660145d2a_icgraph.svg" width="286" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

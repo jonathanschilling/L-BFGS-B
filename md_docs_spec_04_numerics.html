@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>bmv</code>: <code>1 / sqrt(sy[i,i])</code>   </td><td class="markdownTableBodyNone">precondition: <code>sy[i,i] &gt; 0</code> enforced by <code>matupd</code>   </td><td class="markdownTableBodyNone">If precondition violated, behavior undefined.   </td></tr>
 </table>
-<p>| <code>matupd</code>: <code>s'y</code> curvature test | <code>s'y &gt; eps * ||y||^2</code> (refresh threshold) | New pair rejected; <code>updatd = false</code>. |</p>
+<p>| <code>matupd</code>: <code>s&amp;#39;y</code> curvature test | <code>s&amp;#39;y &gt; eps * ||y||^2</code> (refresh threshold) | New pair rejected; <code>updatd = false</code>. |</p>
 <h2>Overflow / underflow</h2>
 <p>The algorithm does not explicitly guard against IEEE-754 overflow to infinity in arithmetic. Inputs that produce intermediate <code>Inf</code> or <code>NaN</code> typically cause the line search to fail, returning <code>INFO_ABNORMAL_LNSRLB</code>. The user should ensure <code>f_eval</code> and <code>g_eval</code> return finite values for feasible inputs.</p>
 <h2>Step-length floor</h2>
@@ -172,35 +172,32 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>dscal</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><code>y &lt;- alpha*y</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>ddot</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><p class="starttd">&lsquo;x&rsquo; y<code>. \ilinebr &lt;/td&gt; &lt;/tr&gt;&lt;/table&gt; |</code>dnrm2<code>| line search, gradients |</code>||x||_2<code>. | |</code>dgemv<code>|</code>formk<code>,</code>subsm<code>,</code>cauchy<code>|</code>y &lt;- alpha*A*x + beta*y<code>. | |</code>dtrsm<code>|</code>bmv<code>,</code>subsm<code>| Triangular solve</code>A x = b<code>. | |</code>dpotrf<code>|</code>formt<code>,</code>formk` | Cholesky factorization. |</p>
+<td class="markdownTableBodyNone"><code>ddot</code>   </td><td class="markdownTableBodyNone">many   </td><td class="markdownTableBodyNone"><code>x&amp;#39; y</code>.   </td></tr>
+</table>
+<p>| <code>dnrm2</code> | line search, gradients | <code>||x||_2</code>. | | <code>dgemv</code> | <code>formk</code>, <code>subsm</code>, <code>cauchy</code> | <code>y &lt;- alpha*A*x + beta*y</code>. | | <code>dtrsm</code> | <code>bmv</code>, <code>subsm</code> | Triangular solve <code>A x = b</code>. | | <code>dpotrf</code> | <code>formt</code>, <code>formk</code> | Cholesky factorization. |</p>
 <h2>Reference build for bit-for-bit conformance</h2>
-<p class="intertd"></p>
-<p class="intertd">Bit-for-bit reproducibility across BLAS implementations is <b>not achievable</b>: OpenBLAS, MKL, Accelerate, and netlib-BLAS differ in internal reduction order and SIMD behavior, and threaded versions add nondeterminism through dynamic chunking.</p>
-<p class="intertd">For <code>--strict</code> conformance, ports and the F77 reference must link against the <b>same reference BLAS/LAPACK build</b>:</p>
+<p>Bit-for-bit reproducibility across BLAS implementations is <b>not achievable</b>: OpenBLAS, MKL, Accelerate, and netlib-BLAS differ in internal reduction order and SIMD behavior, and threaded versions add nondeterminism through dynamic chunking.</p>
+<p>For <code>--strict</code> conformance, ports and the F77 reference must link against the <b>same reference BLAS/LAPACK build</b>:</p>
 <ul>
 <li><b>Reference BLAS</b>: netlib BLAS, single-threaded, source build.</li>
 <li><b>Reference LAPACK</b>: netlib LAPACK, single-threaded, source build.</li>
 <li><b>Reference compiler</b>: <code>gfortran</code> (any version &gt;= 9 in CI).</li>
 <li><b>Reference flags</b>: <code>-O2 -fno-fast-math -fno-associative-math -frounding-math</code> to disable algebraic reordering and float-contract.</li>
 </ul>
-<p class="intertd">CI pins these versions and rebuilds them in the conformance job. The exact version pin is in <code>.github/workflows/test.yml</code> (see Phase E of the plan); the spec runner reads the pin from a metadata file in <code>docs/spec/</code> so it stays in sync.</p>
+<p>CI pins these versions and rebuilds them in the conformance job. The exact version pin is in <code>.github/workflows/test.yml</code> (see Phase E of the plan); the spec runner reads the pin from a metadata file in <code>docs/spec/</code> so it stays in sync.</p>
 <h2>Tolerance mode for non-reference BLAS</h2>
-<p class="intertd"></p>
-<p class="intertd">Ports that must use a non-reference BLAS (e.g., a performance-optimized vendor implementation in production) can run the conformance suite in <code>--tolerance</code> mode, which uses per-subroutine numerical tolerances instead of bit-equality. See <code>07_conformance.md</code> for the per-routine tolerances.</p>
-<p class="intertd">The <code>--tolerance</code> mode is for <b>validation</b>, not for "real" conformance &ndash; a port that only passes <code>--tolerance</code> may diverge from the F77 reference under sufficiently long iteration sequences. For production use of a non-reference BLAS, the port must accept this risk; it is not an algorithmic bug, but a consequence of BLAS nondeterminism.</p>
+<p>Ports that must use a non-reference BLAS (e.g., a performance-optimized vendor implementation in production) can run the conformance suite in <code>--tolerance</code> mode, which uses per-subroutine numerical tolerances instead of bit-equality. See <code>07_conformance.md</code> for the per-routine tolerances.</p>
+<p>The <code>--tolerance</code> mode is for <b>validation</b>, not for "real" conformance &ndash; a port that only passes <code>--tolerance</code> may diverge from the F77 reference under sufficiently long iteration sequences. For production use of a non-reference BLAS, the port must accept this risk; it is not an algorithmic bug, but a consequence of BLAS nondeterminism.</p>
 <h1>Order-of-operations constraints</h1>
-<p class="intertd"></p>
-<p class="intertd">For bit-for-bit conformance, <b>the order of additions and subtractions matters</b> (floating-point addition is not associative). Per-subroutine specs in <code>subroutines/</code> document the operation order explicitly: which loops accumulate in which direction, which sums group with which, etc.</p>
-<p class="intertd">In particular:</p><ul>
+<p>For bit-for-bit conformance, <b>the order of additions and subtractions matters</b> (floating-point addition is not associative). Per-subroutine specs in <code>subroutines/</code> document the operation order explicitly: which loops accumulate in which direction, which sums group with which, etc.</p>
+<p>In particular:</p><ul>
 <li><b>Reduction direction</b>: F77 BLAS-1 routines (<code>ddot</code>, <code>dnrm2</code>, <code>daxpy</code>) accumulate in increasing index order. Ports using their language's BLAS binding inherit this from the reference build.</li>
 <li><b>Manual accumulations</b>: where the algorithm computes a sum without a BLAS call (e.g., the inner loops of <code>cauchy</code> and <code>subsm</code>), the spec specifies the loop order. Reversing is <b>not allowed</b> in <code>--strict</code> mode.</li>
 <li><b>Fused multiply-add (FMA)</b>: not used in the F77 reference (the flags above disable it). Ports compiled with FMA enabled will produce different bit-level outputs even for <code>--strict</code> mode and are non-conformant.</li>
 </ul>
 <h1>Magic-constants table</h1>
-<p class="intertd"></p>
-<p class="intertd">Populated by the Phase D deviations audit; see <code>05_deviations.md</code> for the full audit notes.</p>
+<p>Populated by the Phase D deviations audit; see <code>05_deviations.md</code> for the full audit notes.</p>
 <h2>Algorithmic constants (require port to match)</h2>
-<p class="intertd"></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Constant   </th><th class="markdownTableHeadNone">Site   </th><th class="markdownTableHeadNone">Value   </th><th class="markdownTableHeadNone">Origin   </th><th class="markdownTableHeadNone">Tunable?    </th></tr>
@@ -218,7 +215,6 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <td class="markdownTableBodyNone"><code>xtrapu</code>   </td><td class="markdownTableBodyNone"><code><a class="el" href="dcsrch_8f.html">dcsrch.f</a></code>   </td><td class="markdownTableBodyNone"><code>4.0</code>   </td><td class="markdownTableBodyNone">MINPACK-2 line search upper-extrapolation.   </td><td class="markdownTableBodyNone">No.   </td></tr>
 </table>
 <h2>Universal numeric literals</h2>
-<p class="intertd"></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Constant   </th><th class="markdownTableHeadNone">Sites   </th><th class="markdownTableHeadNone">Value   </th><th class="markdownTableHeadNone">Notes    </th></tr>
@@ -230,7 +226,6 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <td class="markdownTableBodyNone"><code>2.0d0</code>   </td><td class="markdownTableBodyNone"><code><a class="el" href="cauchy_8f.html">cauchy.f</a>:420</code>   </td><td class="markdownTableBodyNone"><code>2.0</code>   </td><td class="markdownTableBodyNone">Cross-term coefficient in the <code>f2</code> update across a breakpoint. From the Taylor expansion in <code>algorithm.pdf</code> sec.4.   </td></tr>
 </table>
 <h2>Implementation-detail sentinels</h2>
-<p class="intertd"></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Constant   </th><th class="markdownTableHeadNone">Site   </th><th class="markdownTableHeadNone">Value   </th><th class="markdownTableHeadNone">Notes    </th></tr>
@@ -238,23 +233,19 @@ $(document).ready(function(){initNavTree('md_docs_spec_04_numerics.html',''); in
 <td class="markdownTableBodyNone"><code>big</code>   </td><td class="markdownTableBodyNone"><code><a class="el" href="lnsrlb_8f.html">lnsrlb.f</a></code>   </td><td class="markdownTableBodyNone"><code>1.0e10</code>   </td><td class="markdownTableBodyNone">No-bounds-binding sentinel for <code>stpmx</code>. Not algorithmic.   </td></tr>
 </table>
 <h2><code>epsmch</code>-scaled safeguards</h2>
-<p class="intertd"></p>
-<p class="intertd">These don't appear as fixed numerical literals; they scale with the machine precision of the running platform.</p>
+<p>These don't appear as fixed numerical literals; they scale with the machine precision of the running platform.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Where   </th><th class="markdownTableHeadNone">Form   </th><th class="markdownTableHeadNone">Purpose    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code><a class="el" href="cauchy_8f.html">cauchy.f</a>:423</code>   </td><td class="markdownTableBodyNone"><code>max(epsmch * f2_org, f2)</code>   </td><td class="markdownTableBodyNone">Lower bound on segment curvature to prevent <code>0/0</code> in <code>dtm = -f1/f2</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code><a class="el" href="mainlb_8f.html">mainlb.f</a>:566</code>   </td><td class="markdownTableBodyNone"><code>dr &lt;= epsmch * ddum</code>   </td><td class="markdownTableBodyNone">L-BFGS curvature-condition gate; rejects <code>(s, y)</code> pairs with too-small <code>s'y</code>.    </td></tr>
+<td class="markdownTableBodyNone"><code><a class="el" href="mainlb_8f.html">mainlb.f</a>:566</code>   </td><td class="markdownTableBodyNone"><code>dr &lt;= epsmch * ddum</code>   </td><td class="markdownTableBodyNone">L-BFGS curvature-condition gate; rejects <code>(s, y)</code> pairs with too-small <code>s&amp;#39;y</code>.    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code><a class="el" href="formt_8f.html">formt.f</a></code>, <code><a class="el" href="formk_8f.html">formk.f</a></code>   </td><td class="markdownTableBodyNone">LAPACK <code>dpotrf</code> failure   </td><td class="markdownTableBodyNone">Cholesky pivot non-positivity -&gt; caller refreshes L-BFGS history.   </td></tr>
 </table>
 <h2>Constants from earlier suspicion that DO NOT exist</h2>
-<p class="intertd"></p>
-<p class="endtd">The original Phase D candidate list mentioned <code>1.0e-8</code> and <code>1.0e-10</code> gates somewhere in <code><a class="el" href="cauchy_8f.html">cauchy.f</a></code> / <code><a class="el" href="subsm_8f.html">subsm.f</a></code>. <b>The audit confirmed neither exists in the F77 source.</b> Cauchy's only safety floor uses <code>epsmch * f2_org</code> (machine-eps-scaled). See <code>05_deviations.md</code> for the audit methodology. </p>
-</td></tr>
-</table>
+<p>The original Phase D candidate list mentioned <code>1.0e-8</code> and <code>1.0e-10</code> gates somewhere in <code><a class="el" href="cauchy_8f.html">cauchy.f</a></code> / <code><a class="el" href="subsm_8f.html">subsm.f</a></code>. <b>The audit confirmed neither exists in the F77 source.</b> Cauchy's only safety floor uses <code>epsmch * f2_org</code> (machine-eps-scaled). See <code>05_deviations.md</code> for the audit methodology. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -106,12 +106,12 @@ varies fastest"). C, C++, Java, Rust, Go, NumPy default-row-major.</p>
 <p>F77 arrays default to 1-based indices: <code>A(1)</code> is the first element, <code>A(N)</code> is the last. Loops written as <code>do i = 1, N</code> are inclusive on both ends.</p>
 <p><b>Spec convention</b>: this pack uses 1-based indexing in pseudocode to match the F77 source for ease of cross-reference. Ports in 0-based languages (C, Python, Rust, ...) translate to 0-based in the obvious way. Where the index value matters numerically (rare &ndash; usually only for diagnostic output), the spec calls it out.</p>
 <h1>Character strings: <code>character*60</code> and trailing-space padding</h1>
-<p>F77 strings are fixed-length character arrays. <code>character*60 task</code> declares a 60-character buffer; assignments shorter than 60 characters are <b>right-padded with spaces</b>. Comparisons (&lsquo;task .eq. 'FG&rsquo;<code>) match on the full padded buffer, so</code>'FG' || 58 spaces == 'FG'<code>(with </code>||` denoting concatenation).</p>
+<p>F77 strings are fixed-length character arrays. <code>character*60 task</code> declares a 60-character buffer; assignments shorter than 60 characters are <b>right-padded with spaces</b>. Comparisons (<code>task .eq. &amp;#39;FG&amp;#39;</code>) match on the full padded buffer, so <code>&amp;#39;FG&amp;#39; || 58 spaces == &amp;#39;FG&amp;#39;</code> (with <code>||</code> denoting concatenation).</p>
 <p>The L-BFGS-B convention: the first 1-8 non-space characters are the state code; the remainder is human-readable diagnostic text:</p>
 <div class="fragment"><div class="line">&#39;CONVERGENCE: NORM OF PROJECTED GRADIENT &lt;= PGTOL          &#39;</div>
 <div class="line"> ^^^^^^^^^^^                                                 (first 11 = state code)</div>
 <div class="line">            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   (rest = description)</div>
-</div><!-- fragment --><p>In F77 callers, the convention is to test only a prefix: &lsquo;task(1:2) .eq. 'FG&rsquo;<code>,</code>task(1:5) .eq. 'NEW_X'`, etc.</p>
+</div><!-- fragment --><p>In F77 callers, the convention is to test only a prefix: <code>task(1:2) .eq. &amp;#39;FG&amp;#39;</code>, <code>task(1:5) .eq. &amp;#39;NEW_X&amp;#39;</code>, etc.</p>
 <p><b>For ports</b>:</p><ul>
 <li>Use the language's native string type. Right-padding is a F77 artifact, not part of the algorithm.</li>
 <li>The state codes themselves matter only for the legacy reverse-comm interface (see <code>08_legacy_reverse_comm.md</code>). Callback-based ports use <code>info</code> codes instead.</li>

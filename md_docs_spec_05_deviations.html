@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('md_docs_spec_05_deviations.html',''); 
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (dr .le. epsmch*ddum) <span class="keywordflow">then</span></div>
 <div class="line">   <span class="comment">! skip L-BFGS update; refresh</span></div>
 <div class="line">endif</div>
-</div><!-- fragment --><p>Caller-side check (in <code>mainlb</code>) that gates calls to <code>matupd</code>. If the new <code>(s, y)</code> pair has curvature <code>s'y</code> smaller than <code>eps</code> times the relevant scale, the pair is rejected to avoid corrupting the L-BFGS cache. Standard refresh logic; the threshold <code>epsmch * ddum</code> keeps the test scale-invariant.</p>
+</div><!-- fragment --><p>Caller-side check (in <code>mainlb</code>) that gates calls to <code>matupd</code>. If the new <code>(s, y)</code> pair has curvature <code>s&amp;#39;y</code> smaller than <code>eps</code> times the relevant scale, the pair is rejected to avoid corrupting the L-BFGS cache. Standard refresh logic; the threshold <code>epsmch * ddum</code> keeps the test scale-invariant.</p>
 <h1>Constants from earlier suspicion that turned out NOT to exist</h1>
 <p>The original spec planning suggested suspect constants <code>1.0e-8</code> and <code>1.0e-10</code> somewhere in <code><a class="el" href="cauchy_8f.html">cauchy.f</a></code> / <code><a class="el" href="subsm_8f.html">subsm.f</a></code>. <b>The audit found no such constants in the F77 source.</b> Cauchy's only safety floor uses <code>epsmch * f2_org</code> (machine-eps-scaled, not a fixed value).</p>
 <h1>Audit methodology</h1>

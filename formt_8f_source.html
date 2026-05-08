@@ -150,15 +150,14 @@ $(document).ready(function(){initNavTree('formt_8f_source.html',''); initResizab
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c     Cholesky factorize T to J*J&#39; with</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c        J&#39; stored in the upper triangle of wt.</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="comment">!call dpofa(wt,m,col,info)</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keyword">call </span>dpotrf(<span class="stringliteral">&#39;U&#39;</span>,col,wt,m,info)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">if</span> (info .ne. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;         info = -3</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keyword">end</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="keyword">call </span>dpotrf(<span class="stringliteral">&#39;U&#39;</span>,col,wt,m,info)</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keywordflow">if</span> (info .ne. 0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;         info = -3</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      <span class="keyword">end</span></div>
 <div class="ttc" id="aformt_8f_html_a237bf34b63889556b05399c224ec5f71"><div class="ttname"><a href="formt_8f.html#a237bf34b63889556b05399c224ec5f71">formt</a></div><div class="ttdeci">subroutine formt(m, wt, sy, ss, col, theta, info)</div><div class="ttdoc">Forms the upper half of the pos. def. and symm. T.</div><div class="ttdef"><b>Definition:</b> <a href="formt_8f_source.html#l00021">formt.f:22</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

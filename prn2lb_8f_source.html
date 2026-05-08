@@ -119,74 +119,84 @@ $(document).ready(function(){initNavTree('prn2lb_8f_source.html',''); initResiza
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">c&gt; </span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">c&gt; @param itfile unit number of iterate.dat file</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">c&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">c&gt; @param iter TODO</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">c&gt; @param nfgv TODO</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">c&gt; @param nact TODO</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt; @param sbgnrm TODO</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt; @param nseg TODO</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt; @param word TODO</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt; @param iword TODO</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt; @param iback TODO</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt; @param stp TODO</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt; @param xstep TODO</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">   43</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">prn2lb</a>(n, x, f, g, iprint, itfile, iter, nfgv, nact, </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;     +                  sbgnrm, nseg, word, iword, iback, stp, xstep)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="keywordtype">character*3</span>      word</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordtype">integer</span>          n, iprint, itfile, iter, nfgv, nact, nseg,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;     +                 iword, iback</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordtype">double precision</span> f, sbgnrm, stp, xstep, x(n), g(n)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">c     ************</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c     Written by</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">c&gt; @param iter Current outer iteration number; printed on the per-iterate</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">c&gt;              summary line.</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">c&gt; @param nfgv Cumulative number of f/g evaluations across the whole run;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt;             logged into the iterate.dat record.</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt; @param nact Number of variables active at their bounds at the current</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt;             iterate.</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt; @param sbgnrm Infinity norm of the projected gradient at x; the natural</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt;               first-order optimality measure printed alongside f.</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt; @param nseg Number of breakpoint segments traversed by cauchy at the</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt;             current iteration; printed for diagnostic accounting.</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c&gt; @param word On exit a 3-character status code summarising the subspace</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">c&gt;             solution: &#39;con&#39; (converged), &#39;bnd&#39; (hit a bound), &#39;TNT&#39;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">c&gt;             (truncated-Newton step used), or &#39;---&#39; otherwise. Determined</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">c&gt;             from iword.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">c&gt; @param iword Status code from subsm: 0 = subspace minimisation</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">c&gt;              converged, 1 = stopped at a bound, 5 = truncated-Newton</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">c&gt;              step used. Maps to word.</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">c&gt; @param iback Number of backtracks the line search performed.</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">c&gt; @param stp Final step length accepted by the line search.</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">c&gt; @param xstep stp * ||d|| -- the actual length of the step in x-space.</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">   53</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">prn2lb</a>(n, x, f, g, iprint, itfile, iter, nfgv, nact, </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;     +                  sbgnrm, nseg, word, iword, iback, stp, xstep)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      <span class="keywordtype">character*3</span>      word</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keywordtype">integer</span>          n, iprint, itfile, iter, nfgv, nact, nseg,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;     +                 iword, iback</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keywordtype">double precision</span> f, sbgnrm, stp, xstep, x(n), g(n)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c     ************</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keywordtype">integer</span> i,imod</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">c           &#39;word&#39; records the status of subspace solutions.</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">if</span> (iword .eq. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">c                            the subspace minimization converged.</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;         word = <span class="stringliteral">&#39;con&#39;</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iword .eq. 1) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">c                          the subspace minimization stopped at a bound.</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;         word = <span class="stringliteral">&#39;bnd&#39;</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iword .eq. 5) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">c                             the truncated Newton step has been used.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;         word = <span class="stringliteral">&#39;TNT&#39;</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;         word = <span class="stringliteral">&#39;---&#39;</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;LINE SEARCH&#39;</span>,iback,<span class="stringliteral">&#39; times; norm of step = &#39;</span>,xstep</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;         <span class="keyword">write</span> (6,2001) iter,f,sbgnrm</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         <span class="keywordflow">if</span> (iprint .gt. 100) <span class="keywordflow">then</span>      </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keyword">write</span> (6,1004) <span class="stringliteral">&#39;X =&#39;</span>,(x(i), i = 1, n)</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="keyword">write</span> (6,1004) <span class="stringliteral">&#39;G =&#39;</span>,(g(i), i = 1, n)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordflow">         endif</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iprint .gt. 0) <span class="keywordflow">then</span> </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;         imod = mod(iter,iprint)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;         <span class="keywordflow">if</span> (imod .eq. 0) <span class="keyword">write</span> (6,2001) iter,f,sbgnrm</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 1) <span class="keyword">write</span> (itfile,3001)</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;     +          iter,nfgv,nseg,nact,word,iback,stp,xstep,sbgnrm,f</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; 1004 <span class="keyword">format</span> (/,a4, 1p, 6(1x,d11.4),/,(4x,1p,6(1x,d11.4)))</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; 2001 <span class="keyword">format</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;     +  (/,<span class="stringliteral">&#39;At iterate&#39;</span>,i5,4x,<span class="stringliteral">&#39;f= &#39;</span>,1p,d12.5,4x,<span class="stringliteral">&#39;|proj g|= &#39;</span>,1p,d12.5)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; 3001 <span class="keyword">format</span>(2(1x,i4),2(1x,i5),2x,a3,1x,i4,1p,2(2x,d7.1),1p,2(1x,d10.3))</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keyword">end</span></div>
-<div class="ttc" id="aprn2lb_8f_html_a5df5a6f8f26c5a5a68585b45a41032bd"><div class="ttname"><a href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">prn2lb</a></div><div class="ttdeci">subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, word, iword, iback, stp, xstep)</div><div class="ttdoc">This subroutine prints out new information after a successful line search.</div><div class="ttdef"><b>Definition:</b> <a href="prn2lb_8f_source.html#l00043">prn2lb.f:45</a></div></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">c     Written by</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">c     ************</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <span class="keywordtype">integer</span> i,imod</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">c           &#39;word&#39; records the status of subspace solutions.</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">if</span> (iword .eq. 0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">c                            the subspace minimization converged.</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         word = <span class="stringliteral">&#39;con&#39;</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iword .eq. 1) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">c                          the subspace minimization stopped at a bound.</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         word = <span class="stringliteral">&#39;bnd&#39;</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iword .eq. 5) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">c                             the truncated Newton step has been used.</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;         word = <span class="stringliteral">&#39;TNT&#39;</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;         word = <span class="stringliteral">&#39;---&#39;</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;         <span class="keyword">write</span> (6,*) <span class="stringliteral">&#39;LINE SEARCH&#39;</span>,iback,<span class="stringliteral">&#39; times; norm of step = &#39;</span>,xstep</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;         <span class="keyword">write</span> (6,2001) iter,f,sbgnrm</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;         <span class="keywordflow">if</span> (iprint .gt. 100) <span class="keywordflow">then</span>      </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keyword">write</span> (6,1004) <span class="stringliteral">&#39;X =&#39;</span>,(x(i), i = 1, n)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keyword">write</span> (6,1004) <span class="stringliteral">&#39;G =&#39;</span>,(g(i), i = 1, n)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordflow">         endif</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (iprint .gt. 0) <span class="keywordflow">then</span> </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;         imod = mod(iter,iprint)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;         <span class="keywordflow">if</span> (imod .eq. 0) <span class="keyword">write</span> (6,2001) iter,f,sbgnrm</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 1) <span class="keyword">write</span> (itfile,3001)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;     +          iter,nfgv,nseg,nact,word,iback,stp,xstep,sbgnrm,f</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; 1004 <span class="keyword">format</span> (/,a4, 1p, 6(1x,d11.4),/,(4x,1p,6(1x,d11.4)))</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; 2001 <span class="keyword">format</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;     +  (/,<span class="stringliteral">&#39;At iterate&#39;</span>,i5,4x,<span class="stringliteral">&#39;f= &#39;</span>,1p,d12.5,4x,<span class="stringliteral">&#39;|proj g|= &#39;</span>,1p,d12.5)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; 3001 <span class="keyword">format</span>(2(1x,i4),2(1x,i5),2x,a3,1x,i4,1p,2(2x,d7.1),1p,2(1x,d10.3))</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keyword">end</span></div>
+<div class="ttc" id="aprn2lb_8f_html_a5df5a6f8f26c5a5a68585b45a41032bd"><div class="ttname"><a href="prn2lb_8f.html#a5df5a6f8f26c5a5a68585b45a41032bd">prn2lb</a></div><div class="ttdeci">subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, word, iword, iback, stp, xstep)</div><div class="ttdoc">This subroutine prints out new information after a successful line search.</div><div class="ttdef"><b>Definition:</b> <a href="prn2lb_8f_source.html#l00053">prn2lb.f:55</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

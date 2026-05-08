@@ -105,91 +105,106 @@ $(document).ready(function(){initNavTree('freev_8f_source.html',''); initResizab
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">c&gt;                the free variables at the previous iteration.&lt;br/&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">c&gt;              On exit it gives the free variables based on the determination</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">c&gt;                in cauchy using the array iwhere.</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">c&gt; @param nenter TODO</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">c&gt; @param ileave TODO</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">c&gt; @param indx2 On entry indx2 is unspecified.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">c&gt;              On exit with iter&gt;0, indx2 indicates which variables</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">c&gt;                 have changed status since the previous iteration.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">c&gt;              For i= 1,...,nenter, indx2(i) have changed from bound to free.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">c&gt;              For i= ileave+1,...,n, indx2(i) have changed from free to bound.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">c&gt; @param iwhere TODO</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">c&gt; @param wrk TODO</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">c&gt; @param updatd TODO</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">c&gt; @param cnstnd indicating whether bounds are present</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">c&gt; @param iprint control screen output</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">c&gt; @param iter TODO</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">   32</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">freev</a>(n, nfree, index, nenter, ileave, indx2, </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;     +                 iwhere, wrk, updatd, cnstnd, iprint, iter)</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      <span class="keywordtype">integer</span> n, nfree, nenter, ileave, iprint, iter, </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;     +        index(n), indx2(n), iwhere(n)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <span class="keywordtype">logical</span> wrk, updatd, cnstnd</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c                           *  *  *</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">c     Written by</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">c     ************</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordtype">integer</span> iact,i,k</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      nenter = 0</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      ileave = n + 1</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keywordflow">if</span> (iter .gt. 0 .and. cnstnd) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c                           count the entering and leaving variables.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;         <span class="keywordflow">do</span> 20 i = 1, nfree</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            k = index(i)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c            write(6,*) &#39; k  = index(i) &#39;, k</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c            write(6,*) &#39; index = &#39;, i</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> (iwhere(k) .gt. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;               ileave = ileave - 1</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;               indx2(ileave) = k</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;               <span class="keywordflow">if</span> (iprint .ge. 100) <span class="keyword">write</span> (6,*)</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;     +             <span class="stringliteral">&#39;Variable &#39;</span>,k,<span class="stringliteral">&#39; leaves the set of free variables&#39;</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordflow">            endif</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  20     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;         <span class="keywordflow">do</span> 22 i = 1 + nfree, n</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            k = index(i)</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keywordflow">if</span> (iwhere(k) .le. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;               nenter = nenter + 1</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;               indx2(nenter) = k</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;               <span class="keywordflow">if</span> (iprint .ge. 100) <span class="keyword">write</span> (6,*)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;     +             <span class="stringliteral">&#39;Variable &#39;</span>,k,<span class="stringliteral">&#39; enters the set of free variables&#39;</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordflow">            endif</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  22     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;         <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keyword">write</span> (6,*)</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;     +       n+1-ileave,<span class="stringliteral">&#39; variables leave; &#39;</span>,nenter,<span class="stringliteral">&#39; variables enter&#39;</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      wrk = (ileave .lt. n+1) .or. (nenter .gt. 0) .or. updatd</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">c     Find the index set of free and active variables at the GCP.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      nfree = 0 </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      iact = n + 1</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">do</span> 24 i = 1, n</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;         <span class="keywordflow">if</span> (iwhere(i) .le. 0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            nfree = nfree + 1</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            index(nfree) = i</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            iact = iact - 1</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            index(iact) = i</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordflow">         endif</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  24  <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keyword">write</span> (6,*)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;     +      nfree,<span class="stringliteral">&#39; variables are free at GCP &#39;</span>,iter + 1  </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <span class="keyword">end</span></div>
-<div class="ttc" id="afreev_8f_html_a9e31e2bbd26db0eabd2e72c99e5a2f84"><div class="ttname"><a href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">freev</a></div><div class="ttdeci">subroutine freev(n, nfree, index, nenter, ileave, indx2, iwhere, wrk, updatd, cnstnd, iprint, iter)</div><div class="ttdoc">This subroutine counts the entering and leaving variables when iter &gt; 0, and finds the index set of f...</div><div class="ttdef"><b>Definition:</b> <a href="freev_8f_source.html#l00032">freev.f:34</a></div></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">c&gt; @param nenter On exit nenter is the number of variables that entered the</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">c&gt;                free set this iteration (were active, now free at the GCP).</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">c&gt; @param ileave On exit indx2(ileave),...,indx2(n) list the variables that</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">c&gt;               left the free set this iteration. ileave starts at n+1 and</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">c&gt;               is decremented each time a leaving variable is recorded.</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">c&gt; @param indx2 On entry indx2 is unspecified.&lt;br/&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">c&gt;              On exit with iter&gt;0, indx2 indicates which variables</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">c&gt;                 have changed status since the previous iteration.&lt;br/&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">c&gt;              For i= 1,...,nenter, indx2(i) have changed from bound to free.&lt;br/&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">c&gt;              For i= ileave+1,...,n, indx2(i) have changed from free to bound.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">c&gt; @param iwhere On entry iwhere(i) classifies each variable&#39;s bound status</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">c&gt;               (set by cauchy): &lt;=0 means free at GCP, &gt;0 means at-bound.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">c&gt;               Used here to compare against the previous index/nfree to</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">c&gt;               detect leaving and entering variables.</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">c&gt; @param wrk On exit .true. if the active-set or L-BFGS bookkeeping has</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">c&gt;            changed enough that the workspace WN needs to be rebuilt</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">c&gt;            (some variable entered/left, or updatd is .true.).</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt; @param updatd On entry .true. if the L-BFGS matrix was updated in the</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt;               previous iteration. Combined with the entering/leaving</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt;               counts to set wrk.</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt; @param cnstnd Whether bounds are present (true if at least one variable</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt;               is bounded). When false, the entering/leaving counting</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt;               loop is skipped.</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt; @param iprint Console output flag (&gt;=99 prints summary, &gt;=100 prints</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c&gt;               per-variable change records).</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">c&gt; @param iter Current outer iteration number. The entering/leaving</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">c&gt;             counting loop only runs when iter &gt; 0 (the first iteration</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">c&gt;             has no &quot;previous&quot; set to compare against).</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">   47</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">freev</a>(n, nfree, index, nenter, ileave, indx2, </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;     +                 iwhere, wrk, updatd, cnstnd, iprint, iter)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keywordtype">integer</span> n, nfree, nenter, ileave, iprint, iter, </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;     +        index(n), indx2(n), iwhere(n)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keywordtype">logical</span> wrk, updatd, cnstnd</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">c                           *  *  *</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c     Written by</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">c     ************</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordtype">integer</span> iact,i,k</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      nenter = 0</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      ileave = n + 1</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keywordflow">if</span> (iter .gt. 0 .and. cnstnd) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">c                           count the entering and leaving variables.</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         <span class="keywordflow">do</span> 20 i = 1, nfree</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            k = index(i)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">c            write(6,*) &#39; k  = index(i) &#39;, k</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">c            write(6,*) &#39; index = &#39;, i</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keywordflow">if</span> (iwhere(k) .gt. 0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;               ileave = ileave - 1</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;               indx2(ileave) = k</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;               <span class="keywordflow">if</span> (iprint .ge. 100) <span class="keyword">write</span> (6,*)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;     +             <span class="stringliteral">&#39;Variable &#39;</span>,k,<span class="stringliteral">&#39; leaves the set of free variables&#39;</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordflow">            endif</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  20     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;         <span class="keywordflow">do</span> 22 i = 1 + nfree, n</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            k = index(i)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">if</span> (iwhere(k) .le. 0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;               nenter = nenter + 1</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;               indx2(nenter) = k</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;               <span class="keywordflow">if</span> (iprint .ge. 100) <span class="keyword">write</span> (6,*)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;     +             <span class="stringliteral">&#39;Variable &#39;</span>,k,<span class="stringliteral">&#39; enters the set of free variables&#39;</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordflow">            endif</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  22     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keyword">write</span> (6,*)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;     +       n+1-ileave,<span class="stringliteral">&#39; variables leave; &#39;</span>,nenter,<span class="stringliteral">&#39; variables enter&#39;</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      wrk = (ileave .lt. n+1) .or. (nenter .gt. 0) .or. updatd</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">c     Find the index set of free and active variables at the GCP.</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      nfree = 0 </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      iact = n + 1</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="keywordflow">do</span> 24 i = 1, n</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;         <span class="keywordflow">if</span> (iwhere(i) .le. 0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            nfree = nfree + 1</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            index(nfree) = i</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;         <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            iact = iact - 1</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            index(iact) = i</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordflow">         endif</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  24  <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      <span class="keywordflow">if</span> (iprint .ge. 99) <span class="keyword">write</span> (6,*)</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;     +      nfree,<span class="stringliteral">&#39; variables are free at GCP &#39;</span>,iter + 1  </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keyword">end</span></div>
+<div class="ttc" id="afreev_8f_html_a9e31e2bbd26db0eabd2e72c99e5a2f84"><div class="ttname"><a href="freev_8f.html#a9e31e2bbd26db0eabd2e72c99e5a2f84">freev</a></div><div class="ttdeci">subroutine freev(n, nfree, index, nenter, ileave, indx2, iwhere, wrk, updatd, cnstnd, iprint, iter)</div><div class="ttdoc">This subroutine counts the entering and leaving variables when iter &gt; 0, and finds the index set of f...</div><div class="ttdef"><b>Definition:</b> <a href="freev_8f_source.html#l00047">freev.f:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

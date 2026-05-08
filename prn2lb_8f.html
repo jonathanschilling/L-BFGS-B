@@ -235,21 +235,21 @@ iprint&gt;100 print details of every iteration including x and g;</li>
 </ul>
 When iprint &gt; 0, the file iterate.dat will be created to summarize the iteration.</td></tr>
     <tr><td class="paramname">itfile</td><td>unit number of iterate.dat file</td></tr>
-    <tr><td class="paramname">iter</td><td>TODO </td></tr>
-    <tr><td class="paramname">nfgv</td><td>TODO </td></tr>
-    <tr><td class="paramname">nact</td><td>TODO </td></tr>
-    <tr><td class="paramname">sbgnrm</td><td>TODO </td></tr>
-    <tr><td class="paramname">nseg</td><td>TODO </td></tr>
-    <tr><td class="paramname">word</td><td>TODO </td></tr>
-    <tr><td class="paramname">iword</td><td>TODO </td></tr>
-    <tr><td class="paramname">iback</td><td>TODO </td></tr>
-    <tr><td class="paramname">stp</td><td>TODO </td></tr>
-    <tr><td class="paramname">xstep</td><td>TODO </td></tr>
+    <tr><td class="paramname">iter</td><td>Current outer iteration number; printed on the per-iterate summary line. </td></tr>
+    <tr><td class="paramname">nfgv</td><td>Cumulative number of f/g evaluations across the whole run; logged into the iterate.dat record. </td></tr>
+    <tr><td class="paramname">nact</td><td>Number of variables active at their bounds at the current iterate. </td></tr>
+    <tr><td class="paramname">sbgnrm</td><td>Infinity norm of the projected gradient at x; the natural first-order optimality measure printed alongside f. </td></tr>
+    <tr><td class="paramname">nseg</td><td>Number of breakpoint segments traversed by cauchy at the current iteration; printed for diagnostic accounting. </td></tr>
+    <tr><td class="paramname">word</td><td>On exit a 3-character status code summarising the subspace solution: 'con' (converged), 'bnd' (hit a bound), 'TNT' (truncated-Newton step used), or '&mdash;' otherwise. Determined from iword. </td></tr>
+    <tr><td class="paramname">iword</td><td>Status code from subsm: 0 = subspace minimisation converged, 1 = stopped at a bound, 5 = truncated-Newton step used. Maps to word. </td></tr>
+    <tr><td class="paramname">iback</td><td>Number of backtracks the line search performed. </td></tr>
+    <tr><td class="paramname">stp</td><td>Final step length accepted by the line search. </td></tr>
+    <tr><td class="paramname">xstep</td><td>stp * ||d|| &ndash; the actual length of the step in x-space. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="prn2lb_8f_source.html#l00043">43</a> of file <a class="el" href="prn2lb_8f_source.html">prn2lb.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prn2lb_8f_source.html#l00053">53</a> of file <a class="el" href="prn2lb_8f_source.html">prn2lb.f</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09">mainlb()</a>.</p>
 <div class="dynheader">

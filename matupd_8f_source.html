@@ -117,98 +117,113 @@ $(document).ready(function(){initNavTree('matupd_8f_source.html',''); initResiza
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">c&gt; @param ss On entry this stores S&#39;S, that defines the</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">c&gt;              limited memory BFGS matrix.&lt;br/&gt;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">c&gt;           On exit this array is unchanged.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">c&gt; @param d TODO</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">c&gt; @param r TODO</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">c&gt; @param itail TODO</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">c&gt; @param iupdat TODO</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">c&gt; @param col On entry col is the actual number of variable metric</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt;               corrections stored so far.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt;            On exit col is unchanged.</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt; @param head On entry head is the location of the first s-vector (or y-vector)</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt;                in S (or Y).&lt;br/&gt;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt;             On exit col is unchanged.</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c&gt; @param theta On entry theta is the scaling factor specifying B_0 = theta I.&lt;br/&gt;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">c&gt;              On exit theta is unchanged.</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">c&gt; @param rr TODO</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">c&gt; @param dr TODO</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">c&gt; @param stp TODO</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">c&gt; @param dtd TODO</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">   49</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">matupd</a>(n, m, ws, wy, sy, ss, d, r, itail, </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;     +                  iupdat, col, head, theta, rr, dr, stp, dtd)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keywordtype">integer</span>          n, m, itail, iupdat, col, head</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordtype">double precision</span> theta, rr, dr, stp, dtd, d(n), r(n), </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;     +                 ws(n, m), wy(n, m), sy(m, m), ss(m, m)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c                           *  *  *</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c     Written by</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">c</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">c     ************</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordtype">integer</span>          j,pointr</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keywordtype">double precision</span> ddot</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      <span class="keywordtype">double precision</span> one</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      parameter(one=1.0d0)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">c     Set pointers for matrices WS and WY.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">if</span> (iupdat .le. m) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         col = iupdat</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         itail = mod(head+iupdat-2,m) + 1</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;         itail = mod(itail,m) + 1</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         head = mod(head,m) + 1</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">c&gt; @param d Search direction at the current iteration. After the line</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">c&gt;           search, the new s-vector is stp*d; matupd stores it as a</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">c&gt;           column of WS (writing d directly, since the stp scaling is</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">c&gt;           folded into the stored ss diagonal entry below).</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">c&gt; @param r The accepted gradient difference y = g_{k+1} - g_k. Stored as</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">c&gt;          a column of WY.</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">c&gt; @param itail On entry the column index in WS/WY that the previous</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">c&gt;              update wrote. On exit the column index this update wrote;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">c&gt;              advances cyclically modulo m.</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">c&gt; @param iupdat Total number of L-BFGS updates performed so far</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">c&gt;               (incremented by mainlb before each matupd call). When</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">c&gt;               iupdat &lt;= m, col simply grows; when iupdat &gt; m, the</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">c&gt;               history wraps and the oldest column is discarded.</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">c&gt; @param col On entry col is the actual number of variable metric</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">c&gt;               corrections stored so far.&lt;br/&gt;</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">c&gt;            On exit col is unchanged.</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">c&gt;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">c&gt; @param head On entry head is the location of the first s-vector (or y-vector)</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">c&gt;                in S (or Y).&lt;br/&gt;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">c&gt;             On exit col is unchanged.</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">c&gt;</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">c&gt; @param theta On entry theta is the scaling factor specifying B_0 = theta I.&lt;br/&gt;</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">c&gt;              On exit theta is unchanged.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">c&gt; @param rr Squared 2-norm of r (i.e. ||y||^2 = y&#39;y). Used to set</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">c&gt;           theta := rr/dr = y&#39;y / (s&#39;y), the standard initial Hessian</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">c&gt;           scaling for the next L-BFGS update.</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">c&gt; @param dr Inner product d&#39;r = s&#39;y / stp (the curvature condition; must</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">c&gt;           be positive for the update to be safely accepted -- mainlb</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">c&gt;           checks this and skips matupd if dr &lt;= eps*rr).</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">c&gt; @param stp Line-search step length. Used to recover the s-vector from</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">c&gt;            d (s = stp*d) when computing ss(col,col) = stp^2 * d&#39;d.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">c&gt; @param dtd Squared 2-norm of d (i.e. d&#39;d). Combined with stp to form</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">c&gt;            ss(col,col) = stp^2 * dtd = ||s||^2 for the new column.</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">   64</a></span>&#160;      <span class="keyword">subroutine </span><a class="code" href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">matupd</a>(n, m, ws, wy, sy, ss, d, r, itail, </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;     +                  iupdat, col, head, theta, rr, dr, stp, dtd)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordtype">integer</span>          n, m, itail, iupdat, col, head</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keywordtype">double precision</span> theta, rr, dr, stp, dtd, d(n), r(n), </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;     +                 ws(n, m), wy(n, m), sy(m, m), ss(m, m)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">c                           *  *  *</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">c     NEOS, November 1994. (Latest revision June 1996.)</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">c     Optimization Technology Center.</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">c     Argonne National Laboratory and Northwestern University.</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">c     Written by</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">c                        Ciyou Zhu</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">c     in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">c</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">c     ************</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">c     Update matrices WS and WY.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keyword">call </span>dcopy(n,d,1,ws(1,itail),1)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keyword">call </span>dcopy(n,r,1,wy(1,itail),1)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keywordtype">integer</span>          j,pointr</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordtype">double precision</span> ddot</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keywordtype">double precision</span> one</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      parameter(one=1.0d0)</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">c     Set theta=yy/ys.</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">c     Set pointers for matrices WS and WY.</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      theta = rr/dr</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">c     Form the middle matrix in B.</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">c        update the upper triangle of SS,</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">c                                         and the lower triangle of SY:</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="keywordflow">if</span> (iupdat .gt. m) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">c                              move old information</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;         <span class="keywordflow">do</span> 50 j = 1, col - 1</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keyword">call </span>dcopy(j,ss(2,j+1),1,ss(1,j),1)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">call </span>dcopy(col-j,sy(j+1,j+1),1,sy(j,j),1)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  50     <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">c        add new information: the last row of SY</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">c                                             and the last column of SS:</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      pointr = head</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      <span class="keywordflow">do</span> 51 j = 1, col - 1</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;         sy(col,j) = ddot(n,d,1,wy(1,pointr),1)</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;         ss(j,col) = ddot(n,ws(1,pointr),1,d,1)</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;         pointr = mod(pointr,m) + 1</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  51  <span class="keywordflow">continue</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      <span class="keywordflow">if</span> (stp .eq. one) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;         ss(col,col) = dtd</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;         ss(col,col) = stp*stp*dtd</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordflow">      endif</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      sy(col,col) = dr</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keyword">end</span></div>
-<div class="ttc" id="amatupd_8f_html_ae0d8b7b11bf7546ed4d53b433273f74b"><div class="ttname"><a href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">matupd</a></div><div class="ttdeci">subroutine matupd(n, m, ws, wy, sy, ss, d, r, itail, iupdat, col, head, theta, rr, dr, stp, dtd)</div><div class="ttdoc">This subroutine updates matrices WS and WY, and forms the middle matrix in B.</div><div class="ttdef"><b>Definition:</b> <a href="matupd_8f_source.html#l00049">matupd.f:51</a></div></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="keywordflow">if</span> (iupdat .le. m) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         col = iupdat</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         itail = mod(head+iupdat-2,m) + 1</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;         itail = mod(itail,m) + 1</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;         head = mod(head,m) + 1</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">c     Update matrices WS and WY.</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="keyword">call </span>dcopy(n,d,1,ws(1,itail),1)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <span class="keyword">call </span>dcopy(n,r,1,wy(1,itail),1)</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">c     Set theta=yy/ys.</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      theta = rr/dr</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">c     Form the middle matrix in B.</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">c        update the upper triangle of SS,</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">c                                         and the lower triangle of SY:</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      <span class="keywordflow">if</span> (iupdat .gt. m) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">c                              move old information</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;         <span class="keywordflow">do</span> 50 j = 1, col - 1</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <span class="keyword">call </span>dcopy(j,ss(2,j+1),1,ss(1,j),1)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keyword">call </span>dcopy(col-j,sy(j+1,j+1),1,sy(j,j),1)</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  50     <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">c        add new information: the last row of SY</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">c                                             and the last column of SS:</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      pointr = head</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      <span class="keywordflow">do</span> 51 j = 1, col - 1</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;         sy(col,j) = ddot(n,d,1,wy(1,pointr),1)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;         ss(j,col) = ddot(n,ws(1,pointr),1,d,1)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;         pointr = mod(pointr,m) + 1</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  51  <span class="keywordflow">continue</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      <span class="keywordflow">if</span> (stp .eq. one) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;         ss(col,col) = dtd</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;         ss(col,col) = stp*stp*dtd</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keywordflow">      endif</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;      sy(col,col) = dr</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      <span class="keyword">end</span></div>
+<div class="ttc" id="amatupd_8f_html_ae0d8b7b11bf7546ed4d53b433273f74b"><div class="ttname"><a href="matupd_8f.html#ae0d8b7b11bf7546ed4d53b433273f74b">matupd</a></div><div class="ttdeci">subroutine matupd(n, m, ws, wy, sy, ss, d, r, itail, iupdat, col, head, theta, rr, dr, stp, dtd)</div><div class="ttdoc">This subroutine updates matrices WS and WY, and forms the middle matrix in B.</div><div class="ttdef"><b>Definition:</b> <a href="matupd_8f_source.html#l00064">matupd.f:66</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

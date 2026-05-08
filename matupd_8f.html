@@ -229,25 +229,25 @@ Functions/Subroutines</h2></td></tr>
  On exit this array is unchanged.</td></tr>
     <tr><td class="paramname">ss</td><td>On entry this stores S'S, that defines the limited memory BFGS matrix.<br  />
  On exit this array is unchanged. </td></tr>
-    <tr><td class="paramname">d</td><td>TODO </td></tr>
-    <tr><td class="paramname">r</td><td>TODO </td></tr>
-    <tr><td class="paramname">itail</td><td>TODO </td></tr>
-    <tr><td class="paramname">iupdat</td><td>TODO </td></tr>
+    <tr><td class="paramname">d</td><td>Search direction at the current iteration. After the line search, the new s-vector is stp*d; matupd stores it as a column of WS (writing d directly, since the stp scaling is folded into the stored ss diagonal entry below). </td></tr>
+    <tr><td class="paramname">r</td><td>The accepted gradient difference y = g_{k+1} - g_k. Stored as a column of WY. </td></tr>
+    <tr><td class="paramname">itail</td><td>On entry the column index in WS/WY that the previous update wrote. On exit the column index this update wrote; advances cyclically modulo m. </td></tr>
+    <tr><td class="paramname">iupdat</td><td>Total number of L-BFGS updates performed so far (incremented by mainlb before each matupd call). When iupdat &lt;= m, col simply grows; when iupdat &gt; m, the history wraps and the oldest column is discarded. </td></tr>
     <tr><td class="paramname">col</td><td>On entry col is the actual number of variable metric corrections stored so far.<br  />
  On exit col is unchanged.</td></tr>
     <tr><td class="paramname">head</td><td>On entry head is the location of the first s-vector (or y-vector) in S (or Y).<br  />
  On exit col is unchanged.</td></tr>
     <tr><td class="paramname">theta</td><td>On entry theta is the scaling factor specifying B_0 = theta I.<br  />
  On exit theta is unchanged. </td></tr>
-    <tr><td class="paramname">rr</td><td>TODO </td></tr>
-    <tr><td class="paramname">dr</td><td>TODO </td></tr>
-    <tr><td class="paramname">stp</td><td>TODO </td></tr>
-    <tr><td class="paramname">dtd</td><td>TODO </td></tr>
+    <tr><td class="paramname">rr</td><td>Squared 2-norm of r (i.e. ||y||^2 = y'y). Used to set theta := rr/dr = y'y / (s'y), the standard initial Hessian scaling for the next L-BFGS update. </td></tr>
+    <tr><td class="paramname">dr</td><td>Inner product d'r = s'y / stp (the curvature condition; must be positive for the update to be safely accepted &ndash; mainlb checks this and skips matupd if dr &lt;= eps*rr). </td></tr>
+    <tr><td class="paramname">stp</td><td>Line-search step length. Used to recover the s-vector from d (s = stp*d) when computing ss(col,col) = stp^2 * d'd. </td></tr>
+    <tr><td class="paramname">dtd</td><td>Squared 2-norm of d (i.e. d'd). Combined with stp to form ss(col,col) = stp^2 * dtd = ||s||^2 for the new column. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="matupd_8f_source.html#l00049">49</a> of file <a class="el" href="matupd_8f_source.html">matupd.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matupd_8f_source.html#l00064">64</a> of file <a class="el" href="matupd_8f_source.html">matupd.f</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09">mainlb()</a>.</p>
 <div class="dynheader">

@@ -310,27 +310,27 @@ Functions/Subroutines</h2></td></tr>
 On exit nbd is unchanged. </td></tr>
     <tr><td class="paramname">x</td><td>position </td></tr>
     <tr><td class="paramname">f</td><td>function value at x </td></tr>
-    <tr><td class="paramname">fold</td><td>TODO </td></tr>
-    <tr><td class="paramname">gd</td><td>TODO </td></tr>
-    <tr><td class="paramname">gdold</td><td>TODO </td></tr>
-    <tr><td class="paramname">g</td><td>gradient of f at x </td></tr>
-    <tr><td class="paramname">d</td><td>TODO </td></tr>
-    <tr><td class="paramname">r</td><td>TODO </td></tr>
-    <tr><td class="paramname">t</td><td>TODO </td></tr>
-    <tr><td class="paramname">z</td><td>TODO </td></tr>
-    <tr><td class="paramname">stp</td><td>TODO </td></tr>
-    <tr><td class="paramname">dnorm</td><td>TODO </td></tr>
-    <tr><td class="paramname">dtd</td><td>TODO </td></tr>
-    <tr><td class="paramname">xstep</td><td>TODO </td></tr>
-    <tr><td class="paramname">stpmx</td><td>TODO </td></tr>
-    <tr><td class="paramname">iter</td><td>TODO </td></tr>
-    <tr><td class="paramname">ifun</td><td>TODO </td></tr>
-    <tr><td class="paramname">iback</td><td>TODO </td></tr>
-    <tr><td class="paramname">nfgv</td><td>TODO </td></tr>
-    <tr><td class="paramname">info</td><td>TODO </td></tr>
-    <tr><td class="paramname">task</td><td>TODO </td></tr>
-    <tr><td class="paramname">boxed</td><td>TODO </td></tr>
-    <tr><td class="paramname">cnstnd</td><td>TODO </td></tr>
+    <tr><td class="paramname">fold</td><td>Function value at the start of this line search (i.e. the accepted value from the previous iteration). Saved at entry so the caller can restore x, g, f if the line search fails. </td></tr>
+    <tr><td class="paramname">gd</td><td>Directional derivative g'd at the current trial step. Computed on every entry and passed to dcsrch as its <code>g</code> argument. </td></tr>
+    <tr><td class="paramname">gdold</td><td>Directional derivative at stp=0 (i.e. the initial g'd before any line-search progress this iteration). Saved on the first call and used by mainlb to test the curvature condition after the line search returns. </td></tr>
+    <tr><td class="paramname">g</td><td>Gradient of f at x. </td></tr>
+    <tr><td class="paramname">d</td><td>Search direction (z - x_current). Length-n vector; the candidate step is t + stp*d. </td></tr>
+    <tr><td class="paramname">r</td><td>Workspace: copy of g at the start of this line search. Used alongside fold to restore the previous iterate on abnormal line-search termination (mainlb does the restore from r and t). </td></tr>
+    <tr><td class="paramname">t</td><td>Workspace: copy of x at the start of this line search. </td></tr>
+    <tr><td class="paramname">z</td><td>Pre-projected candidate (cauchy/subsm output). When stp=1 exactly, lnsrlb sets x := z directly; otherwise it computes x := t + stp*d. </td></tr>
+    <tr><td class="paramname">stp</td><td>Current trial step length. On the first entry of a line search lnsrlb initialises stp; subsequent dcsrch calls update it. </td></tr>
+    <tr><td class="paramname">dnorm</td><td>2-norm of d (||d||). </td></tr>
+    <tr><td class="paramname">dtd</td><td>Squared 2-norm of d (d'd). </td></tr>
+    <tr><td class="paramname">xstep</td><td>On exit stp * ||d||, the actual length of the step in x-space. </td></tr>
+    <tr><td class="paramname">stpmx</td><td>Maximum allowed step. For unconstrained problems set to a large constant (1e10); for bounded problems lnsrlb scans the active bounds and tightens stpmx so x + stpmx*d stays feasible. </td></tr>
+    <tr><td class="paramname">iter</td><td>Outer iteration number from mainlb. </td></tr>
+    <tr><td class="paramname">ifun</td><td>On exit number of f/g evaluations performed in this line search; reset to 0 on each new line search. </td></tr>
+    <tr><td class="paramname">iback</td><td>On exit number of "backtracks" (ifun - 1). mainlb aborts the line search if iback &gt;= 20. </td></tr>
+    <tr><td class="paramname">nfgv</td><td>Cumulative count of f/g evaluations across all iterations; incremented by 1 per evaluation requested. </td></tr>
+    <tr><td class="paramname">info</td><td>On exit 0 on success; -4 if the projected directional derivative gd is non-negative on the first call (no descent possible). </td></tr>
+    <tr><td class="paramname">task</td><td>Reverse-comm task. Initial entry: 'START'. While the line search is running, lnsrlb returns 'FG_LNSRCH' (the user evaluates f, g at the new x and re-enters with task starting with 'FG_LN'). On line-search success lnsrlb returns 'NEW_X'. </td></tr>
+    <tr><td class="paramname">boxed</td><td>.true. if every variable has both lower and upper bounds. When true, the initial trial step is unit (stp=1) regardless of d's magnitude. </td></tr>
+    <tr><td class="paramname">cnstnd</td><td>.true. if the problem has at least one bound. Controls the stpmx-from-bounds scan. </td></tr>
     <tr><td class="paramname">csave</td><td>working array </td></tr>
     <tr><td class="paramname">isave</td><td>working array </td></tr>
     <tr><td class="paramname">dsave</td><td>working array </td></tr>
@@ -338,7 +338,7 @@ On exit nbd is unchanged. </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="lnsrlb_8f_source.html#l00043">43</a> of file <a class="el" href="lnsrlb_8f_source.html">lnsrlb.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lnsrlb_8f_source.html#l00070">70</a> of file <a class="el" href="lnsrlb_8f_source.html">lnsrlb.f</a>.</p>
 
 <p class="reference">References <a class="el" href="dcsrch_8f.html#a25db7a7d8ddac831be23892a10ba2a76">dcsrch()</a>.</p>
 

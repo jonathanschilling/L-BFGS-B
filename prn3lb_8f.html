@@ -260,30 +260,30 @@ Functions/Subroutines</h2></td></tr>
     <tr><td class="paramname">f</td><td>On first entry f is unspecified.<br  />
  On final exit f is the value of the function at x.</td></tr>
     <tr><td class="paramname">task</td><td>working string indicating the current job when entering and leaving this subroutine. </td></tr>
-    <tr><td class="paramname">iprint</td><td>TODO </td></tr>
-    <tr><td class="paramname">info</td><td>TODO </td></tr>
+    <tr><td class="paramname">iprint</td><td>Console output flag; same convention as in setulb. Negative suppresses all output. &gt;=0 prints the per-run summary. &gt;=1 also writes to iterate.dat. &gt;=100 also prints the final x vector. </td></tr>
+    <tr><td class="paramname">info</td><td>Termination status. 0 on normal convergence. Negative values map to specific error messages: -1, -2 (Cholesky not pos.def. in formk's 1st/2nd factor), -3 (formt's Cholesky), -4 (non-descent direction caught by lnsrlb), -5 (&gt;10 evals in a line search), -6 (invalid nbd(k)), -7 (l(k) &gt; u(k)), -8 (singular triangular system), -9 (&gt;20 evals in the last line search). </td></tr>
     <tr><td class="paramname">itfile</td><td>unit number of iterate.dat file </td></tr>
-    <tr><td class="paramname">iter</td><td>TODO </td></tr>
-    <tr><td class="paramname">nfgv</td><td>TODO </td></tr>
-    <tr><td class="paramname">nintol</td><td>TODO </td></tr>
-    <tr><td class="paramname">nskip</td><td>TODO </td></tr>
-    <tr><td class="paramname">nact</td><td>TODO </td></tr>
-    <tr><td class="paramname">sbgnrm</td><td>TODO </td></tr>
-    <tr><td class="paramname">time</td><td>TODO </td></tr>
-    <tr><td class="paramname">nseg</td><td>TODO </td></tr>
-    <tr><td class="paramname">word</td><td>TODO </td></tr>
-    <tr><td class="paramname">iback</td><td>TODO </td></tr>
-    <tr><td class="paramname">stp</td><td>TODO </td></tr>
-    <tr><td class="paramname">xstep</td><td>TODO </td></tr>
-    <tr><td class="paramname">k</td><td>TODO </td></tr>
-    <tr><td class="paramname">cachyt</td><td>TODO </td></tr>
-    <tr><td class="paramname">sbtime</td><td>TODO </td></tr>
-    <tr><td class="paramname">lnscht</td><td>TODO </td></tr>
+    <tr><td class="paramname">iter</td><td>Total number of outer iterations. </td></tr>
+    <tr><td class="paramname">nfgv</td><td>Total number of f/g evaluations across the run. </td></tr>
+    <tr><td class="paramname">nintol</td><td>Total number of breakpoint segments traversed by cauchy. </td></tr>
+    <tr><td class="paramname">nskip</td><td>Number of L-BFGS updates that were skipped because the curvature condition failed (s'y too small). </td></tr>
+    <tr><td class="paramname">nact</td><td>Number of active bounds at the final generalised Cauchy point. </td></tr>
+    <tr><td class="paramname">sbgnrm</td><td>Final infinity norm of the projected gradient at x. </td></tr>
+    <tr><td class="paramname">time</td><td>Total wall-clock time of the optimisation run, in seconds. </td></tr>
+    <tr><td class="paramname">nseg</td><td>Number of breakpoint segments traversed at the LAST cauchy call (used in the iterate.dat record on abnormal exits). </td></tr>
+    <tr><td class="paramname">word</td><td>3-character status code from prn2lb: 'con', 'bnd', 'TNT', or '&mdash;' (see <a class="el" href="prn2lb_8f.html">prn2lb.f</a>). Logged in iterate.dat on info=-4 or info=-9 termination. </td></tr>
+    <tr><td class="paramname">iback</td><td>Number of backtracks in the LAST line search. </td></tr>
+    <tr><td class="paramname">stp</td><td>Final step length from the LAST line search. </td></tr>
+    <tr><td class="paramname">xstep</td><td>stp * ||d|| from the LAST line search (i.e. the actual step length in x-space). </td></tr>
+    <tr><td class="paramname">k</td><td>Index of the offending parameter when info is -6 (invalid nbd) or -7 (infeasible bound). Set by errclb. </td></tr>
+    <tr><td class="paramname">cachyt</td><td>Cumulative wall-clock time spent in cauchy, in seconds. </td></tr>
+    <tr><td class="paramname">sbtime</td><td>Cumulative wall-clock time spent in subsm, in seconds. </td></tr>
+    <tr><td class="paramname">lnscht</td><td>Cumulative wall-clock time spent in lnsrlb, in seconds. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="prn3lb_8f_source.html#l00041">41</a> of file <a class="el" href="prn3lb_8f_source.html">prn3lb.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prn3lb_8f_source.html#l00056">56</a> of file <a class="el" href="prn3lb_8f_source.html">prn3lb.f</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="mainlb_8f.html#a5a0132dc055b1aade2710adfff9b8f09">mainlb()</a>.</p>
 <div class="dynheader">

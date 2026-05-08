@@ -231,21 +231,22 @@ Functions/Subroutines</h2></td></tr>
     <tr><td class="paramname">wy</td><td>part of L-BFGS matrix </td></tr>
     <tr><td class="paramname">sy</td><td>part of L-BFGS matrix </td></tr>
     <tr><td class="paramname">wt</td><td>part of L-BFGS matrix </td></tr>
-    <tr><td class="paramname">z</td><td>TODO </td></tr>
-    <tr><td class="paramname">r</td><td>TODO </td></tr>
-    <tr><td class="paramname">wa</td><td>TODO </td></tr>
-    <tr><td class="paramname">index</td><td>TODO </td></tr>
-    <tr><td class="paramname">theta</td><td>TODO </td></tr>
-    <tr><td class="paramname">col</td><td>TODO </td></tr>
-    <tr><td class="paramname">head</td><td>TODO </td></tr>
-    <tr><td class="paramname">nfree</td><td>TODO </td></tr>
-    <tr><td class="paramname">cnstnd</td><td>TODO </td></tr>
-    <tr><td class="paramname">info</td><td>TODO </td></tr>
+    <tr><td class="paramname">z</td><td>The generalized Cauchy point xcp computed by cauchy. Used here as the linearisation point: r encodes -B(z-x) - g restricted to the free variables. </td></tr>
+    <tr><td class="paramname">r</td><td>On exit r(1:nfree) contains -theta*(z(k)-x(k)) - g(k) plus the W*M^{-1}*W' correction, where k = index(i). Caller uses this as the residual for the subspace minimisation problem. When cnstnd=.false. and col&gt;0, the shortcut path sets r(1:n) = -g(:) without using the index array. </td></tr>
+    <tr><td class="paramname">wa</td><td>Length-4m workspace shared with cauchy. On entry, the segment wa(2m+1 : 2m+2col) holds W'(z-x) (filled by cauchy). On exit wa(1 : 2col) holds M^{-1}*W'(z-x) from the bmv call. </td></tr>
+    <tr><td class="paramname">index</td><td>Permutation of (1..n): index(1..nfree) lists the indices of variables that are free at the GCP and are the active optimisation variables here. </td></tr>
+    <tr><td class="paramname">theta</td><td>Scaling factor specifying the initial Hessian B_0 = theta*I. </td></tr>
+    <tr><td class="paramname">col</td><td>Number of stored (s,y) correction pairs (0 on the first iteration; up to m thereafter). </td></tr>
+    <tr><td class="paramname">head</td><td>Index in the cyclic WS/WY buffer of the oldest stored correction. Used to walk the columns in chronological order. </td></tr>
+    <tr><td class="paramname">nfree</td><td>Number of free variables; size of the subspace problem. </td></tr>
+    <tr><td class="paramname">cnstnd</td><td>.true. if the problem has bounds; controls the shortcut path described under</td></tr>
+    <tr><td class="paramname">r.</td><td></td></tr>
+    <tr><td class="paramname">info</td><td>Error code from the embedded bmv call. With the current dtrsm-based bmv this is always 0 (see <a class="el" href="bmv_8f.html">bmv.f</a>); the code path that maps a nonzero info to -8 is dead but kept for the event of a future BLAS substitution. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmprlb_8f_source.html#l00027">27</a> of file <a class="el" href="cmprlb_8f_source.html">cmprlb.f</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmprlb_8f_source.html#l00043">43</a> of file <a class="el" href="cmprlb_8f_source.html">cmprlb.f</a>.</p>
 
 <p class="reference">References <a class="el" href="bmv_8f.html#a3b7cf8256f5c958dd10a7f72db1a0f14">bmv()</a>.</p>
 

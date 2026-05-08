@@ -9,18 +9,41 @@ cannot achieve bit-for-bit numerical agreement with the F77
 reference; see `04_numerics.md`), the runner provides a **tolerance**
 mode using per-subroutine numerical tolerances.
 
+## Engines
+
+The conformance runner supports two implementations to validate
+against the JSON test vectors:
+
+- **`--engine python`** (default). Validates the Python+NumPy
+  reference implementation in `docs/spec/reference_impl/`. Uses
+  `scipy.linalg` for triangular solves and Cholesky.
+- **`--engine fortran`**. Subprocess-calls
+  `tests/conformance/conformance_driver` (built by CMake) which
+  links `liblbfgsb.so` and runs the actual F77 routines. This is
+  the strongest validation: it proves the JSON test vectors match
+  the canonical F77 implementation directly, not just transitively.
+
+Both engines accept both modes (`--strict` and `--tolerance`).
+
 ## Modes
 
 ### `--strict` (default)
 
 ```
-python3 docs/spec/runner/conformance.py --strict
+python3 docs/spec/runner/conformance.py --strict --engine fortran
 ```
 
 Each output value must match `np.float64(expected).tobytes() ==
 np.float64(actual).tobytes()`. Integer and string values must match
 exactly; boolean values must match exactly; arrays must have matching
 length and pointwise bit-equal entries.
+
+The repo's expected end state:
+
+| Engine | --strict | --tolerance |
+|--------|----------|-------------|
+| `fortran` | 101/101 | 101/101 |
+| `python`  | 100/101 (`bmv_case_3` BLAS variance) | 101/101 |
 
 Strict mode is the gold-standard conformance test. It requires:
 
@@ -93,14 +116,18 @@ only tolerance mode are noted as such.
 
 ## Known caveats
 
-- **`bmv_case_3` may fail strict mode** when the port uses a BLAS
-  whose internal triangular-solve operation order differs from the
-  reference. The expected value (`-1/7` etc.) is encoded as the
-  canonical IEEE-754 representation of those rationals; some BLAS
-  implementations produce a 1-ULP-off result on the input matrix
-  for this specific case. Tolerance mode passes. This is documented
-  as a known BLAS-reproducibility edge case rather than a defect in
-  the spec or the F77 code.
+- **`bmv_case_3` is BLAS-sensitive**. The JSON expected values are
+  the actual output of the F77 reference linked against OpenBLAS
+  (the reference build for this repo). The Python reference impl
+  (linked through `scipy.linalg.solve_triangular`) produces a 1-ULP-
+  different value for `p[2]`. Strict mode therefore passes against
+  the F77 build (`--engine fortran`) but fails for one case against
+  the Python ref (`--engine python`). Tolerance mode passes for
+  both engines. This is a real BLAS-reproducibility effect, not a
+  defect: scipy's triangular-solve has a slightly different reduction
+  order than netlib/OpenBLAS `dtrsm`. Ports using the reference BLAS
+  pin will pass strict mode; ports using a different BLAS may need
+  to use tolerance mode.
 - **Trajectory cases for `dcsrch` and `lnsrlb`** (full line searches)
   are not yet encoded as JSON. They require a multi-call replay
   protocol and are deferred to a future Phase C extension. Until

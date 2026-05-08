@@ -76,10 +76,11 @@ target_link_libraries(driver2_f90 PRIVATE lbfgsb json_writer)
 target_link_libraries(driver3_f77 PRIVATE lbfgsb json_writer)
 target_link_libraries(driver3_f90 PRIVATE lbfgsb json_writer)
 
-# integration tests + per-subroutine unit tests
+# integration tests + per-subroutine unit tests + F77 conformance driver
 enable_testing()
 add_subdirectory(tests)
 add_subdirectory(tests/unit)
+add_subdirectory(tests/conformance)
 
 # Coverage report target. Requires LBFGSB_COVERAGE=ON and gcovr installed.
 # Usage: `cmake --build . --target coverage` after tests have been built.

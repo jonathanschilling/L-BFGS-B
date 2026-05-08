@@ -35,7 +35,9 @@ import glob
 import json
 import os
 import re
+import subprocess
 import sys
+import tempfile
 from typing import Any, Callable
 
 import numpy as np
@@ -44,8 +46,15 @@ import numpy as np
 # Make ``core.<sub>`` importable regardless of cwd.
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SPEC_ROOT = os.path.dirname(ROOT)
+REPO_ROOT = os.path.dirname(os.path.dirname(SPEC_ROOT))
 sys.path.insert(0, SPEC_ROOT)
 sys.path.insert(0, os.path.join(SPEC_ROOT, "reference_impl"))
+
+
+# Default location of the F77 conformance driver (built by
+# tests/conformance/CMakeLists.txt). Can be overridden via --driver-bin.
+DEFAULT_FORTRAN_DRIVER = os.path.join(REPO_ROOT, "build", "tests",
+                                      "conformance", "conformance_driver")
 
 
 # ---------------------------------------------------------------------------
@@ -437,9 +446,222 @@ def _subsm(inp: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Fortran engine: subprocess-call ``conformance_driver``, marshal text I/O.
+# ---------------------------------------------------------------------------
+
+# Per-subroutine type schemas. For each input key, the entry is the
+# conformance_driver type code (i, r, s, b, iv, rv, im, rm). Used when
+# the JSON value is a list and we need to disambiguate vec vs mat, and
+# when the JSON value is a Python int that should be marshalled as a
+# real (rare; we don't have such cases yet).
+SCHEMAS: dict[str, dict[str, str]] = {
+    "projgr": {"n": "i", "x": "rv", "l": "rv", "u": "rv", "nbd": "iv", "g": "rv"},
+    "errclb": {
+        "n": "i", "m": "i", "factr": "r",
+        "l": "rv", "u": "rv", "nbd": "iv",
+        "task_in": "s", "info_in": "i", "k_in": "i",
+    },
+    "active": {
+        "n": "i", "l": "rv", "u": "rv", "nbd": "iv",
+        "x_in": "rv", "iprint": "i",
+    },
+    "freev": {
+        "n": "i", "nfree_in": "i",
+        "index_in": "iv", "indx2_in": "iv", "iwhere": "iv",
+        "updatd": "b", "cnstnd": "b", "iter": "i", "iprint": "i",
+    },
+    "hpsolb": {"n": "i", "t_in": "rv", "iorder_in": "iv", "iheap": "i"},
+    "cmprlb": {
+        "n": "i", "m": "i", "col": "i", "head": "i", "nfree": "i",
+        "theta": "r", "cnstnd": "b",
+        "index": "iv", "x": "rv", "z": "rv", "g": "rv",
+        "r_in": "rv", "wa_in": "rv",
+        "ws": "rm", "wy": "rm", "sy": "rm", "wt": "rm",
+    },
+    "bmv": {
+        "m": "i", "col": "i",
+        "sy": "rm", "wt": "rm", "v": "rv", "p_in": "rv",
+    },
+    "formt": {
+        "m": "i", "col": "i", "theta": "r",
+        "sy": "rm", "ss": "rm", "wt_in": "rm",
+    },
+    "matupd": {
+        "n": "i", "m": "i", "iupdat": "i",
+        "head_in": "i", "itail_in": "i", "col_in": "i",
+        "ws_in": "rm", "wy_in": "rm", "sy_in": "rm", "ss_in": "rm",
+        "d": "rv", "r": "rv",
+        "rr": "r", "dr": "r", "stp": "r", "dtd": "r",
+    },
+    "dcstep": {
+        "stx_in": "r", "fx_in": "r", "dx_in": "r",
+        "sty_in": "r", "fy_in": "r", "dy_in": "r",
+        "stp_in": "r", "fp": "r", "dp": "r",
+        "brackt_in": "b", "stpmin": "r", "stpmax": "r",
+    },
+    "formk": {
+        "n": "i", "m": "i", "nsub": "i", "nenter": "i", "ileave": "i",
+        "iupdat": "i", "col": "i", "head": "i",
+        "updatd": "b", "theta": "r",
+        "ind": "iv", "indx2": "iv",
+        "ws": "rm", "wy": "rm", "sy": "rm",
+        "wn_in": "rm", "wn1_in": "rm",
+    },
+    "dcsrch": {
+        "f": "r", "g": "r", "stp": "r",
+        "ftol": "r", "gtol": "r", "xtol": "r",
+        "stpmin": "r", "stpmax": "r", "task_in": "s",
+    },
+    "lnsrlb": {
+        "n": "i",
+        "l": "rv", "u": "rv", "nbd": "iv",
+        "x": "rv", "f_in": "r", "g": "rv", "d": "rv",
+        "r_in": "rv", "t_in": "rv", "z": "rv",
+        "stp_in": "r", "iter": "i",
+        "ifun_in": "i", "iback_in": "i", "nfgv_in": "i", "info_in": "i",
+        "task_in": "s", "boxed": "b", "cnstnd": "b",
+    },
+    "cauchy": {
+        "n": "i", "m": "i", "col": "i", "head": "i", "iprint": "i",
+        "theta": "r", "sbgnrm": "r", "epsmch": "r",
+        "x": "rv", "l": "rv", "u": "rv", "nbd": "iv", "g": "rv",
+        "iwhere_in": "iv",
+        "ws": "rm", "wy": "rm", "sy": "rm", "wt": "rm",
+    },
+    "subsm": {
+        "n": "i", "m": "i", "nsub": "i", "col": "i", "head": "i",
+        "theta": "r",
+        "ind": "iv", "l": "rv", "u": "rv", "nbd": "iv",
+        "x_in": "rv", "d_in": "rv", "xx": "rv", "gg": "rv",
+        "ws": "rm", "wy": "rm", "wn_in": "rm",
+    },
+}
+
+
+def _format_real(x: float) -> str:
+    """Format a float to a 17-digit IEEE-754 round-tripping representation."""
+    return f"{float(x):.17g}"
+
+
+def _write_input(sub: str, inputs: dict, path: str) -> None:
+    """Write ``inputs`` in conformance_driver text format."""
+    schema = SCHEMAS.get(sub)
+    if schema is None:
+        raise ValueError(f"no schema defined for subroutine '{sub}'")
+    lines = [f"sub {sub}"]
+    for key, val in inputs.items():
+        typ = schema.get(key)
+        if typ is None:
+            # Skip extras not in the schema (e.g. JSON-only metadata).
+            continue
+        if typ == "i":
+            lines.append(f"i {key} {int(val)}")
+        elif typ == "r":
+            lines.append(f"r {key} {_format_real(val)}")
+        elif typ == "s":
+            lines.append(f"s {key} {val}")
+        elif typ == "b":
+            lines.append(f"b {key} {'T' if val else 'F'}")
+        elif typ == "iv":
+            n = len(val)
+            ints = " ".join(str(int(v)) for v in val)
+            lines.append(f"iv {key} {n} {ints}")
+        elif typ == "rv":
+            n = len(val) if val else 0
+            reals = " ".join(_format_real(v) for v in val) if n > 0 else ""
+            lines.append(f"rv {key} {n} {reals}".rstrip())
+        elif typ == "im":
+            mat = np.array(val, dtype=np.int64)
+            r, c = mat.shape
+            flat = mat.T.ravel()              # column-major
+            ints = " ".join(str(int(v)) for v in flat)
+            lines.append(f"im {key} {r} {c} {ints}")
+        elif typ == "rm":
+            mat = np.array(val, dtype=np.float64)
+            r, c = mat.shape
+            flat = mat.T.ravel()              # column-major
+            reals = " ".join(_format_real(v) for v in flat)
+            lines.append(f"rm {key} {r} {c} {reals}")
+        else:
+            raise ValueError(f"unknown type code '{typ}' for {key}")
+    lines.append("end")
+    with open(path, "w") as fh:
+        fh.write("\n".join(lines) + "\n")
+
+
+def _parse_output(path: str) -> dict:
+    """Parse conformance_driver's text output into a dict.
+
+    Output keys preserve their type-coded interpretation: int, real,
+    string, bool, list-of-int, list-of-float, list-of-list (matrix
+    de-flattened from column-major).
+    """
+    out: dict[str, Any] = {}
+    with open(path) as fh:
+        text = fh.read()
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("sub ") or line == "end":
+            continue
+        toks = line.split(None, 2)
+        typ = toks[0]
+        key = toks[1]
+        rest = toks[2] if len(toks) > 2 else ""
+        if typ == "i":
+            out[key] = int(rest)
+        elif typ == "r":
+            out[key] = float(rest)
+        elif typ == "s":
+            out[key] = rest
+        elif typ == "b":
+            out[key] = (rest.strip() == "T")
+        elif typ in ("iv", "rv"):
+            parts = rest.split()
+            n = int(parts[0])
+            vals = parts[1:1 + n]
+            if typ == "iv":
+                out[key] = [int(v) for v in vals]
+            else:
+                out[key] = [float(v) for v in vals]
+        elif typ in ("im", "rm"):
+            parts = rest.split()
+            r, c = int(parts[0]), int(parts[1])
+            flat = parts[2:2 + r * c]
+            cast = int if typ == "im" else float
+            arr = np.array([cast(v) for v in flat]).reshape(c, r).T  # col-major -> row-major
+            out[key] = arr.tolist()
+        else:
+            raise ValueError(f"unknown output type code '{typ}'")
+    return out
+
+
+def make_fortran_handler(driver_bin: str, sub: str) -> Callable[[dict], dict]:
+    """Return a handler that runs the F77 conformance driver for ``sub``."""
+    def _handler(inp: dict) -> dict:
+        with tempfile.TemporaryDirectory() as td:
+            in_path = os.path.join(td, "in.txt")
+            out_path = os.path.join(td, "out.txt")
+            _write_input(sub, inp, in_path)
+            res = subprocess.run(
+                [driver_bin, in_path, out_path],
+                capture_output=True, text=True, timeout=30,
+            )
+            if res.returncode != 0:
+                raise RuntimeError(
+                    f"conformance_driver failed (code {res.returncode}):\n"
+                    f"  stderr: {res.stderr}\n  stdout: {res.stdout}"
+                )
+            return _parse_output(out_path)
+    return _handler
+
+
+# ---------------------------------------------------------------------------
 # Driver
 # ---------------------------------------------------------------------------
-def run(data_dir: str, strict: bool, filter_sub: str | None) -> int:
+def run(data_dir: str, strict: bool, filter_sub: str | None,
+        engine: str = "python", driver_bin: str = DEFAULT_FORTRAN_DRIVER) -> int:
     pattern = os.path.join(data_dir, "*.json")
     paths = sorted(glob.glob(pattern), key=lambda p: (
         re.sub(r"_case_\d+", "", p),
@@ -449,6 +671,20 @@ def run(data_dir: str, strict: bool, filter_sub: str | None) -> int:
     if not paths:
         print(f"No JSON test vectors found under {data_dir}", file=sys.stderr)
         return 1
+
+    if engine == "fortran":
+        if not os.path.isfile(driver_bin) or not os.access(driver_bin, os.X_OK):
+            print(f"Fortran conformance driver not found or not executable: {driver_bin}",
+                  file=sys.stderr)
+            print("Build it with: cmake --build build --target conformance_driver",
+                  file=sys.stderr)
+            return 2
+        # Replace HANDLERS with subprocess-based handlers.
+        active_handlers: dict[str, Callable[[dict], dict]] = {
+            sub: make_fortran_handler(driver_bin, sub) for sub in SCHEMAS
+        }
+    else:
+        active_handlers = HANDLERS
 
     n_pass = 0
     n_fail = 0
@@ -462,11 +698,11 @@ def run(data_dir: str, strict: bool, filter_sub: str | None) -> int:
         sub = name.rsplit("_case_", 1)[0]
         if filter_sub and sub != filter_sub:
             continue
-        if sub not in HANDLERS:
+        if sub not in active_handlers:
             n_skip += 1
             continue
         try:
-            actual = HANDLERS[sub](spec["inputs"])
+            actual = active_handlers[sub](spec["inputs"])
         except Exception as exc:
             n_fail += 1
             failures.append((name, [f"handler raised: {type(exc).__name__}: {exc}"]))
@@ -488,7 +724,8 @@ def run(data_dir: str, strict: bool, filter_sub: str | None) -> int:
             n_fail += 1
             failures.append((name, issues))
 
-    print(f"\n=== Conformance ({'strict' if strict else 'tolerance'}) ===")
+    mode = "strict" if strict else "tolerance"
+    print(f"\n=== Conformance ({mode}, engine={engine}) ===")
     print(f"  Pass: {n_pass}")
     print(f"  Fail: {n_fail}")
     print(f"  Skip: {n_skip}")
@@ -522,6 +759,16 @@ def main() -> int:
         "--filter", default=None,
         help="Restrict to a single subroutine (e.g. 'projgr').",
     )
+    parser.add_argument(
+        "--engine", choices=("python", "fortran"), default="python",
+        help="Reference implementation to validate against. 'fortran' "
+             "subprocess-calls tests/conformance/conformance_driver "
+             "(must be built first with cmake).",
+    )
+    parser.add_argument(
+        "--driver-bin", default=DEFAULT_FORTRAN_DRIVER,
+        help="Path to the Fortran conformance driver binary.",
+    )
     args = parser.parse_args()
 
     if args.tolerance and args.strict:
@@ -529,7 +776,7 @@ def main() -> int:
         return 2
 
     strict = not args.tolerance                # default to strict
-    return run(args.data, strict, args.filter)
+    return run(args.data, strict, args.filter, args.engine, args.driver_bin)
 
 
 if __name__ == "__main__":
